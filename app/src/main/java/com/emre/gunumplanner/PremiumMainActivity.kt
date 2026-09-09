@@ -79,7 +79,7 @@ private val Dark = darkColorScheme(
     background=Color(0xFF0F1116), surface=Color(0xFF17191F), surfaceVariant=Color(0xFF232630),
     onSurface=Color(0xFFF4F4F7), onSurfaceVariant=Color(0xFFB5B9C5), outline=Color(0xFF3C404B)
 )
-@Composable fun PremiumTheme(c:@Composable()->Unit){ MaterialTheme(colorScheme=if(androidx.compose.foundation.isSystemInDarkTheme()) Dark else Light, shapes=Shapes(small=RoundedCornerShape(12.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(28.dp)),content=c) }
+@Composable fun PremiumTheme(c: @Composable () -> Unit){ MaterialTheme(colorScheme=if(androidx.compose.foundation.isSystemInDarkTheme()) Dark else Light, shapes=Shapes(small=RoundedCornerShape(12.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(28.dp)),content=c) }
 
 enum class PScreen{TODAY,HISTORY,TOPICS,SEARCH,TOPIC}
 
