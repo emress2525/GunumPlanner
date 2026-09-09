@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -38,6 +38,17 @@ jobs:
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
+
+      - name: Persist normalized source
+        if: github.ref == 'refs/heads/premium-v1'
+        run: |
+          if ! git diff --quiet -- app/src/main/java/com/emre/gunumplanner/PremiumMainActivity.kt; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add app/src/main/java/com/emre/gunumplanner/PremiumMainActivity.kt
+            git commit -m "Fix premium Kotlin source [skip ci]"
+            git push
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
