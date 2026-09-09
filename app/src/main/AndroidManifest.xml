@@ -5,11 +5,13 @@
 
     <application
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="Günüm"
         android:theme="@style/Theme.Gunum">
 
         <activity
-            android:name=".ModernMainActivity"
+            android:name=".PremiumMainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,22 +19,12 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+        <activity android:name=".ModernMainActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false" />
 
-        <receiver
-            android:name=".ReminderReceiver"
-            android:exported="false" />
-
-        <receiver
-            android:name=".NotificationActionReceiver"
-            android:exported="false" />
-
-        <receiver
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name=".ReminderReceiver" android:exported="false" />
+        <receiver android:name=".NotificationActionReceiver" android:exported="false" />
+        <receiver android:name=".BootReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
