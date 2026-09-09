@@ -4,10 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,231 +36,77 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
-    private Db db;
-    private TextView title, sub;
-    private ListView list;
-    private Button add;
-    private String day;
-    private Screen screen = Screen.TODAY;
-    private long topicId = 0;
-    private List<Db.Item> items = new ArrayList<>();
-    private List<Db.Topic> topics = new ArrayList<>();
+    private static final int VOICE_REQUEST = 902;
+    private Db db; private TextView title,sub; private ListView list; private Button add;
+    private String day,lastSearch=""; private boolean voiceAsTask=true; private Screen screen=Screen.TODAY; private long topicId=0;
+    private List<Db.Item> items=new ArrayList<>(); private List<Db.Topic> topics=new ArrayList<>();
+    private final DateTimeFormatter dayFmt=DateTimeFormatter.ISO_LOCAL_DATE;
+    private final DateTimeFormatter niceFmt=DateTimeFormatter.ofPattern("d MMMM EEEE",new Locale("tr","TR"));
+    private final DateTimeFormatter timeFmt=DateTimeFormatter.ofPattern("HH:mm");
+    enum Screen{TODAY,HISTORY,TOPICS,TOPIC,SEARCH}
 
-    private final DateTimeFormatter dayFmt = DateTimeFormatter.ISO_LOCAL_DATE;
-    private final DateTimeFormatter niceFmt = DateTimeFormatter.ofPattern("d MMMM EEEE", new Locale("tr", "TR"));
-    private final DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
+    @Override public void onCreate(Bundle b){super.onCreate(b);db=new Db(this);day=LocalDate.now().format(dayFmt);buildUi();askNotificationPermission();showToday();}
+    @Override protected void onResume(){super.onResume();if(list!=null)refresh();}
+    @Override public void onBackPressed(){if(screen==Screen.TOPIC){showTopics();return;}if(screen!=Screen.TODAY){showToday();return;}super.onBackPressed();}
 
-    enum Screen { TODAY, HISTORY, TOPICS, TOPIC }
-
-    @Override public void onCreate(Bundle b) {
-        super.onCreate(b);
-        db = new Db(this);
-        day = LocalDate.now().format(dayFmt);
-        buildUi();
-        askNotificationPermission();
-        showToday();
+    private void buildUi(){
+        LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setPadding(dp(12),dp(12),dp(12),dp(10));root.setBackgroundColor(Color.rgb(246,247,251));
+        title=new TextView(this);title.setTextSize(28);title.setTextColor(Color.rgb(22,24,29));title.setTypeface(null,1);root.addView(title);
+        sub=new TextView(this);sub.setTextSize(14);sub.setTextColor(Color.DKGRAY);sub.setPadding(0,0,0,dp(8));root.addView(sub);
+        LinearLayout nav=new LinearLayout(this);nav.setGravity(Gravity.CENTER);Button today=button("Bugün");today.setOnClickListener(v->showToday());nav.addView(today,weight());Button hist=button("Geçmiş");hist.setOnClickListener(v->pickHistory());nav.addView(hist,weight());Button top=button("Konular");top.setOnClickListener(v->showTopics());nav.addView(top,weight());Button search=button("Ara");search.setOnClickListener(v->searchDialog());nav.addView(search,weight());root.addView(nav,new LinearLayout.LayoutParams(-1,dp(48)));
+        LinearLayout smart=new LinearLayout(this);smart.setGravity(Gravity.CENTER);Button voice=button("🎙 Ses");voice.setOnClickListener(v->voiceChooser());smart.addView(voice,weight());Button plan=button("✨ Planla");plan.setOnClickListener(v->smartPlan());smart.addView(plan,weight());Button summary=button("Özet");summary.setOnClickListener(v->showDaySummary(day));smart.addView(summary,weight());root.addView(smart,new LinearLayout.LayoutParams(-1,dp(46)));
+        list=new ListView(this);list.setDividerHeight(dp(6));root.addView(list,new LinearLayout.LayoutParams(-1,0,1));add=button("＋ Görev / Not ekle");add.setTextSize(16);add.setOnClickListener(v->addChooser());root.addView(add,new LinearLayout.LayoutParams(-1,dp(54)));setContentView(root);
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-        if (list != null) refresh();
+    private void showToday(){screen=Screen.TODAY;topicId=0;day=LocalDate.now().format(dayFmt);title.setText("Bugün");Db.DayStats s=db.getDayStats(day);sub.setText(LocalDate.now().format(niceFmt)+" • "+s.open+" açık • "+s.done+" tamam • "+s.notes+" not");add.setText("＋ Görev / Not ekle");add.setOnClickListener(v->addChooser());add.setVisibility(View.VISIBLE);loadDay();}
+    private void loadDay(){items=db.getItemsForDay(day);List<String> rows=new ArrayList<>();for(Db.Item i:items)rows.add(itemRow(i));if(rows.isEmpty())rows.add("Bu gün için kayıt yok.");setRows(rows);list.setOnItemClickListener((p,v,pos,id)->{if(pos<items.size())details(items.get(pos));});list.setOnItemLongClickListener((p,v,pos,id)->{if(pos<items.size())itemActions(items.get(pos));return true;});}
+    private String itemRow(Db.Item i){String mark=Db.TYPE_NOTE.equals(i.type)?"📝":(Db.STATUS_DONE.equals(i.status)?"✓":"○");String pr=Db.TYPE_TASK.equals(i.type)?priorityIcon(i.priority):"";String tm=i.dueAt>0?"  "+Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt):"";String dur=i.durationMinutes>0?" • "+i.durationMinutes+" dk":"";String rep=i.recurrence!=null&&!i.recurrence.isEmpty()?" • ↻ "+NaturalLanguageParser.recurrenceLabel(i.recurrence):"";String body=i.body==null||i.body.trim().isEmpty()?"":"\n   "+shortText(i.body);return mark+" "+pr+i.title+tm+dur+rep+body;}
+
+    private void pickHistory(){LocalDate d;try{d=LocalDate.parse(day);}catch(Exception e){d=LocalDate.now();}new DatePickerDialog(this,(v,y,m,dd)->showHistory(LocalDate.of(y,m+1,dd).format(dayFmt)),d.getYear(),d.getMonthValue()-1,d.getDayOfMonth()).show();}
+    private void showHistory(String key){screen=Screen.HISTORY;day=key;topicId=0;Db.DayStats stats=db.getDayStats(key);title.setText("Geçmiş");sub.setText(LocalDate.parse(key).format(niceFmt)+" • "+stats.done+" tamam • "+stats.open+" açık • "+stats.postponed+" erteleme");add.setText("＋ Bu güne kayıt ekle");add.setOnClickListener(v->addChooser());add.setVisibility(View.VISIBLE);List<String> rows=new ArrayList<>();for(Db.Event e:db.getEventsForDay(key)){String tm=Instant.ofEpochMilli(e.createdAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt);rows.add(tm+"  "+eventName(e.eventType)+"\n"+e.titleSnapshot+(e.details==null||e.details.isEmpty()?"":"\n"+e.details));}if(rows.isEmpty())rows.add("Bu tarihte kayıtlı hareket yok.");setRows(rows);list.setOnItemClickListener(null);list.setOnItemLongClickListener(null);}
+
+    private void showTopics(){screen=Screen.TOPICS;topicId=0;day=LocalDate.now().format(dayFmt);title.setText("Konular");sub.setText("Notlar ve ilgili görevler aynı konu dosyasında toplanabilir");add.setText("＋ Yeni not ekle");add.setOnClickListener(v->noteDialog(null,0));add.setVisibility(View.VISIBLE);topics=db.getTopics();List<String> rows=new ArrayList<>();for(Db.Topic t:topics)rows.add("📁 "+t.title+(t.locked?" 🔒":"")+"\n"+db.countItemsInTopic(t.id)+" kayıt • otomatik "+(t.autoGroup?"açık":"kapalı"));if(rows.isEmpty())rows.add("Henüz konu yok. Bir not ekle.");setRows(rows);list.setOnItemClickListener((p,v,pos,id)->{if(pos<topics.size())showTopic(topics.get(pos).id);});list.setOnItemLongClickListener((p,v,pos,id)->{if(pos<topics.size())topicActions(topics.get(pos));return true;});}
+    private void showTopic(long id){Db.Topic t=db.getTopic(id);if(t==null){showTopics();return;}screen=Screen.TOPIC;topicId=id;title.setText(t.title);sub.setText("Bu konunun kronolojik hafızası • "+db.countItemsInTopic(id)+" kayıt");add.setText("＋ Bu konuya not ekle");add.setOnClickListener(v->noteDialog(null,id));add.setVisibility(View.VISIBLE);items=db.getItemsForTopic(id);List<String> rows=new ArrayList<>();for(Db.Item i:items){String icon=Db.TYPE_NOTE.equals(i.type)?"📝":(Db.STATUS_DONE.equals(i.status)?"✓":"○");String tm=i.dueAt>0?" "+Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt):"";rows.add(icon+" "+i.title+"\n"+i.dayKey+tm+(i.body==null||i.body.isEmpty()?"":" • "+shortText(i.body)));}if(rows.isEmpty())rows.add("Bu konuda henüz kayıt yok.");setRows(rows);list.setOnItemClickListener((p,v,pos,x)->{if(pos<items.size())details(items.get(pos));});list.setOnItemLongClickListener((p,v,pos,x)->{if(pos<items.size())itemActions(items.get(pos));return true;});}
+
+    private void searchDialog(){EditText e=edit("Görev, not veya kelime ara",lastSearch);new AlertDialog.Builder(this).setTitle("Geçmişte ara").setView(e).setNegativeButton("Vazgeç",null).setPositiveButton("Ara",(d,w)->renderSearch(e.getText().toString().trim())).show();}
+    private void renderSearch(String query){lastSearch=query;screen=Screen.SEARCH;topicId=0;title.setText("Arama");sub.setText(query.isEmpty()?"Bir kelime yaz":"“"+query+"” sonuçları");add.setText("🔎 Yeni arama");add.setOnClickListener(v->searchDialog());add.setVisibility(View.VISIBLE);items=db.searchItems(query);List<String> rows=new ArrayList<>();for(Db.Item i:items){String icon=Db.TYPE_NOTE.equals(i.type)?"📝":(Db.STATUS_DONE.equals(i.status)?"✓":"○");rows.add(icon+" "+i.title+"\n"+i.dayKey+(i.body==null||i.body.isEmpty()?"":" • "+shortText(i.body)));}if(rows.isEmpty())rows.add("Sonuç bulunamadı.");setRows(rows);list.setOnItemClickListener((p,v,pos,id)->{if(pos<items.size())details(items.get(pos));});list.setOnItemLongClickListener((p,v,pos,id)->{if(pos<items.size())itemActions(items.get(pos));return true;});}
+
+    private void addChooser(){new AlertDialog.Builder(this).setTitle("Ne eklemek istiyorsun?").setItems(new String[]{"⚡ Hızlı görev (doğal dil)","🎙 Sesle görev","Görev (ayrıntılı)","Not","🎙 Sesli not"},(d,w)->{if(w==0)quickTaskDialog("");else if(w==1)startVoice(true);else if(w==2)taskDialog(null);else if(w==3)noteDialog(null,0);else startVoice(false);}).show();}
+    private void quickTaskDialog(String initial){EditText e=edit("Örn: Yarın 14:30 Mehmet'i ara 30 dk her hafta",initial);AlertDialog dlg=new AlertDialog.Builder(this).setTitle("Hızlı görev").setView(e).setNegativeButton("Vazgeç",null).setPositiveButton("Devam",null).create();dlg.setOnShowListener(x->dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{String raw=e.getText().toString().trim();if(raw.isEmpty()){toast("Görevi yaz");return;}dlg.dismiss();confirmParsedTask(NaturalLanguageParser.parse(raw,safeDay()));}));dlg.show();}
+    private void confirmParsedTask(NaturalLanguageParser.ParsedTask p){StringBuilder msg=new StringBuilder();msg.append("Görev: ").append(p.title).append("\nTarih: ").append(p.dayKey);if(p.dueAt>0)msg.append("\nSaat: ").append(Instant.ofEpochMilli(p.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt));if(p.durationMinutes>0)msg.append("\nSüre: ").append(p.durationMinutes).append(" dk");if(p.recurrence!=null&&!p.recurrence.isEmpty())msg.append("\nTekrar: ").append(NaturalLanguageParser.recurrenceLabel(p.recurrence));msg.append("\nÖncelik: ").append(priorityLabel(p.priority));new AlertDialog.Builder(this).setTitle("Böyle ekleyeyim mi?").setMessage(msg.toString()).setNegativeButton("Vazgeç",null).setNeutralButton("Metni düzelt",(d,w)->quickTaskDialog(p.original)).setPositiveButton("Ekle",(d,w)->createParsedTask(p)).show();}
+    private void createParsedTask(NaturalLanguageParser.ParsedTask p){long tid=TopicEngine.findMatchingTopic(db,p.title,p.original);long id=db.insertItem(Db.TYPE_TASK,p.title,"",p.dayKey,p.dueAt,tid,p.recurrence,p.durationMinutes,p.priority);if(p.dueAt>0)ReminderScheduler.schedule(this,id,p.dueAt);if(tid>0)TopicEngine.refreshAutoTitle(db,tid);day=p.dayKey;toast("Görev eklendi");if(LocalDate.now().toString().equals(p.dayKey))showToday();else showHistory(p.dayKey);}
+
+    private void taskDialog(Db.Item old){
+        LinearLayout box=box();EditText name=edit("Görev",old==null?"":old.title);box.addView(name);EditText body=edit("Not / açıklama",old==null?"":old.body);box.addView(body);EditText date=edit("Tarih: YYYY-MM-DD",old==null?day:old.dayKey);date.setInputType(InputType.TYPE_CLASS_DATETIME);box.addView(date);String oldTime=old!=null&&old.dueAt>0?Instant.ofEpochMilli(old.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt):"";EditText time=edit("Saat: HH:mm (boş bırakılabilir)",oldTime);time.setInputType(InputType.TYPE_CLASS_DATETIME);box.addView(time);EditText duration=edit("Tahmini süre (dakika)",old==null||old.durationMinutes<=0?"":String.valueOf(old.durationMinutes));duration.setInputType(InputType.TYPE_CLASS_NUMBER);box.addView(duration);
+        Spinner recurrence=new Spinner(this);String[] reps={"Tekrar yok","Her gün","Hafta içi","Her hafta","Her ay"};recurrence.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,reps));recurrence.setSelection(recurrenceIndex(old==null?"":old.recurrence));box.addView(recurrence);Spinner priority=new Spinner(this);String[] prs={"Acil","Önemli","Normal"};priority.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,prs));priority.setSelection(old==null?2:Math.max(0,Math.min(2,old.priority)));box.addView(priority);
+        AlertDialog dlg=new AlertDialog.Builder(this).setTitle(old==null?"Görev ekle":"Görevi düzenle").setView(box).setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",null).create();dlg.setOnShowListener(x->dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{String n=name.getText().toString().trim(),b=body.getText().toString().trim(),dk=date.getText().toString().trim(),ts=time.getText().toString().trim();if(n.isEmpty()){toast("Görev adı yaz");return;}long due=0;try{LocalDate d=LocalDate.parse(dk);if(!ts.isEmpty())due=LocalDateTime.of(d,LocalTime.parse(ts,timeFmt)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();}catch(Exception e){toast("Tarih veya saat hatalı");return;}int dur=safeInt(duration.getText().toString(),0);String rec=recurrenceRule(recurrence.getSelectedItemPosition());int pri=priority.getSelectedItemPosition();if(old==null){long tid=TopicEngine.findMatchingTopic(db,n,b);long id=db.insertItem(Db.TYPE_TASK,n,b,dk,due,tid,rec,dur,pri);if(due>0)ReminderScheduler.schedule(this,id,due);}else{ReminderScheduler.cancel(this,old.id);db.updateItem(old.id,n,b,dk,due,old.topicId,rec,dur,pri);if(due>0&&Db.STATUS_OPEN.equals(old.status))ReminderScheduler.schedule(this,old.id,due);}dlg.dismiss();refresh();}));dlg.show();
     }
 
-    private void buildUi() {
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(dp(14), dp(14), dp(14), dp(10));
-        root.setBackgroundColor(Color.rgb(246,247,251));
+    private void noteDialog(Db.Item old,long forcedTopic){LinearLayout box=box();EditText name=edit("Not başlığı",old==null?"":old.title);box.addView(name);EditText body=edit("Not",old==null?"":old.body);box.addView(body);AlertDialog dlg=new AlertDialog.Builder(this).setTitle(old==null?"Not ekle":"Notu düzenle").setView(box).setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",null).create();dlg.setOnShowListener(x->dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{String n=name.getText().toString().trim(),b=body.getText().toString().trim();if(n.isEmpty()&&b.isEmpty()){toast("Bir şey yaz");return;}if(n.isEmpty())n=TopicEngine.suggestTitle(b);if(old==null){long tid=forcedTopic>0?forcedTopic:TopicEngine.findOrCreateTopic(db,n,b);db.insertItem(Db.TYPE_NOTE,n,b,LocalDate.now().toString(),0,tid);TopicEngine.refreshAutoTitle(db,tid);}else{db.updateItem(old.id,n,b,old.dayKey,0,old.topicId,"",0,2);if(old.topicId>0)TopicEngine.refreshAutoTitle(db,old.topicId);}dlg.dismiss();refresh();}));dlg.show();}
 
-        title = new TextView(this);
-        title.setTextSize(28); title.setTextColor(Color.rgb(22,24,29)); title.setTypeface(null,1);
-        root.addView(title);
-        sub = new TextView(this);
-        sub.setTextSize(14); sub.setTextColor(Color.DKGRAY); sub.setPadding(0,0,0,dp(10));
-        root.addView(sub);
+    private void details(Db.Item i){StringBuilder msg=new StringBuilder();msg.append(i.body==null||i.body.isEmpty()?"Açıklama yok":i.body).append("\n\nTarih: ").append(i.dayKey);if(i.dueAt>0)msg.append("\nSaat: ").append(Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt));if(i.durationMinutes>0)msg.append("\nSüre: ").append(i.durationMinutes).append(" dk");if(i.recurrence!=null&&!i.recurrence.isEmpty())msg.append("\nTekrar: ").append(NaturalLanguageParser.recurrenceLabel(i.recurrence));if(Db.TYPE_TASK.equals(i.type))msg.append("\nÖncelik: ").append(priorityLabel(i.priority));if(i.topicId>0){Db.Topic t=db.getTopic(i.topicId);if(t!=null)msg.append("\nKonu: ").append(t.title);}new AlertDialog.Builder(this).setTitle(i.title).setMessage(msg.toString()).setPositiveButton("Tamam",null).show();}
+    private void itemActions(Db.Item i){if(Db.TYPE_NOTE.equals(i.type)){noteActions(i);return;}String first=Db.STATUS_DONE.equals(i.status)?"Tekrar aç":"Tamamla";String[] a={first,"Yarına ertele","Düzenle","Konuya taşı","Sil"};new AlertDialog.Builder(this).setTitle(i.title).setItems(a,(d,w)->{if(w==0){if(Db.STATUS_DONE.equals(i.status))db.reopenItem(i.id);else{long nextId=db.completeItem(i.id);ReminderScheduler.cancel(this,i.id);scheduleIfNeeded(nextId);}}else if(w==1){LocalDate nd=LocalDate.parse(i.dayKey).plusDays(1);long due=0;if(i.dueAt>0){LocalTime tm=Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime();due=LocalDateTime.of(nd,tm).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();}ReminderScheduler.cancel(this,i.id);db.postponeItem(i.id,nd.format(dayFmt),due);if(due>0)ReminderScheduler.schedule(this,i.id,due);}else if(w==2){taskDialog(i);return;}else if(w==3){moveItem(i);return;}else{ReminderScheduler.cancel(this,i.id);db.deleteItem(i.id);}refresh();}).show();}
+    private void noteActions(Db.Item i){String[] a={"Düzenle","Başka konuya taşı","Bu notu ayrı konu yap","Sil"};new AlertDialog.Builder(this).setTitle(i.title).setItems(a,(d,w)->{if(w==0){noteDialog(i,i.topicId);return;}if(w==1){moveItem(i);return;}if(w==2){long t=db.createTopic(TopicEngine.suggestTitle(i.title+" "+i.body));db.moveItemToTopic(i.id,t);}if(w==3)db.deleteItem(i.id);refresh();}).show();}
+    private void moveItem(Db.Item i){List<Db.Topic> all=db.getTopics();if(all.isEmpty()){toast("Henüz konu yok");return;}String[] names=new String[all.size()+1];names[0]="Konu bağlantısını kaldır";for(int x=0;x<all.size();x++)names[x+1]=all.get(x).title;new AlertDialog.Builder(this).setTitle("Konu seç").setItems(names,(d,w)->{long target=w==0?0:all.get(w-1).id;db.moveItemToTopic(i.id,target);if(target>0)TopicEngine.refreshAutoTitle(db,target);refresh();}).show();}
 
-        LinearLayout nav = new LinearLayout(this); nav.setGravity(Gravity.CENTER);
-        Button today = button("Bugün"); today.setOnClickListener(v -> showToday()); nav.addView(today, weight());
-        Button hist = button("Geçmiş"); hist.setOnClickListener(v -> pickHistory()); nav.addView(hist, weight());
-        Button top = button("Konular"); top.setOnClickListener(v -> showTopics()); nav.addView(top, weight());
-        root.addView(nav, new LinearLayout.LayoutParams(-1, dp(48)));
+    private void topicActions(Db.Topic t){String[] a={"Başlığı değiştir / kilitle","Otomatik gruplamayı "+(t.autoGroup?"kapat":"aç"),"Benzer konuları bul"};new AlertDialog.Builder(this).setTitle(t.title).setItems(a,(d,w)->{if(w==0)renameTopic(t);else if(w==1){db.setTopicAutoGroup(t.id,!t.autoGroup);showTopics();}else similarTopics(t);}).show();}
+    private void similarTopics(Db.Topic source){List<TopicEngine.TopicMatch> matches=TopicEngine.similarTopics(db,source.id);if(matches.isEmpty()){toast("Yeterince benzer başka konu bulamadım");return;}String[] rows=new String[matches.size()];for(int i=0;i<matches.size();i++)rows[i]=matches.get(i).topic.title+" • %"+(int)Math.round(matches.get(i).score*100)+" benzer";new AlertDialog.Builder(this).setTitle("Birleştirme önerileri").setItems(rows,(d,w)->{Db.Topic target=matches.get(w).topic;new AlertDialog.Builder(this).setTitle("Konuları birleştir?").setMessage("“"+source.title+"” içindeki kayıtları “"+target.title+"” altında toplayacağım.").setNegativeButton("Vazgeç",null).setPositiveButton("Birleştir",(x,y)->{db.mergeTopics(source.id,target.id);TopicEngine.refreshAutoTitle(db,target.id);showTopic(target.id);}).show();}).show();}
+    private void renameTopic(Db.Topic t){LinearLayout box=box();EditText e=edit("Konu başlığı",t.title);box.addView(e);CheckBox lock=new CheckBox(this);lock.setText("Başlığı kilitle; otomatik değiştirme");lock.setChecked(t.locked);box.addView(lock);new AlertDialog.Builder(this).setTitle("Konu ayarları").setView(box).setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",(d,w)->{String n=e.getText().toString().trim();if(!n.isEmpty())db.renameTopic(t.id,n,lock.isChecked());showTopics();}).show();}
 
-        list = new ListView(this); list.setDividerHeight(dp(6));
-        root.addView(list, new LinearLayout.LayoutParams(-1,0,1));
+    private void showDaySummary(String key){Db.DayStats s=db.getDayStats(key);String msg="Tamamlanan görev: "+s.done+"\nAçık görev: "+s.open+"\nNot: "+s.notes+"\nErtelenen: "+s.postponed;if(s.open==0&&s.done>0)msg+="\n\nBugünün planı tamamlanmış görünüyor.";else if(s.postponed>=3)msg+="\n\nBu gün birkaç kez erteleme yapılmış. Süre tahminlerini biraz büyütmek faydalı olabilir.";new AlertDialog.Builder(this).setTitle("Gün özeti • "+key).setMessage(msg).setPositiveButton("Tamam",null).show();}
+    private void smartPlan(){LocalDate target=LocalDate.now();List<Db.Item> backlog=db.getOpenTasksUpTo(target.toString());List<SmartPlanner.Plan> plan=SmartPlanner.propose(backlog,target);if(plan.isEmpty()){toast("Planlanacak saatsiz veya gecikmiş görev yok");return;}StringBuilder msg=new StringBuilder();int shown=0;for(SmartPlanner.Plan p:plan){if(shown++>=12){msg.append("\n… ve ").append(plan.size()-12).append(" görev daha");break;}LocalDateTime dt=Instant.ofEpochMilli(p.newDueAt).atZone(ZoneId.systemDefault()).toLocalDateTime();msg.append(dt.format(DateTimeFormatter.ofPattern("dd MMM HH:mm",new Locale("tr","TR")))).append("  ").append(p.title).append(" • ").append(p.durationMinutes).append(" dk\n");}new AlertDialog.Builder(this).setTitle("Akıllı plan önerisi").setMessage(msg.toString().trim()).setNegativeButton("Vazgeç",null).setPositiveButton("Uygula",(d,w)->{for(SmartPlanner.Plan p:plan){ReminderScheduler.cancel(this,p.itemId);db.rescheduleItem(p.itemId,p.newDayKey,p.newDueAt);ReminderScheduler.schedule(this,p.itemId,p.newDueAt);}toast("Plan uygulandı");showToday();}).show();}
 
-        add = button("＋ Görev / Not ekle"); add.setTextSize(16); add.setOnClickListener(v -> addChooser());
-        root.addView(add, new LinearLayout.LayoutParams(-1,dp(54)));
-        setContentView(root);
-    }
+    private void voiceChooser(){new AlertDialog.Builder(this).setTitle("Sesle ekle").setItems(new String[]{"Görev olarak","Not olarak"},(d,w)->startVoice(w==0)).show();}
+    private void startVoice(boolean asTask){voiceAsTask=asTask;Intent i=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);i.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"tr-TR");i.putExtra(RecognizerIntent.EXTRA_PROMPT,asTask?"Görevi söyle":"Notunu söyle");try{startActivityForResult(i,VOICE_REQUEST);}catch(ActivityNotFoundException e){toast("Telefonda sesli tanıma servisi bulunamadı");}}
+    @Override protected void onActivityResult(int requestCode,int resultCode,Intent data){super.onActivityResult(requestCode,resultCode,data);if(requestCode!=VOICE_REQUEST||resultCode!=RESULT_OK||data==null)return;ArrayList<String> r=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);if(r==null||r.isEmpty())return;String spoken=r.get(0).trim();if(voiceAsTask)confirmParsedTask(NaturalLanguageParser.parse(spoken,LocalDate.now()));else{String n=TopicEngine.suggestTitle(spoken);long tid=TopicEngine.findOrCreateTopic(db,n,spoken);db.insertItem(Db.TYPE_NOTE,n,spoken,LocalDate.now().toString(),0,tid);TopicEngine.refreshAutoTitle(db,tid);toast("Sesli not kaydedildi");showToday();}}
 
-    private void showToday() {
-        screen = Screen.TODAY; topicId = 0; day = LocalDate.now().format(dayFmt);
-        title.setText("Bugün"); sub.setText(LocalDate.now().format(niceFmt));
-        add.setText("＋ Görev / Not ekle"); add.setOnClickListener(v -> addChooser()); add.setVisibility(View.VISIBLE);
-        loadDay();
-    }
-
-    private void loadDay() {
-        items = db.getItemsForDay(day);
-        List<String> rows = new ArrayList<>();
-        for (Db.Item i : items) {
-            String mark = Db.STATUS_DONE.equals(i.status) ? "✓" : "○";
-            String type = Db.TYPE_NOTE.equals(i.type) ? " 📝" : "";
-            String tm = i.dueAt > 0 ? "  " + Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt) : "";
-            String body = i.body == null || i.body.trim().isEmpty() ? "" : "\n   " + shortText(i.body);
-            rows.add(mark + type + " " + i.title + tm + body);
-        }
-        if (rows.isEmpty()) rows.add("Bu gün için kayıt yok.");
-        setRows(rows);
-        list.setOnItemClickListener((p,v,pos,id) -> { if (pos < items.size()) details(items.get(pos)); });
-        list.setOnItemLongClickListener((p,v,pos,id) -> { if (pos < items.size()) itemActions(items.get(pos)); return true; });
-    }
-
-    private void pickHistory() {
-        LocalDate d;
-        try { d = LocalDate.parse(day); } catch (Exception e) { d = LocalDate.now(); }
-        new DatePickerDialog(this, (v,y,m,dd) -> showHistory(LocalDate.of(y,m+1,dd).format(dayFmt)),
-                d.getYear(), d.getMonthValue()-1, d.getDayOfMonth()).show();
-    }
-
-    private void showHistory(String key) {
-        screen = Screen.HISTORY; day = key; topicId = 0;
-        title.setText("Geçmiş"); sub.setText(LocalDate.parse(key).format(niceFmt) + " • hareket günlüğü");
-        add.setText("＋ Bu güne kayıt ekle"); add.setOnClickListener(v -> addChooser()); add.setVisibility(View.VISIBLE);
-        List<String> rows = new ArrayList<>();
-        for (Db.Event e : db.getEventsForDay(key)) {
-            String tm = Instant.ofEpochMilli(e.createdAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt);
-            rows.add(tm + "  " + eventName(e.eventType) + "\n" + e.titleSnapshot + (e.details == null || e.details.isEmpty() ? "" : "\n" + e.details));
-        }
-        if (rows.isEmpty()) rows.add("Bu tarihte kayıtlı hareket yok.");
-        setRows(rows); list.setOnItemClickListener(null); list.setOnItemLongClickListener(null);
-    }
-
-    private void showTopics() {
-        screen = Screen.TOPICS; topicId = 0;
-        title.setText("Konular"); sub.setText("Benzer notlar otomatik aynı başlık altında toplanır");
-        add.setText("＋ Yeni not ekle"); add.setOnClickListener(v -> noteDialog(null,0)); add.setVisibility(View.VISIBLE);
-        topics = db.getTopics();
-        List<String> rows = new ArrayList<>();
-        for (Db.Topic t : topics) rows.add("📁 " + t.title + (t.locked ? " 🔒" : "") + "\n" + db.countNotesInTopic(t.id) + " not • otomatik " + (t.autoGroup ? "açık" : "kapalı"));
-        if (rows.isEmpty()) rows.add("Henüz konu yok. Bir not ekle.");
-        setRows(rows);
-        list.setOnItemClickListener((p,v,pos,id) -> { if (pos < topics.size()) showTopic(topics.get(pos).id); });
-        list.setOnItemLongClickListener((p,v,pos,id) -> { if (pos < topics.size()) topicActions(topics.get(pos)); return true; });
-    }
-
-    private void showTopic(long id) {
-        Db.Topic t = db.getTopic(id); if (t == null) { showTopics(); return; }
-        screen = Screen.TOPIC; topicId = id; title.setText(t.title); sub.setText("Bu konuya ait tüm notlar");
-        add.setText("＋ Bu konuya not ekle"); add.setOnClickListener(v -> noteDialog(null,id));
-        items = db.getNotesForTopic(id);
-        List<String> rows = new ArrayList<>();
-        for (Db.Item i : items) rows.add("📝 " + i.title + "\n" + i.dayKey + (i.body == null || i.body.isEmpty() ? "" : " • " + shortText(i.body)));
-        if (rows.isEmpty()) rows.add("Bu konuda henüz not yok.");
-        setRows(rows);
-        list.setOnItemClickListener((p,v,pos,x) -> { if (pos < items.size()) details(items.get(pos)); });
-        list.setOnItemLongClickListener((p,v,pos,x) -> { if (pos < items.size()) noteActions(items.get(pos)); return true; });
-    }
-
-    private void addChooser() {
-        new AlertDialog.Builder(this).setTitle("Ne eklemek istiyorsun?")
-                .setItems(new String[]{"Görev","Not"}, (d,w) -> { if (w==0) taskDialog(null); else noteDialog(null,0); }).show();
-    }
-
-    private void taskDialog(Db.Item old) {
-        LinearLayout box = box();
-        EditText name = edit("Görev", old == null ? "" : old.title); box.addView(name);
-        EditText body = edit("Not / açıklama", old == null ? "" : old.body); box.addView(body);
-        EditText date = edit("Tarih: YYYY-MM-DD", old == null ? day : old.dayKey); date.setInputType(InputType.TYPE_CLASS_DATETIME); box.addView(date);
-        String oldTime = old != null && old.dueAt > 0 ? Instant.ofEpochMilli(old.dueAt).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFmt) : "";
-        EditText time = edit("Saat: HH:mm (boş bırakılabilir)", oldTime); time.setInputType(InputType.TYPE_CLASS_DATETIME); box.addView(time);
-        AlertDialog dlg = new AlertDialog.Builder(this).setTitle(old == null ? "Görev ekle" : "Görevi düzenle").setView(box)
-                .setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",null).create();
-        dlg.setOnShowListener(x -> dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String n=name.getText().toString().trim(), b=body.getText().toString().trim(), dk=date.getText().toString().trim(), ts=time.getText().toString().trim();
-            if (n.isEmpty()) { toast("Görev adı yaz"); return; }
-            long due=0;
-            try { LocalDate d=LocalDate.parse(dk); if (!ts.isEmpty()) due=LocalDateTime.of(d, LocalTime.parse(ts,timeFmt)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(); }
-            catch(Exception e){ toast("Tarih veya saat hatalı"); return; }
-            if (old == null) { long id=db.insertItem(Db.TYPE_TASK,n,b,dk,due,0); if (due>0) ReminderScheduler.schedule(this,id,due); }
-            else { ReminderScheduler.cancel(this,old.id); db.updateItem(old.id,n,b,dk,due); if (due>0 && Db.STATUS_OPEN.equals(old.status)) ReminderScheduler.schedule(this,old.id,due); }
-            dlg.dismiss(); refresh();
-        })); dlg.show();
-    }
-
-    private void noteDialog(Db.Item old, long forcedTopic) {
-        LinearLayout box=box();
-        EditText name=edit("Not başlığı", old==null?"":old.title); box.addView(name);
-        EditText body=edit("Not", old==null?"":old.body); box.addView(body);
-        AlertDialog dlg=new AlertDialog.Builder(this).setTitle(old==null?"Not ekle":"Notu düzenle").setView(box)
-                .setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",null).create();
-        dlg.setOnShowListener(x -> dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String n=name.getText().toString().trim(), b=body.getText().toString().trim();
-            if (n.isEmpty() && b.isEmpty()) { toast("Bir şey yaz"); return; }
-            if (n.isEmpty()) n="Not";
-            if (old==null) {
-                long tid=forcedTopic>0?forcedTopic:TopicEngine.findOrCreateTopic(db,n,b);
-                db.insertItem(Db.TYPE_NOTE,n,b,day,0,tid); TopicEngine.refreshAutoTitle(db,tid);
-            } else { db.updateItem(old.id,n,b,old.dayKey,0); if(old.topicId>0) TopicEngine.refreshAutoTitle(db,old.topicId); }
-            dlg.dismiss(); refresh();
-        })); dlg.show();
-    }
-
-    private void details(Db.Item i) {
-        String msg=(i.body==null||i.body.isEmpty()?"Açıklama yok":i.body)+"\n\nTarih: "+i.dayKey;
-        if(i.topicId>0){Db.Topic t=db.getTopic(i.topicId); if(t!=null) msg+="\nKonu: "+t.title;}
-        new AlertDialog.Builder(this).setTitle(i.title).setMessage(msg).setPositiveButton("Tamam",null).show();
-    }
-
-    private void itemActions(Db.Item i) {
-        if (Db.TYPE_NOTE.equals(i.type)) { noteActions(i); return; }
-        String first=Db.STATUS_DONE.equals(i.status)?"Tekrar aç":"Tamamla";
-        String[] a={first,"Yarına ertele","Düzenle","Sil"};
-        new AlertDialog.Builder(this).setTitle(i.title).setItems(a,(d,w)->{
-            if(w==0){ if(Db.STATUS_DONE.equals(i.status)) db.reopenItem(i.id); else {db.completeItem(i.id); ReminderScheduler.cancel(this,i.id);} }
-            else if(w==1){ LocalDate nd=LocalDate.parse(i.dayKey).plusDays(1); long due=0; if(i.dueAt>0){LocalTime tm=Instant.ofEpochMilli(i.dueAt).atZone(ZoneId.systemDefault()).toLocalTime(); due=LocalDateTime.of(nd,tm).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();} ReminderScheduler.cancel(this,i.id); db.postponeItem(i.id,nd.format(dayFmt),due); if(due>0) ReminderScheduler.schedule(this,i.id,due); }
-            else if(w==2){ taskDialog(i); return; }
-            else { ReminderScheduler.cancel(this,i.id); db.deleteItem(i.id); }
-            refresh();
-        }).show();
-    }
-
-    private void noteActions(Db.Item i) {
-        String[] a={"Düzenle","Başka konuya taşı","Bu notu ayrı konu yap","Sil"};
-        new AlertDialog.Builder(this).setTitle(i.title).setItems(a,(d,w)->{
-            if(w==0){noteDialog(i,i.topicId);return;}
-            if(w==1){moveNote(i);return;}
-            if(w==2){long t=db.createTopic(TopicEngine.suggestTitle(i.title+" "+i.body)); db.moveNoteToTopic(i.id,t);}
-            if(w==3)db.deleteItem(i.id); refresh();
-        }).show();
-    }
-
-    private void moveNote(Db.Item i) {
-        List<Db.Topic> all=db.getTopics(); if(all.isEmpty()){toast("Başka konu yok");return;}
-        String[] names=new String[all.size()]; for(int x=0;x<all.size();x++)names[x]=all.get(x).title;
-        new AlertDialog.Builder(this).setTitle("Konu seç").setItems(names,(d,w)->{db.moveNoteToTopic(i.id,all.get(w).id); TopicEngine.refreshAutoTitle(db,all.get(w).id); refresh();}).show();
-    }
-
-    private void topicActions(Db.Topic t) {
-        String[] a={"Başlığı değiştir / kilitle","Otomatik gruplamayı "+(t.autoGroup?"kapat":"aç")};
-        new AlertDialog.Builder(this).setTitle(t.title).setItems(a,(d,w)->{if(w==0)renameTopic(t);else{db.setTopicAutoGroup(t.id,!t.autoGroup);showTopics();}}).show();
-    }
-
-    private void renameTopic(Db.Topic t) {
-        LinearLayout box=box(); EditText e=edit("Konu başlığı",t.title); box.addView(e);
-        CheckBox lock=new CheckBox(this); lock.setText("Başlığı kilitle; otomatik değiştirme"); lock.setChecked(t.locked); box.addView(lock);
-        new AlertDialog.Builder(this).setTitle("Konu ayarları").setView(box).setNegativeButton("Vazgeç",null).setPositiveButton("Kaydet",(d,w)->{String n=e.getText().toString().trim();if(!n.isEmpty())db.renameTopic(t.id,n,lock.isChecked());showTopics();}).show();
-    }
-
-    private void refresh(){ if(screen==Screen.TODAY)showToday(); else if(screen==Screen.HISTORY)showHistory(day); else if(screen==Screen.TOPICS)showTopics(); else showTopic(topicId); }
-    private String eventName(String e){ if("CREATED".equals(e))return"＋ Oluşturuldu"; if("NOTE_CREATED".equals(e))return"📝 Not alındı"; if("COMPLETED".equals(e))return"✓ Tamamlandı"; if("POSTPONED".equals(e))return"→ Ertelendi"; if("MOVED_IN".equals(e))return"← Taşındı"; if("EDITED".equals(e))return"✎ Düzenlendi"; if("DELETED".equals(e))return"⌫ Silindi"; return e; }
-    private void setRows(List<String> rows){ ArrayAdapter<String> ad=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,rows){@Override public View getView(int p,View c,ViewGroup g){TextView t=(TextView)super.getView(p,c,g);t.setTextSize(16);t.setPadding(dp(12),dp(12),dp(12),dp(12));t.setBackgroundColor(Color.WHITE);return t;}};list.setAdapter(ad); }
-    private Button button(String s){Button b=new Button(this);b.setText(s);b.setAllCaps(false);return b;}
-    private LinearLayout.LayoutParams weight(){return new LinearLayout.LayoutParams(0,-1,1);}
-    private LinearLayout box(){LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.setPadding(dp(18),dp(8),dp(18),dp(8));return b;}
-    private EditText edit(String hint,String value){EditText e=new EditText(this);e.setHint(hint);e.setText(value==null?"":value);e.setTextSize(16);e.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);return e;}
-    private String shortText(String s){String x=s.replace('\n',' ').trim();return x.length()>80?x.substring(0,79)+"…":x;}
-    private int dp(int x){return(int)(x*getResources().getDisplayMetrics().density+0.5f);}
-    private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
-    private void askNotificationPermission(){if(Build.VERSION.SDK_INT>=33&&checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},901);}
+    private void scheduleIfNeeded(long itemId){if(itemId<=0)return;Db.Item n=db.getItem(itemId);if(n!=null&&n.dueAt>System.currentTimeMillis())ReminderScheduler.schedule(this,n.id,n.dueAt);}
+    private void refresh(){if(screen==Screen.TODAY)showToday();else if(screen==Screen.HISTORY)showHistory(day);else if(screen==Screen.TOPICS)showTopics();else if(screen==Screen.TOPIC)showTopic(topicId);else renderSearch(lastSearch);}
+    private String eventName(String e){if("CREATED".equals(e))return"＋ Oluşturuldu";if("NOTE_CREATED".equals(e))return"📝 Not alındı";if("COMPLETED".equals(e))return"✓ Tamamlandı";if("POSTPONED".equals(e))return"→ Ertelendi";if("MOVED_IN".equals(e))return"← Taşındı";if("EDITED".equals(e))return"✎ Düzenlendi";if("DELETED".equals(e))return"⌫ Silindi";if("REOPENED".equals(e))return"↺ Tekrar açıldı";if("RECUR_CREATED".equals(e))return"↻ Tekrar oluşturuldu";if("SCHEDULED".equals(e))return"◷ Planlandı";if("TOPIC_MOVED".equals(e))return"📁 Konu değişti";return e;}
+    private void setRows(List<String> rows){ArrayAdapter<String> ad=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,rows){@Override public View getView(int p,View c,ViewGroup g){TextView t=(TextView)super.getView(p,c,g);t.setTextSize(16);t.setPadding(dp(12),dp(12),dp(12),dp(12));t.setBackgroundColor(Color.WHITE);return t;}};list.setAdapter(ad);}
+    private int recurrenceIndex(String rule){if(NaturalLanguageParser.DAILY.equals(rule))return 1;if(NaturalLanguageParser.WEEKDAYS.equals(rule))return 2;if(NaturalLanguageParser.WEEKLY.equals(rule))return 3;if(NaturalLanguageParser.MONTHLY.equals(rule))return 4;return 0;}
+    private String recurrenceRule(int i){if(i==1)return NaturalLanguageParser.DAILY;if(i==2)return NaturalLanguageParser.WEEKDAYS;if(i==3)return NaturalLanguageParser.WEEKLY;if(i==4)return NaturalLanguageParser.MONTHLY;return"";}
+    private String priorityLabel(int p){return p==0?"Acil":p==1?"Önemli":"Normal";} private String priorityIcon(int p){return p==0?"‼ ":p==1?"! ":"";}
+    private LocalDate safeDay(){try{return LocalDate.parse(day);}catch(Exception e){return LocalDate.now();}} private int safeInt(String s,int fallback){try{return s==null||s.trim().isEmpty()?fallback:Integer.parseInt(s.trim());}catch(Exception e){return fallback;}}
+    private Button button(String s){Button b=new Button(this);b.setText(s);b.setAllCaps(false);return b;} private LinearLayout.LayoutParams weight(){return new LinearLayout.LayoutParams(0,-1,1);} private LinearLayout box(){LinearLayout b=new LinearLayout(this);b.setOrientation(LinearLayout.VERTICAL);b.setPadding(dp(18),dp(8),dp(18),dp(8));return b;} private EditText edit(String hint,String value){EditText e=new EditText(this);e.setHint(hint);e.setText(value==null?"":value);e.setTextSize(16);e.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);return e;} private String shortText(String s){String x=s.replace('\n',' ').trim();return x.length()>90?x.substring(0,89)+"…":x;} private int dp(int x){return(int)(x*getResources().getDisplayMetrics().density+0.5f);} private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();} private void askNotificationPermission(){if(Build.VERSION.SDK_INT>=33&&checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},901);}
 }

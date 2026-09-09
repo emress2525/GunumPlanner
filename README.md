@@ -1,36 +1,36 @@
 # Günüm Planner
 
-Android için yerel/çevrimdışı günlük planlama, görev, geçmiş ve konu bazlı not uygulamasının ilk çalışan sürümü.
+Android için çevrimdışı çalışan günlük planlama, görev, geçmiş ve konu bazlı not uygulaması.
 
-## v0.1 özellikleri
+## v0.2
 
-- Bugünün görev ve notları
-- Saatli görev hatırlatmaları
-- Bildirimden **Tamamla** ve **10 dk ertele**
-- Telefon yeniden başlatılınca gelecekteki hatırlatmaları yeniden kurma
-- Görevi yarına erteleme
-- Geçmiş günlerdeki hareketleri silinmeden saklama
-- Eski güne dönüp oluşturma / tamamlama / erteleme / silme hareketlerini görme
-- Farklı günlerde yazılan benzer notları otomatik konu altında toplama
-- Otomatik konu başlığı önerme ve zamanla başlığı iyileştirme
-- Konu başlığını elle değiştirme ve kilitleme
-- Otomatik gruplamayı konu bazında açıp kapatma
-- Notu başka konuya taşıma
-- Notu mevcut konudan ayırıp yeni konu yapma
-- Konuları birleştirme
-- Bir konuya girip farklı tarihlerdeki bütün notları birlikte görme
-- SQLite ile tamamen cihaz üzerinde veri saklama
+- Geçmiş günlerin hareket günlüğünü korur.
+- Farklı günlerdeki benzer notları otomatik konu altında toplar.
+- Konu başlığını otomatik iyileştirir; başlık kilitlenebilir ve elle değiştirilebilir.
+- Notlar ve ilgili görevler aynı konu hafızasında gösterilebilir.
+- Benzer konu dosyalarını bulur ve kullanıcı onayıyla birleştirir.
+- Türkçe doğal dil ile hızlı görev: `Yarın 14:30 Mehmet'i ara 30 dk her hafta`.
+- `bugün`, `yarın`, `öbür gün`, hafta günleri, `dd.MM`, saat, süre, öncelik ve tekrar ifadelerini algılar.
+- Sesle görev ve sesli not ekleme (telefondaki konuşma tanıma servisini kullanır).
+- Tekrarlanan görevler: her gün, hafta içi, her hafta, her ay.
+- Tekrarlanan görev tamamlanınca sıradaki görev otomatik oluşturulur ve hatırlatması kurulur.
+- Görev süresi ve öncelik kaydı.
+- Arama: eski görev ve notların başlık/içeriğinde arama.
+- Gün özeti: açık, tamamlanan, not ve erteleme sayıları.
+- Akıllı plan önerisi: gecikmiş/saatsiz işleri süre ve önceliğe göre boş saatlere dizer; kullanıcı onayı olmadan değişiklik yapmaz.
+- Bildirimden tamamla ve 10 dakika ertele.
+- Telefon yeniden başlatılınca gelecek hatırlatmaları yeniden kurar.
+- SQLite ile veriler cihazda tutulur; mevcut v0.1 verileri v0.2'ye otomatik taşınır.
 
-## APK oluşturma
+## APK
 
-Repository GitHub'a yüklendiğinde **Actions > Build Android APK** workflow'u otomatik çalışır.
+Her `main` güncellemesinde GitHub Actions otomatik debug APK üretir:
 
-Başarılı çalışmanın altında **Artifacts > GunumPlanner-debug-apk** dosyasını indir. ZIP'in içindeki `app-debug.apk` telefona kurulabilir.
+**Actions → Build Android APK → Artifacts → GunumPlanner-debug-apk**
 
-## Teknik yapı
+## Teknik
 
 - Java 17
 - Android SDK 35
 - minSdk 26
-- Harici Android kütüphanesi yok; ilk sürüm mümkün olduğunca sade tutuldu.
-- Veriler `SQLiteOpenHelper` ile yerel veritabanında tutulur.
+- Harici Android kütüphanesi yok
