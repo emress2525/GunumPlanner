@@ -12,5 +12,7 @@ public class BootReceiver extends BroadcastReceiver {
         for (Db.Item item : db.getOpenReminderItems()) {
             ReminderScheduler.schedule(context, item.id, item.dueAt);
         }
+        ExtrasRepository.INSTANCE.ensureSchema(db);
+        LocationReminderManager.INSTANCE.rescheduleAll(context);
     }
 }
