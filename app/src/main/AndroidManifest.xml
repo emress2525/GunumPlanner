@@ -51,9 +51,15 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <service
+            android:name=".GunumWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
         <receiver android:name=".ReminderReceiver" android:exported="false" />
         <receiver android:name=".NotificationActionReceiver" android:exported="false" />
         <receiver android:name=".GeofenceReceiver" android:exported="false" />
+        <receiver android:name=".WidgetItemActionReceiver" android:exported="false" />
         <receiver android:name=".GunumWidgetProvider" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
