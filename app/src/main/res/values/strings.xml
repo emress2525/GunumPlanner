@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Günüm</string>
+    <string name="widget_description">Bugünkü açık görevleri ve sıradaki işi gösterir</string>
 </resources>
