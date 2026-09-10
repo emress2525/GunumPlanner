@@ -25,6 +25,7 @@
         </activity>
 
         <activity android:name=".TaskExtrasActivity" android:exported="false" />
+        <activity android:name=".RichTaskActivity" android:exported="false" />
         <activity android:name=".PremiumMainActivity" android:exported="false" />
         <activity android:name=".ModernMainActivity" android:exported="false" />
         <activity android:name=".MainActivity" android:exported="false" />
