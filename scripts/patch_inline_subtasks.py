@@ -31,7 +31,7 @@ private fun V2TaskWithSubtasks(
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val db = remember(context) { Db(context) }
     var localRevision by remember(item.id) { mutableIntStateOf(0) }
-    var expanded by rememberSaveable(item.id) { mutableStateOf(false) }
+    var expanded by remember(item.id) { mutableStateOf(false) }
 
     DisposableEffect(lifecycleOwner, item.id) {
         val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
@@ -63,7 +63,7 @@ private fun V2TaskWithSubtasks(
                 onClick = { expanded = !expanded },
                 shape = RoundedCornerShape(16.dp),
                 color = if (allDone)
-                    Color(0xFF173D2E).copy(alpha = if (MaterialTheme.colorScheme.background.luminance() < .5f) .72f else .12f)
+                    MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = .72f)
                 else MaterialTheme.colorScheme.primaryContainer.copy(alpha = .62f),
                 modifier = Modifier.fillMaxWidth().padding(start = 44.dp)
             ) {
@@ -75,7 +75,7 @@ private fun V2TaskWithSubtasks(
                         if (allDone) Icons.Rounded.TaskAlt else Icons.Rounded.Checklist,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = if (allDone) Color(0xFF43A875) else MaterialTheme.colorScheme.primary
+                        tint = if (allDone) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
@@ -89,7 +89,7 @@ private fun V2TaskWithSubtasks(
                         Text(
                             "Tamamlandı",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFF43A875),
+                            color = MaterialTheme.colorScheme.tertiary,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.width(6.dp))
