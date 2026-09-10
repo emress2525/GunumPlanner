@@ -118,3 +118,9 @@ if old_complete in a and 'LocationReminderManager.cancel(activity, item.id)' not
     a = a.replace(old_complete, new_complete, 1)
 
 p2.write_text(a, encoding='utf-8')
+
+# Keep icon usage compatible with the Material Icons version pinned by this project.
+p3 = Path('app/src/main/java/com/emre/gunumplanner/TaskExtrasActivity.kt')
+x = p3.read_text(encoding='utf-8')
+x = x.replace('Icons.Rounded.DeleteLocation', 'Icons.Rounded.DeleteOutline')
+p3.write_text(x, encoding='utf-8')
