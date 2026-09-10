@@ -28,32 +28,38 @@ public class ReminderReceiver extends BroadcastReceiver {
             nm.createNotificationChannel(ch);
         }
 
-        Intent open = new Intent(context, MainActivity.class);
+        Intent open = new Intent(context, PremiumV2Activity.class);
         PendingIntent openPi = PendingIntent.getActivity(context, 100000 + (int) itemId, open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        Intent done = new Intent(context, NotificationActionReceiver.class).setAction("COMPLETE");
-        done.putExtra("itemId", itemId);
-        PendingIntent donePi = PendingIntent.getBroadcast(context, 200000 + (int) itemId, done,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent donePi = action(context, itemId, "COMPLETE", 200000);
+        PendingIntent snooze10Pi = action(context, itemId, "SNOOZE_10", 300000);
+        PendingIntent snooze60Pi = action(context, itemId, "SNOOZE_60", 400000);
+        PendingIntent tomorrowPi = action(context, itemId, "TOMORROW", 500000);
 
-        Intent snooze = new Intent(context, NotificationActionReceiver.class).setAction("SNOOZE");
-        snooze.putExtra("itemId", itemId);
-        PendingIntent snoozePi = PendingIntent.getBroadcast(context, 300000 + (int) itemId, snooze,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
+        String extra = item.durationMinutes > 0 ? " • " + item.durationMinutes + " dk" : "";
         Notification.Builder b = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
                 ? new Notification.Builder(context, CHANNEL_ID)
                 : new Notification.Builder(context);
         b.setSmallIcon(android.R.drawable.ic_popup_reminder)
-                .setContentTitle("Günüm")
-                .setContentText(item.title)
+                .setContentTitle(item.title)
+                .setContentText("Günüm" + extra)
+                .setStyle(new Notification.BigTextStyle().bigText((item.body == null || item.body.isEmpty() ? "Görev zamanı geldi" : item.body) + extra))
                 .setAutoCancel(true)
                 .setContentIntent(openPi)
                 .setCategory(Notification.CATEGORY_REMINDER)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .addAction(new Notification.Action.Builder(android.R.drawable.checkbox_on_background, "Tamamla", donePi).build())
-                .addAction(new Notification.Action.Builder(android.R.drawable.ic_media_ff, "10 dk ertele", snoozePi).build());
+                .addAction(new Notification.Action.Builder(android.R.drawable.ic_lock_idle_alarm, "10 dk", snooze10Pi).build())
+                .addAction(new Notification.Action.Builder(android.R.drawable.ic_lock_idle_alarm, "1 saat", snooze60Pi).build())
+                .addAction(new Notification.Action.Builder(android.R.drawable.ic_media_next, "Yarın", tomorrowPi).build());
         nm.notify((int) (itemId & 0x7fffffff), b.build());
+    }
+
+    private PendingIntent action(Context context, long itemId, String action, int base) {
+        Intent i = new Intent(context, NotificationActionReceiver.class).setAction(action);
+        i.putExtra("itemId", itemId);
+        return PendingIntent.getBroadcast(context, base + (int) itemId, i,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 }
