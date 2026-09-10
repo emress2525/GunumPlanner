@@ -15,6 +15,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         if ("COMPLETE".equals(action)) {
             long nextId = db.completeItem(itemId);
             ReminderScheduler.cancel(context, itemId);
+            LocationReminderManager.INSTANCE.cancel(context, itemId);
             if (nextId > 0) {
                 Db.Item next = db.getItem(nextId);
                 if (next != null && next.dueAt > System.currentTimeMillis()) {
