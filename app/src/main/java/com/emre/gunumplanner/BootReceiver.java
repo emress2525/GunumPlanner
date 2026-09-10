@@ -9,10 +9,11 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) return;
         Db db = new Db(context);
+        FullRepository.INSTANCE.ensureSchema(db);
         for (Db.Item item : db.getOpenReminderItems()) {
             ReminderScheduler.schedule(context, item.id, item.dueAt);
         }
-        ExtrasRepository.INSTANCE.ensureSchema(db);
         LocationReminderManager.INSTANCE.rescheduleAll(context);
+        GunumWidgetProvider.Companion.refreshAll(context);
     }
 }
