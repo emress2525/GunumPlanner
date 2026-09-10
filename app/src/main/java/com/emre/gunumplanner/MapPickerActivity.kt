@@ -61,10 +61,7 @@ class MapPickerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         Configuration.getInstance().userAgentValue = packageName
-        Configuration.getInstance().load(
-            this,
-            getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
-        )
+        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
 
         val db = Db(this)
         FullRepository.ensureSchema(db)
@@ -95,6 +92,27 @@ class MapPickerActivity : ComponentActivity() {
                 var radiusCircle by remember { mutableStateOf<Polygon?>(null) }
                 val savedPlaces = remember { FullRepository.savedPlaces(db) }
 
+                fun reverseGeocode(lat: Double, lng: Double) {
+                    Thread {
+                        val resolved = runCatching {
+                            @Suppress("DEPRECATION")
+                            Geocoder(this@MapPickerActivity, Locale("tr", "TR"))
+                                .getFromLocation(lat, lng, 1)
+                                ?.firstOrNull()
+                                ?.getAddressLine(0)
+                                .orEmpty()
+                        }.getOrDefault("")
+                        runOnUiThread {
+                            if (resolved.isNotBlank()) {
+                                selectedAddress = resolved
+                                selectedLabel = resolved.substringBefore(',').trim()
+                                query = resolved
+                            }
+                            status = "Konum seçildi • pini sürükleyerek ince ayar yapabilirsin"
+                        }
+                    }.start()
+                }
+
                 fun drawSelection(centerCamera: Boolean = false) {
                     val map = mapView ?: return
                     val la = selectedLat ?: return
@@ -109,8 +127,7 @@ class MapPickerActivity : ComponentActivity() {
                             override fun onMarkerDragStart(marker: Marker) = Unit
 
                             override fun onMarkerDrag(marker: Marker) {
-                                val circle = radiusCircle
-                                if (circle != null) {
+                                radiusCircle?.let { circle ->
                                     circle.setPoints(Polygon.pointsAsCircle(marker.position, radius.toDouble()))
                                     map.invalidate()
                                 }
@@ -120,10 +137,7 @@ class MapPickerActivity : ComponentActivity() {
                                 val p = marker.position
                                 selectedLat = p.latitude
                                 selectedLng = p.longitude
-                                val circle = radiusCircle
-                                if (circle != null) {
-                                    circle.setPoints(Polygon.pointsAsCircle(p, radius.toDouble()))
-                                }
+                                radiusCircle?.setPoints(Polygon.pointsAsCircle(p, radius.toDouble()))
                                 map.invalidate()
                                 reverseGeocode(p.latitude, p.longitude)
                             }
@@ -158,27 +172,6 @@ class MapPickerActivity : ComponentActivity() {
                     }
                     if (label.isNotBlank()) selectedLabel = label
                     drawSelection(centerCamera = true)
-                }
-
-                fun reverseGeocode(lat: Double, lng: Double) {
-                    Thread {
-                        val resolved = runCatching {
-                            @Suppress("DEPRECATION")
-                            Geocoder(this@MapPickerActivity, Locale("tr", "TR"))
-                                .getFromLocation(lat, lng, 1)
-                                ?.firstOrNull()
-                                ?.getAddressLine(0)
-                                .orEmpty()
-                        }.getOrDefault("")
-                        runOnUiThread {
-                            if (resolved.isNotBlank()) {
-                                selectedAddress = resolved
-                                selectedLabel = resolved.substringBefore(',').trim()
-                                query = resolved
-                            }
-                            status = "Konum seçildi • pini sürükleyerek ince ayar yapabilirsin"
-                        }
-                    }.start()
                 }
 
                 fun choose(hit: SearchHit) {
@@ -249,17 +242,13 @@ class MapPickerActivity : ComponentActivity() {
                                             selected = radius == m,
                                             onClick = {
                                                 radius = m
-                                                drawSelection(centerCamera = false)
+                                                drawSelection(false)
                                             },
                                             label = { Text(if (m >= 1000) "1 km" else "${m.toInt()} m") }
                                         )
                                     }
                                 }
-                                Text(
-                                    status,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Button(
                                     onClick = {
                                         val la = selectedLat ?: return@Button
@@ -287,10 +276,7 @@ class MapPickerActivity : ComponentActivity() {
                         }
                     }
                 ) { padding ->
-                    Column(
-                        Modifier.fillMaxSize().padding(padding),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    Column(Modifier.fillMaxSize().padding(padding), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Row(
                             Modifier.fillMaxWidth().padding(horizontal = 12.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -360,11 +346,11 @@ class MapPickerActivity : ComponentActivity() {
                                     controller.setZoom(if (hasCoord) 16.5 else 6.0)
                                     controller.setCenter(GeoPoint(startLat, startLng))
 
-                                    val events = MapEventsOverlay(object : MapEventsReceiver {
+                                    overlays.add(MapEventsOverlay(object : MapEventsReceiver {
                                         override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
                                             selectedLat = p.latitude
                                             selectedLng = p.longitude
-                                            drawSelection(centerCamera = false)
+                                            drawSelection(false)
                                             reverseGeocode(p.latitude, p.longitude)
                                             return true
                                         }
@@ -372,23 +358,20 @@ class MapPickerActivity : ComponentActivity() {
                                         override fun longPressHelper(p: GeoPoint): Boolean {
                                             selectedLat = p.latitude
                                             selectedLng = p.longitude
-                                            drawSelection(centerCamera = false)
+                                            drawSelection(false)
                                             reverseGeocode(p.latitude, p.longitude)
                                             return true
                                         }
-                                    })
-                                    overlays.add(events)
+                                    }))
                                     mapView = this
                                     nativeMap = this
-                                    if (hasCoord) drawSelection(centerCamera = false)
+                                    if (hasCoord) drawSelection(false)
                                 }
                             },
                             update = { map ->
                                 mapView = map
                                 nativeMap = map
-                                if (selectedLat != null && selectedLng != null) {
-                                    drawSelection(centerCamera = false)
-                                }
+                                if (selectedLat != null && selectedLng != null) drawSelection(false)
                             }
                         )
                     }
