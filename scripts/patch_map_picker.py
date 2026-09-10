@@ -6,8 +6,11 @@ s = p.read_text(encoding='utf-8')
 if 'import android.app.Activity' not in s:
     s = s.replace('package com.emre.gunumplanner\n\n', 'package com.emre.gunumplanner\n\nimport android.app.Activity\n')
 
-anchor = '''    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok ->\n'''
-launcher = '''    val mapPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+# The launcher must be declared after the location state variables so its result callback can update them.
+anchor = '''    var locating by remember { mutableStateOf(false) }\n'''
+launcher = '''    var locating by remember { mutableStateOf(false) }
+
+    val mapPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
             val newLat = data?.getDoubleExtra("lat", Double.NaN) ?: Double.NaN
@@ -22,10 +25,9 @@ launcher = '''    val mapPickerLauncher = rememberLauncherForActivityResult(Acti
             }
         }
     }
-
 '''
 if anchor in s and 'val mapPickerLauncher =' not in s:
-    s = s.replace(anchor, launcher + anchor, 1)
+    s = s.replace(anchor, launcher, 1)
 
 old = '''                OutlinedButton(
                     onClick = {
