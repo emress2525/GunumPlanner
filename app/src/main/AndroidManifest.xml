@@ -28,6 +28,15 @@
         <activity android:name=".TaskExtrasActivity" android:exported="false" />
         <activity android:name=".MapPickerActivity" android:exported="false" />
         <activity android:name=".RichTaskActivity" android:exported="false" />
+        <activity android:name=".FullSettingsActivity" android:exported="false" />
+        <activity android:name=".ChecklistActivity" android:exported="false" />
+        <activity android:name=".TrashActivity" android:exported="false" />
+        <activity android:name=".AdvancedSearchActivity" android:exported="false" />
+        <activity android:name=".SavedPlacesActivity" android:exported="false" />
+        <activity android:name=".BackupActivity" android:exported="false" />
+        <activity android:name=".FullOnboardingActivity" android:exported="false" />
+        <activity android:name=".SeriesEditActivity" android:exported="false" />
+        <activity android:name=".SmartPlanReviewActivity" android:exported="false" />
         <activity android:name=".PremiumMainActivity" android:exported="false" />
         <activity android:name=".ModernMainActivity" android:exported="false" />
         <activity android:name=".MainActivity" android:exported="false" />
@@ -45,6 +54,13 @@
         <receiver android:name=".ReminderReceiver" android:exported="false" />
         <receiver android:name=".NotificationActionReceiver" android:exported="false" />
         <receiver android:name=".GeofenceReceiver" android:exported="false" />
+        <receiver android:name=".GunumWidgetProvider" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.emre.gunumplanner.WIDGET_REFRESH" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/gunum_widget_info" />
+        </receiver>
         <receiver android:name=".BootReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
