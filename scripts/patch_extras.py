@@ -1,5 +1,6 @@
 from pathlib import Path
 
+# Inject premium-v3 extras into the already-tested premium-v2 UI without replacing its planner code.
 p = Path('app/src/main/java/com/emre/gunumplanner/PremiumV2Dialogs.kt')
 s = p.read_text(encoding='utf-8')
 
@@ -8,6 +9,39 @@ if 'import android.content.Intent' not in s:
 if 'import androidx.compose.ui.platform.LocalContext' not in s:
     s = s.replace('import androidx.compose.ui.Modifier\n', 'import androidx.compose.ui.Modifier\nimport androidx.compose.ui.platform.LocalContext\n')
 
+# Direct "photo/location task" entry in the add sheet.
+add_head = '''fun V2AddSheet(
+    close: () -> Unit,
+    quick: () -> Unit,
+    task: () -> Unit,
+    note: () -> Unit,
+    voiceTask: () -> Unit,
+    voiceNote: () -> Unit
+) {
+    ModalBottomSheet(onDismissRequest = close) {'''
+add_repl = '''fun V2AddSheet(
+    close: () -> Unit,
+    quick: () -> Unit,
+    task: () -> Unit,
+    note: () -> Unit,
+    voiceTask: () -> Unit,
+    voiceNote: () -> Unit
+) {
+    val addContext = LocalContext.current
+    ModalBottomSheet(onDismissRequest = close) {'''
+if add_head in s and 'val addContext = LocalContext.current' not in s:
+    s = s.replace(add_head, add_repl, 1)
+
+add_line = '            V2AddOption(Icons.Rounded.Today, "Ayrıntılı görev", "Tarih, saat, süre, tekrar ve öncelik", task)\n'
+rich_line = add_line + '''            V2AddOption(Icons.Rounded.AddAPhoto, "Fotoğraflı / konumlu görev", "Kamera, galeri, PDF, dosya ve konum hatırlatması") {
+                addContext.startActivity(Intent(addContext, RichTaskActivity::class.java))
+                close()
+            }
+'''
+if add_line in s and 'Fotoğraflı / konumlu görev' not in s:
+    s = s.replace(add_line, rich_line, 1)
+
+# Existing task/note details: one tap opens all attachments and location options.
 needle = '''    delete: () -> Unit
 ) {
     ModalBottomSheet(onDismissRequest = close) {'''
@@ -45,8 +79,8 @@ if needle2 in s and 'Fotoğraf • Dosya • Konum' not in s:
 
 p.write_text(s, encoding='utf-8')
 
-# Existing debug builds are not reactive to SQLite changes made in a second Activity.
-# Force a safe refresh when returning from the extras screen by refreshing the main Activity.
+# Main activity: refresh SQLite-backed lists when returning from camera/files/settings/rich-task screens,
+# and keep geofences in sync with complete/reopen actions.
 p2 = Path('app/src/main/java/com/emre/gunumplanner/PremiumV2Activity.kt')
 a = p2.read_text(encoding='utf-8')
 if 'private var resumeCount = 0' not in a:
@@ -61,15 +95,26 @@ if 'override fun onResume()' not in a:
 '''
     repl = marker + '''\n    override fun onResume() {
         super.onResume()
-        // The first resume belongs to initial launch. Later resumes may follow camera/files/settings screens.
-        // Recreating makes the SQLite-backed planner immediately reflect new extras without touching task data.
-        if (resumeCount++ > 0 && intent.getBooleanExtra("refresh_on_resume", false)) {
-            intent.removeExtra("refresh_on_resume")
-            recreate()
-        }
+        if (resumeCount++ > 0) recreate()
     }
 '''
     if marker in a:
         a = a.replace(marker, repl, 1)
-# The extras screen does not need to recreate the planner; regular planner refresh happens on next DB action.
+
+old_reopen = '''            db.reopenItem(item.id)
+            scheduleIfFuture(db.getItem(item.id))'''
+new_reopen = '''            db.reopenItem(item.id)
+            ExtrasRepository.getLocation(db, item.id)?.takeIf { it.enabled }?.let { LocationReminderManager.schedule(activity, it) }
+            scheduleIfFuture(db.getItem(item.id))'''
+if old_reopen in a and 'ExtrasRepository.getLocation(db, item.id)?.takeIf' not in a:
+    a = a.replace(old_reopen, new_reopen, 1)
+
+old_complete = '''            ReminderScheduler.cancel(activity, item.id)
+            val nextId = db.completeItem(item.id)'''
+new_complete = '''            ReminderScheduler.cancel(activity, item.id)
+            LocationReminderManager.cancel(activity, item.id)
+            val nextId = db.completeItem(item.id)'''
+if old_complete in a and 'LocationReminderManager.cancel(activity, item.id)' not in a:
+    a = a.replace(old_complete, new_complete, 1)
+
 p2.write_text(a, encoding='utf-8')
