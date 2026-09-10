@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ "main", "premium-v1", "premium-v2" ]
+    branches: [ "main", "premium-v1", "premium-v2", "premium-v3" ]
   workflow_dispatch:
 
 permissions:
@@ -27,12 +27,16 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Integrate premium v3 extras
+        if: github.ref == 'refs/heads/premium-v3'
+        run: python3 scripts/patch_extras.py
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GunumPlanner-premium-v2-apk
+          name: GunumPlanner-premium-v3-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
