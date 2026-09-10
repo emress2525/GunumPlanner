@@ -2,6 +2,7 @@ package com.emre.gunumplanner
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,12 +13,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.AttachFile
-import androidx.compose.material.icons.rounded.CalendarMonth
-import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,7 @@ class RichTaskActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = Db(this)
-        ExtrasRepository.ensureSchema(db)
+        FullRepository.ensureSchema(db)
         setContent { V2Theme { RichTaskScreen(this, db) } }
     }
 
@@ -49,34 +48,48 @@ private fun RichTaskScreen(activity: RichTaskActivity, db: Db) {
     var body by remember { mutableStateOf("") }
     var date by remember { mutableStateOf(LocalDate.now()) }
     var time by remember { mutableStateOf<LocalTime?>(null) }
-    var duration by remember { mutableIntStateOf(30) }
+    var duration by remember { mutableIntStateOf(FullRepository.Prefs.defaultDuration(activity)) }
     var priority by remember { mutableIntStateOf(2) }
     var recurrence by remember { mutableStateOf("") }
+    var placeRevision by remember { mutableIntStateOf(0) }
+    var selectedPlaceId by remember { mutableStateOf<Long?>(null) }
+    val savedPlaces = remember(placeRevision) { FullRepository.savedPlaces(db) }
+    val selectedPlace = savedPlaces.firstOrNull { it.id == selectedPlaceId }
 
     fun save(openExtras: Boolean) {
         if (title.isBlank()) return
-        val due = time?.let {
-            LocalDateTime.of(date, it).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        } ?: 0L
+        val due = time?.let { LocalDateTime.of(date, it).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() } ?: 0L
         val topic = TopicEngine.findMatchingTopic(db, title.trim(), body.trim())
-        val id = db.insertItem(
-            Db.TYPE_TASK, title.trim(), body.trim(), date.toString(), due, topic,
-            recurrence, duration, priority
-        )
+        val id = db.insertItem(Db.TYPE_TASK, title.trim(), body.trim(), date.toString(), due, topic, recurrence, duration, priority)
         if (due > 0) ReminderScheduler.schedule(activity, id, due)
-        if (openExtras) {
-            activity.startActivity(
-                android.content.Intent(activity, TaskExtrasActivity::class.java)
-                    .putExtra("item_id", id)
+        if (recurrence.isNotBlank()) FullRepository.ensureSeries(db, id)
+
+        selectedPlace?.let { p ->
+            val rule = ExtrasRepository.LocationRule(
+                itemId = id,
+                label = p.name,
+                address = p.address,
+                lat = p.lat,
+                lng = p.lng,
+                radius = p.radius,
+                transition = "ENTER",
+                enabled = true,
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis()
             )
+            ExtrasRepository.saveLocation(db, rule)
+            LocationReminderManager.schedule(activity, rule)
         }
+        GunumWidgetProvider.refreshAll(activity)
+
+        if (openExtras) activity.startActivity(Intent(activity, TaskExtrasActivity::class.java).putExtra("item_id", id))
         activity.finish()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Column { Text("Zengin görev", fontWeight = FontWeight.Bold); Text("Fotoğraf • dosya • konum", style = MaterialTheme.typography.bodySmall) } },
+                title = { Column { Text("Zengin görev", fontWeight = FontWeight.Bold); Text("Fotoğraf • dosya • konum • checklist", style = MaterialTheme.typography.bodySmall) } },
                 navigationIcon = { IconButton(onClick = { activity.finish() }) { Icon(Icons.Rounded.ArrowBack, "Geri") } }
             )
         }
@@ -114,38 +127,55 @@ private fun RichTaskScreen(activity: RichTaskActivity, db: Db) {
 
             Text("Tekrar", fontWeight = FontWeight.SemiBold)
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(
-                    listOf(
-                        "" to "Yok",
-                        NaturalLanguageParser.DAILY to "Her gün",
-                        NaturalLanguageParser.WEEKDAYS to "Hafta içi",
-                        NaturalLanguageParser.WEEKLY to "Her hafta",
-                        NaturalLanguageParser.MONTHLY to "Her ay"
-                    )
-                ) { (value, label) -> FilterChip(recurrence == value, { recurrence = value }, { Text(label) }) }
+                items(listOf("" to "Yok", NaturalLanguageParser.DAILY to "Her gün", NaturalLanguageParser.WEEKDAYS to "Hafta içi", NaturalLanguageParser.WEEKLY to "Her hafta", NaturalLanguageParser.MONTHLY to "Her ay")) { (value, label) ->
+                    FilterChip(recurrence == value, { recurrence = value }, { Text(label) })
+                }
+            }
+
+            Text("Konum", fontWeight = FontWeight.SemiBold)
+            if (savedPlaces.isEmpty()) {
+                Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+                    Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Rounded.AddLocationAlt, null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(10.dp))
+                        Column(Modifier.weight(1f)) { Text("Kayıtlı konum yok", fontWeight = FontWeight.SemiBold); Text("Fabrika, Ev veya Ofis'i bir kez kaydet", style = MaterialTheme.typography.bodySmall) }
+                        TextButton(onClick = { activity.startActivity(Intent(activity, SavedPlacesActivity::class.java)); placeRevision++ }) { Text("Ekle") }
+                    }
+                }
+            } else {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    item { FilterChip(selectedPlaceId == null, { selectedPlaceId = null }, { Text("Konum yok") }) }
+                    items(savedPlaces, key = { it.id }) { p ->
+                        FilterChip(
+                            selected = selectedPlaceId == p.id,
+                            onClick = { selectedPlaceId = if (selectedPlaceId == p.id) null else p.id },
+                            label = { Text(p.name) },
+                            leadingIcon = { Icon(Icons.Rounded.Place, null, Modifier.size(17.dp)) }
+                        )
+                    }
+                }
+                TextButton(onClick = { activity.startActivity(Intent(activity, SavedPlacesActivity::class.java)); placeRevision++ }) {
+                    Icon(Icons.Rounded.EditLocationAlt, null, Modifier.size(18.dp)); Spacer(Modifier.width(5.dp)); Text("Kayıtlı konumları yönet")
+                }
+            }
+            selectedPlace?.let { p ->
+                Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.secondaryContainer) {
+                    Column(Modifier.padding(14.dp)) { Text("${p.name} atanacak", fontWeight = FontWeight.Bold); Text("${p.address} • ${if (p.radius >= 1000) "1 km" else "${p.radius.toInt()} m"} • gelince hatırlat", style = MaterialTheme.typography.bodySmall) }
+                }
             }
 
             Card(shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                 Row(Modifier.padding(16.dp)) {
                     Icon(Icons.Rounded.AttachFile, null, tint = MaterialTheme.colorScheme.primary)
                     Spacer(Modifier.width(10.dp))
-                    Text("Kaydedince doğrudan kamera, galeri, PDF/dosya ve konum hatırlatma ekranı açılacak.", color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Text("Kaydedince kamera, galeri, PDF/dosya, checklist ve ayrıntılı konum ekranına geçebilirsin.", color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
             }
 
-            Button(
-                onClick = { save(true) },
-                enabled = title.isNotBlank(),
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(18.dp)
-            ) { Text("Kaydet ve ekleri ekle", fontWeight = FontWeight.Bold) }
-
-            OutlinedButton(
-                onClick = { save(false) },
-                enabled = title.isNotBlank(),
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(18.dp)
-            ) { Text("Sadece görevi kaydet") }
+            Button(onClick = { save(true) }, enabled = title.isNotBlank(), modifier = Modifier.fillMaxWidth().height(56.dp), shape = RoundedCornerShape(18.dp)) {
+                Text("Kaydet ve ayrıntıları ekle", fontWeight = FontWeight.Bold)
+            }
+            OutlinedButton(onClick = { save(false) }, enabled = title.isNotBlank(), modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) { Text("Görevi kaydet") }
         }
     }
 }
