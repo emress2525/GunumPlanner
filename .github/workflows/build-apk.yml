@@ -46,6 +46,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GunumPlanner-premium-v4.4-inline-subtasks-apk
+          name: GunumPlanner-premium-v4.5-scrollable-widget-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
