@@ -29,7 +29,9 @@ jobs:
 
       - name: Integrate premium v3 extras
         if: github.ref == 'refs/heads/premium-v3'
-        run: python3 scripts/patch_extras.py
+        run: |
+          python3 scripts/patch_extras.py
+          python3 scripts/patch_map_picker.py
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
@@ -37,6 +39,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: GunumPlanner-premium-v3-apk
+          name: GunumPlanner-premium-v3-mapfix-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
