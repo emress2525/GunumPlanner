@@ -6,7 +6,6 @@ s = p.read_text(encoding='utf-8')
 if 'import android.app.Activity' not in s:
     s = s.replace('package com.emre.gunumplanner\n\n', 'package com.emre.gunumplanner\n\nimport android.app.Activity\n')
 
-# The launcher must be declared after the location state variables so its result callback can update them.
 anchor = '''    var locating by remember { mutableStateOf(false) }\n'''
 launcher = '''    var locating by remember { mutableStateOf(false) }
 
@@ -18,6 +17,7 @@ launcher = '''    var locating by remember { mutableStateOf(false) }
             if (!newLat.isNaN() && !newLng.isNaN()) {
                 lat = newLat
                 lng = newLng
+                radius = data?.getFloatExtra("radius", radius) ?: radius
                 data?.getStringExtra("address")?.takeIf { it.isNotBlank() }?.let { address = it }
                 data?.getStringExtra("label")?.takeIf { it.isNotBlank() }?.let { label = it }
                 statusText = "Haritadan konum seçildi"
@@ -47,6 +47,7 @@ new = '''                OutlinedButton(
                         val i = Intent(context, MapPickerActivity::class.java)
                             .putExtra("query", address)
                             .putExtra("has_coord", lat != null && lng != null)
+                            .putExtra("radius", radius)
                         lat?.let { i.putExtra("lat", it) }
                         lng?.let { i.putExtra("lng", it) }
                         mapPickerLauncher.launch(i)
