@@ -68,6 +68,13 @@ jobs:
           grep -q "targetSdkVersion:'36'" "$RUNNER_TEMP/jarvis-badging.txt"
           sha256sum "$APK" | tee "$RUNNER_TEMP/jarvis-sha256.txt"
 
+      - name: Enable KVM acceleration
+        run: |
+          if [ -e /dev/kvm ]; then
+            sudo chmod 666 /dev/kvm
+            ls -l /dev/kvm
+          fi
+
       - name: Android 16 runtime smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
