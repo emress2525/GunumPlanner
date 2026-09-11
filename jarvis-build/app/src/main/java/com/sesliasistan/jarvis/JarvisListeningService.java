@@ -1,0 +1,472 @@
+package com.sesliasistan.jarvis;
+
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
+import android.graphics.drawable.Icon;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.provider.AlarmClock;
+import android.provider.Settings;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
+
+import com.sesliasistan.jarvis.core.CommandResult;
+import com.sesliasistan.jarvis.core.CommandRouter;
+import com.sesliasistan.jarvis.core.WakeSession;
+
+import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public final class JarvisListeningService extends Service implements RecognitionListener {
+    public static final String ACTION_START = "com.sesliasistan.jarvis.action.START";
+    public static final String ACTION_STOP = "com.sesliasistan.jarvis.action.STOP";
+    public static final String ACTION_STATUS = "com.sesliasistan.jarvis.action.STATUS";
+    public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_TRANSCRIPT = "transcript";
+    public static final String EXTRA_ACTIVE = "active";
+    public static final String PREFS = "jarvis_state";
+    public static final String KEY_ACTIVE = "active";
+
+    private static final String CHANNEL_ID = "jarvis_listening";
+    private static final int NOTIFICATION_ID = 1701;
+    private static final long COMMAND_WINDOW_MS = 8000L;
+    private static final String UTTERANCE_ID = "jarvis_reply";
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final WakeSession wakeSession = new WakeSession(COMMAND_WINDOW_MS);
+    private final Map<String, String> knownPackages = new HashMap<>();
+
+    private SpeechRecognizer recognizer;
+    private Intent recognizerIntent;
+    private TextToSpeech tts;
+    private boolean ttsReady;
+    private boolean active;
+    private boolean listening;
+    private boolean pausedForTts;
+    private boolean destroyed;
+    private int consecutiveErrors;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initKnownPackages();
+        createNotificationChannel();
+        initTextToSpeech();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent == null ? ACTION_START : intent.getAction();
+        if (ACTION_STOP.equals(action)) {
+            stopAssistant();
+            return START_NOT_STICKY;
+        }
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            setRequested(false);
+            broadcast("Mikrofon izni gerekli", null, false);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+        try {
+            startForeground(NOTIFICATION_ID, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
+        } catch (RuntimeException error) {
+            setRequested(false);
+            broadcast("Mikrofon servisi başlatılamadı", null, false);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+
+        active = true;
+        destroyed = false;
+        setRequested(true);
+        ensureRecognizer();
+        if (!active) return START_NOT_STICKY;
+        broadcast("Jarvis demeni bekliyorum", null, true);
+        scheduleRecognition(250L);
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        destroyed = true;
+        active = false;
+        listening = false;
+        handler.removeCallbacksAndMessages(null);
+        if (recognizer != null) {
+            try { recognizer.cancel(); recognizer.destroy(); } catch (RuntimeException ignored) { }
+            recognizer = null;
+        }
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            tts = null;
+        }
+        broadcast("Asistan durdu", null, false);
+        super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void setRequested(boolean value) {
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(KEY_ACTIVE, value).apply();
+    }
+
+    private void stopAssistant() {
+        setRequested(false);
+        active = false;
+        destroyed = true;
+        handler.removeCallbacksAndMessages(null);
+        broadcast("Asistan kapalı", null, false);
+        stopForeground(STOP_FOREGROUND_REMOVE);
+        stopSelf();
+    }
+
+    private void ensureRecognizer() {
+        if (recognizer != null) return;
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            setRequested(false);
+            active = false;
+            broadcast("Bu telefonda konuşma tanıma servisi bulunamadı", null, false);
+            stopSelf();
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= 31 && SpeechRecognizer.isOnDeviceRecognitionAvailable(this)) {
+            recognizer = SpeechRecognizer.createOnDeviceSpeechRecognizer(this);
+        } else {
+            recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        }
+        recognizer.setRecognitionListener(this);
+        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR");
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "tr-TR");
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
+    }
+
+    private final Runnable startRecognitionRunnable = () -> {
+        if (!active || destroyed || pausedForTts || listening) return;
+        if (recognizer == null) {
+            ensureRecognizer();
+            if (recognizer == null) return;
+        }
+        try {
+            listening = true;
+            recognizer.startListening(recognizerIntent);
+        } catch (SecurityException error) {
+            listening = false;
+            setRequested(false);
+            broadcast("Mikrofon izni kayboldu", null, false);
+            stopSelf();
+        } catch (RuntimeException error) {
+            listening = false;
+            consecutiveErrors++;
+            scheduleRecognition(retryDelay(consecutiveErrors));
+        }
+    };
+
+    private void scheduleRecognition(long delayMs) {
+        handler.removeCallbacks(startRecognitionRunnable);
+        if (!active || destroyed || pausedForTts) return;
+        handler.postDelayed(startRecognitionRunnable, delayMs);
+    }
+
+    private long retryDelay(int failures) {
+        return Math.min(3500L, 350L * Math.max(1, failures));
+    }
+
+    private void initTextToSpeech() {
+        tts = new TextToSpeech(this, status -> {
+            if (status != TextToSpeech.SUCCESS || tts == null) {
+                ttsReady = false;
+                return;
+            }
+            int result = tts.setLanguage(Locale.forLanguageTag("tr-TR"));
+            ttsReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED;
+            tts.setSpeechRate(0.98f);
+            tts.setPitch(0.95f);
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override public void onStart(String utteranceId) { }
+                @Override public void onDone(String utteranceId) { resumeAfterSpeech(); }
+                @Override public void onError(String utteranceId) { resumeAfterSpeech(); }
+            });
+        });
+    }
+
+    private void resumeAfterSpeech() {
+        handler.post(() -> {
+            pausedForTts = false;
+            scheduleRecognition(450L);
+        });
+    }
+
+    private void speak(String text) {
+        broadcast(text, null, true);
+        if (!ttsReady || tts == null) {
+            scheduleRecognition(300L);
+            return;
+        }
+        pausedForTts = true;
+        listening = false;
+        if (recognizer != null) {
+            try { recognizer.cancel(); } catch (RuntimeException ignored) { }
+        }
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, new Bundle(), UTTERANCE_ID + System.nanoTime());
+    }
+
+    private void handleUtterance(String utterance) {
+        WakeSession.Decision decision = wakeSession.onUtterance(utterance, System.currentTimeMillis());
+        if (decision.type() == WakeSession.DecisionType.IGNORE) {
+            broadcast("Jarvis demeni bekliyorum", utterance, true);
+            scheduleRecognition(250L);
+            return;
+        }
+        if (decision.type() == WakeSession.DecisionType.ARM) {
+            broadcast("Dinliyorum…", utterance, true);
+            speak("Dinliyorum");
+            return;
+        }
+        executeCommand(CommandRouter.route(decision.command()));
+    }
+
+    private void executeCommand(CommandResult command) {
+        switch (command.type()) {
+            case TIME:
+                speak("Saat " + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                break;
+            case DATE:
+                speak("Bugün " + LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy EEEE", Locale.forLanguageTag("tr-TR"))));
+                break;
+            case OPEN_APP:
+                speak(openApp(command.text()) ? capitalize(command.text()) + " açılıyor" : command.text() + " adlı uygulamayı bulamadım");
+                break;
+            case WEB_SEARCH:
+                speak(openWebSearch(command.text()) ? "Arıyorum: " + command.text() : "Web aramasını açamadım");
+                break;
+            case SET_ALARM:
+                speak(openAlarm(command.hour(), command.minute())
+                        ? String.format(Locale.forLanguageTag("tr-TR"), "%02d:%02d için alarmı açıyorum", command.hour(), command.minute())
+                        : "Alarm uygulamasını açamadım");
+                break;
+            case OPEN_SETTINGS:
+                speak(openSettings(command.text()) ? "Ayarlar açılıyor" : "Ayarları açamadım");
+                break;
+            case HELP:
+                speak("Spotify aç, saat kaç, bugün tarih ne, internette bir şey ara, alarm kur veya Bluetooth ayarlarını aç diyebilirsin");
+                break;
+        }
+    }
+
+    private boolean openApp(String requestedName) {
+        try {
+            PackageManager pm = getPackageManager();
+            String requested = normalizeAppName(requestedName);
+            String known = knownPackages.get(requested);
+            if (known != null) {
+                Intent launch = pm.getLaunchIntentForPackage(known);
+                if (launch != null) {
+                    launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(launch);
+                    return true;
+                }
+            }
+            Intent query = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
+            List<ResolveInfo> candidates = Build.VERSION.SDK_INT >= 33
+                    ? pm.queryIntentActivities(query, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_ALL))
+                    : pm.queryIntentActivities(query, PackageManager.MATCH_ALL);
+            ResolveInfo best = null;
+            int bestScore = Integer.MAX_VALUE;
+            for (ResolveInfo info : candidates) {
+                CharSequence labelSequence = info.loadLabel(pm);
+                if (labelSequence == null) continue;
+                int score = matchScore(requested, normalizeAppName(labelSequence.toString()));
+                if (score < bestScore) { best = info; bestScore = score; }
+            }
+            if (best == null || bestScore >= 1000) return false;
+            Intent launch = pm.getLaunchIntentForPackage(best.activityInfo.packageName);
+            if (launch == null) return false;
+            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(launch);
+            return true;
+        } catch (RuntimeException error) {
+            return false;
+        }
+    }
+
+    private int matchScore(String requested, String label) {
+        if (label.equals(requested)) return 0;
+        if (label.startsWith(requested) || requested.startsWith(label)) return 10 + Math.abs(label.length() - requested.length());
+        if (label.contains(requested) || requested.contains(label)) return 100 + Math.abs(label.length() - requested.length());
+        return 1000;
+    }
+
+    private boolean openWebSearch(String query) {
+        try {
+            Intent webSearch = new Intent(Intent.ACTION_WEB_SEARCH).putExtra("query", query).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (webSearch.resolveActivity(getPackageManager()) != null) {
+                startActivity(webSearch);
+                return true;
+            }
+            Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=" + Uri.encode(query)))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (browser.resolveActivity(getPackageManager()) != null) {
+                startActivity(browser);
+                return true;
+            }
+        } catch (RuntimeException ignored) { }
+        return false;
+    }
+
+    private boolean openAlarm(int hour, int minute) {
+        try {
+            Intent alarm = new Intent(AlarmClock.ACTION_SET_ALARM)
+                    .putExtra(AlarmClock.EXTRA_HOUR, hour)
+                    .putExtra(AlarmClock.EXTRA_MINUTES, minute)
+                    .putExtra(AlarmClock.EXTRA_MESSAGE, "Jarvis")
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (alarm.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(alarm);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean openSettings(String kind) {
+        String action = "bluetooth".equals(kind) ? Settings.ACTION_BLUETOOTH_SETTINGS
+                : "wifi".equals(kind) ? Settings.ACTION_WIFI_SETTINGS : Settings.ACTION_SETTINGS;
+        try {
+            Intent settings = new Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (settings.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(settings);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private void initKnownPackages() {
+        knownPackages.put("spotify", "com.spotify.music");
+        knownPackages.put("youtube", "com.google.android.youtube");
+        knownPackages.put("whatsapp", "com.whatsapp");
+        knownPackages.put("instagram", "com.instagram.android");
+        knownPackages.put("chrome", "com.android.chrome");
+        knownPackages.put("haritalar", "com.google.android.apps.maps");
+        knownPackages.put("maps", "com.google.android.apps.maps");
+    }
+
+    private String normalizeAppName(String input) {
+        return Normalizer.normalize(input == null ? "" : input, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "")
+                .toLowerCase(Locale.ROOT)
+                .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
+                .replace('ç', 'c').replace('ö', 'o').replace('ü', 'u')
+                .replaceAll("[^a-z0-9]+", " ").trim();
+    }
+
+    private String capitalize(String text) {
+        if (text == null || text.trim().isEmpty()) return "Uygulama";
+        return text.substring(0, 1).toUpperCase(Locale.forLanguageTag("tr-TR")) + text.substring(1);
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription(getString(R.string.notification_channel_description));
+        channel.setSound(null, null);
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+    }
+
+    private Notification buildNotification() {
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent stopIntent = PendingIntent.getService(this, 1, new Intent(this, JarvisListeningService.class).setAction(ACTION_STOP), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        return new Notification.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_jarvis)
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_text))
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .addAction(new Notification.Action.Builder(Icon.createWithResource(this, R.drawable.ic_jarvis), getString(R.string.notification_stop), stopIntent).build())
+                .build();
+    }
+
+    private void broadcast(String status, String transcript, boolean isActive) {
+        Intent intent = new Intent(ACTION_STATUS).setPackage(getPackageName());
+        intent.putExtra(EXTRA_STATUS, status);
+        intent.putExtra(EXTRA_ACTIVE, isActive);
+        if (transcript != null) intent.putExtra(EXTRA_TRANSCRIPT, transcript);
+        sendBroadcast(intent);
+    }
+
+    @Override public void onReadyForSpeech(Bundle params) {
+        consecutiveErrors = 0;
+        broadcast(wakeSession.isArmed(System.currentTimeMillis()) ? "Komutunu dinliyorum…" : "Jarvis demeni bekliyorum", null, true);
+    }
+    @Override public void onBeginningOfSpeech() { }
+    @Override public void onRmsChanged(float rmsdB) { }
+    @Override public void onBufferReceived(byte[] buffer) { }
+    @Override public void onEndOfSpeech() { }
+
+    @Override
+    public void onError(int error) {
+        listening = false;
+        if (!active || destroyed || pausedForTts) return;
+        consecutiveErrors++;
+        long delay;
+        if (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) delay = 250L;
+        else if (error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) delay = 1400L;
+        else if (error == SpeechRecognizer.ERROR_NETWORK || error == SpeechRecognizer.ERROR_NETWORK_TIMEOUT) {
+            delay = 1800L;
+            broadcast("Çevrimdışı tanıma hazır değilse internet gerekebilir", null, true);
+        } else if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+            setRequested(false);
+            broadcast("Mikrofon izni gerekli", null, false);
+            stopSelf();
+            return;
+        } else delay = retryDelay(consecutiveErrors);
+        scheduleRecognition(delay);
+    }
+
+    @Override
+    public void onResults(Bundle results) {
+        listening = false;
+        consecutiveErrors = 0;
+        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (matches == null || matches.isEmpty()) { scheduleRecognition(250L); return; }
+        String best = matches.get(0);
+        broadcast("Duydum", best, true);
+        handleUtterance(best);
+    }
+
+    @Override
+    public void onPartialResults(Bundle partialResults) {
+        ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (matches != null && !matches.isEmpty()) {
+            broadcast(wakeSession.isArmed(System.currentTimeMillis()) ? "Komutunu dinliyorum…" : "Dinliyorum…", matches.get(0), true);
+        }
+    }
+
+    @Override public void onEvent(int eventType, Bundle params) { }
+}
