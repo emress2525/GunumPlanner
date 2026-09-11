@@ -1,6 +1,7 @@
 package com.sesliasistan.jarvis;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.role.RoleManager;
 import android.content.BroadcastReceiver;
@@ -59,8 +60,11 @@ public final class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         IntentFilter filter = new IntentFilter(JarvisListeningService.ACTION_STATUS);
-        if (Build.VERSION.SDK_INT >= 33) registerReceiver(statusReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        else registerReceiver(statusReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(statusReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerStatusReceiverPre33(filter);
+        }
         receiverRegistered = true;
         renderActive(isServiceRequested());
         if (isServiceRequested() && checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
@@ -69,6 +73,11 @@ public final class MainActivity extends Activity {
             } catch (RuntimeException ignored) {
             }
         }
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerStatusReceiverPre33(IntentFilter filter) {
+        registerReceiver(statusReceiver, filter);
     }
 
     @Override
