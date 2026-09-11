@@ -81,11 +81,12 @@ public final class PromptEngine {
             out.append("Static check → compile/build → unit test → integration/behavior test → edge-case test → real-environment test → regression test → requirement validation sırasını uygula. Bir aşama başarısızsa self-repair döngüsüne dön.\n");
         } else {
             out.append("Çıktıyı gereksinim kapsamı, çelişki, eksik kritik bilgi, doğruluk ve kullanılabilirlik açısından bağımsız bir critic/judge kontrolünden geçir.\n");
+        }
 
         out.append("\n## REAL-ENVIRONMENT VERIFICATION\n");
         out.append(code
                 ? "Hedef ortam erişilebiliyorsa çözümü gerçekten orada çalıştır. Erişilemiyorsa 'gerçek ortamda test edildi' deme; hangi doğrulamanın eksik kaldığını açıkça bildir.\n"
-                : "Görev gerçek ortam doğrulaması gerektiriyorsa kanıt üret; gerektirmiyorsa bunu zorunlu gibi göstermeme.\n");
+                : "Görev gerçek ortam doğrulaması gerektiriyorsa kanıt üret; gerektirmiyorsa bunu zorunlu gibi gösterme.\n");
 
         out.append("\n## ACCEPTANCE CRITERIA\n");
         out.append("- Kritik gereksinim eksikliği: 0\n");
