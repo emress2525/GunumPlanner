@@ -7,23 +7,30 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.graphics.drawable.Icon;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.media.AudioManager;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.AlarmClock;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.view.KeyEvent;
 
 import com.sesliasistan.jarvis.core.CommandResult;
 import com.sesliasistan.jarvis.core.CommandRouter;
@@ -49,6 +56,9 @@ public final class JarvisListeningService extends Service implements Recognition
     public static final String PREFS = "jarvis_state";
     public static final String KEY_ACTIVE = "active";
 
+    private static final String NOTES_PREFS = "jarvis_notes";
+    private static final String KEY_LAST_NOTE = "last_note";
+    private static final String KEY_LAST_NOTE_TIME = "last_note_time";
     private static final String CHANNEL_ID = "jarvis_listening";
     private static final int NOTIFICATION_ID = 1701;
     private static final long COMMAND_WINDOW_MS = 8000L;
@@ -127,10 +137,7 @@ public final class JarvisListeningService extends Service implements Recognition
         super.onDestroy();
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    @Override public IBinder onBind(Intent intent) { return null; }
 
     private void setRequested(boolean value) {
         getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(KEY_ACTIVE, value).apply();
@@ -271,14 +278,70 @@ public final class JarvisListeningService extends Service implements Recognition
                 break;
             case SET_ALARM:
                 speak(openAlarm(command.hour(), command.minute())
-                        ? String.format(Locale.forLanguageTag("tr-TR"), "%02d:%02d için alarmı açıyorum", command.hour(), command.minute())
+                        ? String.format(Locale.forLanguageTag("tr-TR"), "%02d:%02d için alarmı kuruyorum", command.hour(), command.minute())
                         : "Alarm uygulamasını açamadım");
+                break;
+            case SET_TIMER:
+                speak(openTimer(command.value()) ? formatDuration(command.value()) + " zamanlayıcı başlatıldı" : "Zamanlayıcıyı başlatamadım");
                 break;
             case OPEN_SETTINGS:
                 speak(openSettings(command.text()) ? "Ayarlar açılıyor" : "Ayarları açamadım");
                 break;
+            case FLASHLIGHT_ON:
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) speak("Fener için kamera izni gerekli");
+                else speak(setFlashlight(true) ? "Fener açıldı" : "Feneri açamadım");
+                break;
+            case FLASHLIGHT_OFF:
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) speak("Fener için kamera izni gerekli");
+                else speak(setFlashlight(false) ? "Fener kapatıldı" : "Feneri kapatamadım");
+                break;
+            case VOLUME_UP:
+                speak(adjustVolume(AudioManager.ADJUST_RAISE, false) ? "Ses yükseltildi" : "Sesi değiştiremedim");
+                break;
+            case VOLUME_DOWN:
+                speak(adjustVolume(AudioManager.ADJUST_LOWER, false) ? "Ses azaltıldı" : "Sesi değiştiremedim");
+                break;
+            case VOLUME_MUTE:
+                speak(adjustVolume(AudioManager.ADJUST_SAME, true) ? "Medya sesi kapatıldı" : "Sesi kapatamadım");
+                break;
+            case VOLUME_MAX:
+                speak(setVolumeMaximum() ? "Medya sesi maksimum" : "Sesi değiştiremedim");
+                break;
+            case BATTERY_STATUS:
+                int battery = batteryPercentage();
+                speak(battery >= 0 ? "Pil yüzde " + battery : "Pil durumunu okuyamadım");
+                break;
+            case OPEN_CAMERA:
+                speak(openCamera() ? "Kamera açılıyor" : "Kamerayı açamadım");
+                break;
+            case NAVIGATE_TO:
+                speak(openNavigation(command.text()) ? command.text() + " için yol tarifi açılıyor" : "Haritayı açamadım");
+                break;
+            case DIAL_NUMBER:
+                speak(openDialer(command.text()) ? command.text() + " aranmak üzere açıldı" : "Telefon uygulamasını açamadım");
+                break;
+            case COMPOSE_SMS:
+                speak(composeSms(command.text(), command.secondaryText()) ? "Mesaj ekranı açılıyor" : "Mesaj uygulamasını açamadım");
+                break;
+            case MEDIA_PLAY_PAUSE:
+                speak(sendMediaKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) ? "Medya oynatma durumu değiştirildi" : "Medya kontrol edilemedi");
+                break;
+            case MEDIA_NEXT:
+                speak(sendMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT) ? "Sonraki parça" : "Medya kontrol edilemedi");
+                break;
+            case MEDIA_PREVIOUS:
+                speak(sendMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS) ? "Önceki parça" : "Medya kontrol edilemedi");
+                break;
+            case CREATE_NOTE:
+                saveNote(command.text());
+                speak("Not aldım: " + command.text());
+                break;
+            case READ_LAST_NOTE:
+                String note = readLastNote();
+                speak(note.isEmpty() ? "Kayıtlı not bulamadım" : "Son notun: " + note);
+                break;
             case HELP:
-                speak("Spotify aç, saat kaç, bugün tarih ne, internette bir şey ara, alarm kur veya Bluetooth ayarlarını aç diyebilirsin");
+                speak("Uygulama açabilir, internette arayabilir, alarm ve zamanlayıcı kurabilir, feneri ve medya sesini kontrol edebilir, müziği yönetebilir, pil durumunu söyleyebilir, kamera açabilir, yol tarifi başlatabilir, numara arayabilir, mesaj hazırlayabilir ve not alabilirim");
                 break;
         }
     }
@@ -349,6 +412,7 @@ public final class JarvisListeningService extends Service implements Recognition
                     .putExtra(AlarmClock.EXTRA_HOUR, hour)
                     .putExtra(AlarmClock.EXTRA_MINUTES, minute)
                     .putExtra(AlarmClock.EXTRA_MESSAGE, "Jarvis")
+                    .putExtra(AlarmClock.EXTRA_SKIP_UI, true)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (alarm.resolveActivity(getPackageManager()) == null) return false;
             startActivity(alarm);
@@ -356,9 +420,155 @@ public final class JarvisListeningService extends Service implements Recognition
         } catch (RuntimeException ignored) { return false; }
     }
 
+    private boolean openTimer(int seconds) {
+        if (seconds <= 0) return false;
+        try {
+            Intent timer = new Intent(AlarmClock.ACTION_SET_TIMER)
+                    .putExtra(AlarmClock.EXTRA_LENGTH, seconds)
+                    .putExtra(AlarmClock.EXTRA_MESSAGE, "Jarvis")
+                    .putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (timer.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(timer);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private String formatDuration(int seconds) {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int remaining = seconds % 60;
+        StringBuilder builder = new StringBuilder();
+        if (hours > 0) builder.append(hours).append(" saat ");
+        if (minutes > 0) builder.append(minutes).append(" dakika ");
+        if (remaining > 0) builder.append(remaining).append(" saniye");
+        return builder.toString().trim();
+    }
+
+    private boolean setFlashlight(boolean enabled) {
+        try {
+            CameraManager cameraManager = getSystemService(CameraManager.class);
+            if (cameraManager == null) return false;
+            for (String id : cameraManager.getCameraIdList()) {
+                CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(id);
+                Boolean flashAvailable = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+                if (Boolean.TRUE.equals(flashAvailable)
+                        && (facing == null || facing == CameraCharacteristics.LENS_FACING_BACK)) {
+                    cameraManager.setTorchMode(id, enabled);
+                    return true;
+                }
+            }
+        } catch (Exception ignored) { }
+        return false;
+    }
+
+    private boolean adjustVolume(int direction, boolean mute) {
+        try {
+            AudioManager audio = getSystemService(AudioManager.class);
+            if (audio == null) return false;
+            if (mute) audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_SHOW_UI);
+            else audio.adjustStreamVolume(AudioManager.STREAM_MUSIC, direction, AudioManager.FLAG_SHOW_UI);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean setVolumeMaximum() {
+        try {
+            AudioManager audio = getSystemService(AudioManager.class);
+            if (audio == null) return false;
+            audio.setStreamVolume(AudioManager.STREAM_MUSIC, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_SHOW_UI);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private int batteryPercentage() {
+        try {
+            BatteryManager batteryManager = getSystemService(BatteryManager.class);
+            if (batteryManager != null) {
+                int value = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+                if (value >= 0 && value <= 100) return value;
+            }
+            Intent battery = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+            if (battery == null) return -1;
+            int level = battery.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = battery.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            return level >= 0 && scale > 0 ? Math.round(level * 100f / scale) : -1;
+        } catch (RuntimeException ignored) { return -1; }
+    }
+
+    private boolean openCamera() {
+        try {
+            Intent camera = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (camera.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(camera);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean openNavigation(String destination) {
+        try {
+            Uri uri = Uri.parse("geo:0,0?q=" + Uri.encode(destination));
+            Intent map = new Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (map.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(map);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean openDialer(String number) {
+        try {
+            Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(number)))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (dial.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(dial);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean composeSms(String number, String message) {
+        try {
+            Intent sms = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(number)))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (message != null && !message.trim().isEmpty()) sms.putExtra("sms_body", message);
+            if (sms.resolveActivity(getPackageManager()) == null) return false;
+            startActivity(sms);
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private boolean sendMediaKey(int keyCode) {
+        try {
+            AudioManager audio = getSystemService(AudioManager.class);
+            if (audio == null) return false;
+            long now = android.os.SystemClock.uptimeMillis();
+            audio.dispatchMediaKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_DOWN, keyCode, 0));
+            audio.dispatchMediaKeyEvent(new KeyEvent(now, now, KeyEvent.ACTION_UP, keyCode, 0));
+            return true;
+        } catch (RuntimeException ignored) { return false; }
+    }
+
+    private void saveNote(String note) {
+        getSharedPreferences(NOTES_PREFS, MODE_PRIVATE).edit()
+                .putString(KEY_LAST_NOTE, note)
+                .putLong(KEY_LAST_NOTE_TIME, System.currentTimeMillis())
+                .apply();
+    }
+
+    private String readLastNote() {
+        return getSharedPreferences(NOTES_PREFS, MODE_PRIVATE).getString(KEY_LAST_NOTE, "");
+    }
+
     private boolean openSettings(String kind) {
-        String action = "bluetooth".equals(kind) ? Settings.ACTION_BLUETOOTH_SETTINGS
-                : "wifi".equals(kind) ? Settings.ACTION_WIFI_SETTINGS : Settings.ACTION_SETTINGS;
+        String action;
+        switch (kind) {
+            case "bluetooth": action = Settings.ACTION_BLUETOOTH_SETTINGS; break;
+            case "wifi": action = Settings.ACTION_WIFI_SETTINGS; break;
+            case "location": action = Settings.ACTION_LOCATION_SOURCE_SETTINGS; break;
+            case "display": action = Settings.ACTION_DISPLAY_SETTINGS; break;
+            case "sound": action = Settings.ACTION_SOUND_SETTINGS; break;
+            default: action = Settings.ACTION_SETTINGS; break;
+        }
         try {
             Intent settings = new Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (settings.resolveActivity(getPackageManager()) == null) return false;
@@ -375,6 +585,11 @@ public final class JarvisListeningService extends Service implements Recognition
         knownPackages.put("chrome", "com.android.chrome");
         knownPackages.put("haritalar", "com.google.android.apps.maps");
         knownPackages.put("maps", "com.google.android.apps.maps");
+        knownPackages.put("gmail", "com.google.android.gm");
+        knownPackages.put("telegram", "org.telegram.messenger");
+        knownPackages.put("tiktok", "com.zhiliaoapp.musically");
+        knownPackages.put("x", "com.twitter.android");
+        knownPackages.put("twitter", "com.twitter.android");
     }
 
     private String normalizeAppName(String input) {
