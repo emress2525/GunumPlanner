@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sessionService=""
+    android:recognitionService=""
+    android:settingsActivity="com.sesliasistan.jarvis.MainActivity"
+    android:supportsAssist="false"
+    android:supportsLocalInteraction="true" />
