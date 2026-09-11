@@ -108,11 +108,11 @@ public final class MainActivity extends Activity {
         });
         scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
 
-        TextView eyebrow = text("JARVIS  /  SESLİ ASİSTAN", 13, Color.rgb(77, 235, 255), Typeface.BOLD);
-        eyebrow.setLetterSpacing(0.18f);
+        TextView eyebrow = text("JARVIS  /  SESLİ ASİSTAN  v1.1", 13, Color.rgb(77, 235, 255), Typeface.BOLD);
+        eyebrow.setLetterSpacing(0.16f);
         root.addView(eyebrow, fullWidthWrap());
 
-        TextView title = text("Hazır olduğunda\nsadece adımı söyle.", 31, Color.rgb(243, 251, 255), Typeface.BOLD);
+        TextView title = text("Söyle.\nBen halledeyim.", 31, Color.rgb(243, 251, 255), Typeface.BOLD);
         LinearLayout.LayoutParams titleLp = fullWidthWrap();
         titleLp.topMargin = dp(14);
         root.addView(title, titleLp);
@@ -134,7 +134,7 @@ public final class MainActivity extends Activity {
         statusText.setGravity(Gravity.CENTER);
         root.addView(statusText, fullWidthWrap());
 
-        TextView helper = text("Aktifken “Jarvis” de. Ardından komutunu söyle veya tek cümlede “Jarvis Spotify aç” de.", 14, Color.rgb(145, 168, 182), Typeface.NORMAL);
+        TextView helper = text("“Jarvis” de; uygulama, cihaz, medya, zaman, harita, telefon ve not komutlarını doğal Türkçe söyle.", 14, Color.rgb(145, 168, 182), Typeface.NORMAL);
         helper.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams helperLp = fullWidthWrap();
         helperLp.topMargin = dp(8);
@@ -172,7 +172,7 @@ public final class MainActivity extends Activity {
 
         Button helpButton = new Button(this);
         helpButton.setAllCaps(false);
-        helpButton.setText("Neler söyleyebilirim?");
+        helpButton.setText("Komutları göster");
         helpButton.setTextSize(14);
         helpButton.setTextColor(Color.rgb(206, 237, 244));
         helpButton.setBackgroundResource(R.drawable.bg_secondary_button);
@@ -183,7 +183,7 @@ public final class MainActivity extends Activity {
         helpLp.topMargin = dp(12);
         root.addView(helpButton, helpLp);
 
-        TextView privacy = text("Mikrofon yalnızca asistanı sen başlattığında çalışır. Varsayılan asistan rolü Android'in arka plan kısıtlarına daha güvenli uyum sağlar ve istediğin zaman sistem ayarlarından değiştirilebilir.", 12, Color.rgb(104, 130, 142), Typeface.NORMAL);
+        TextView privacy = text("Mikrofon yalnızca asistanı başlattığında kullanılır. Kamera izni yalnızca fener kontrolü içindir ve reddedilirse diğer komutlar çalışmaya devam eder.", 12, Color.rgb(104, 130, 142), Typeface.NORMAL);
         privacy.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams privacyLp = fullWidthWrap();
         privacyLp.topMargin = dp(20);
@@ -199,37 +199,37 @@ public final class MainActivity extends Activity {
             startActivityForResult(roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT), REQUEST_ASSISTANT_ROLE);
             return;
         }
-        ensureMicrophoneAndStart();
+        ensurePermissionsAndStartService();
     }
 
-    private void ensureMicrophoneAndStart() {
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            requestNotificationPermissionIfNeeded();
+    private void ensurePermissionsAndStartService() {
+        List<String> permissions = new ArrayList<>();
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.RECORD_AUDIO);
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.CAMERA);
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (permissions.isEmpty()) {
             startAssistant();
             return;
         }
-        List<String> permissions = new ArrayList<>();
-        permissions.add(Manifest.permission.RECORD_AUDIO);
-        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.POST_NOTIFICATIONS);
         requestPermissions(permissions.toArray(new String[0]), REQUEST_PERMISSIONS);
-    }
-
-    private void requestNotificationPermissionIfNeeded() {
-        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_PERMISSIONS);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ASSISTANT_ROLE) ensureMicrophoneAndStart();
+        if (requestCode == REQUEST_ASSISTANT_ROLE) ensurePermissionsAndStartService();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode != REQUEST_PERMISSIONS) return;
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) startAssistant();
-        else {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            startAssistant();
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Fener komutu kamera izni verilene kadar kullanılamaz.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
             statusText.setText("Mikrofon izni gerekli");
             Toast.makeText(this, "Jarvis'in seni duyabilmesi için mikrofon izni gerekli.", Toast.LENGTH_LONG).show();
         }
@@ -281,7 +281,13 @@ public final class MainActivity extends Activity {
     }
 
     private void showCommandExamples() {
-        String examples = "Örnekler:\n\n• Jarvis Spotify aç\n• Jarvis saat kaç\n• Jarvis bugün tarih ne\n• Jarvis internette Ankara hava durumu ara\n• Jarvis 07:30 alarm kur\n• Jarvis Bluetooth ayarlarını aç";
+        String examples =
+                "UYGULAMALAR\n• Jarvis Spotify aç\n• Jarvis Telegram aç\n\n" +
+                "CİHAZ\n• Jarvis feneri aç / kapat\n• Jarvis sesi yükselt / azalt / kapat / fulle\n• Jarvis pil yüzde kaç\n• Jarvis kamerayı aç\n• Jarvis Wi‑Fi / Bluetooth / konum / ekran ayarlarını aç\n\n" +
+                "ZAMAN\n• Jarvis saat kaç\n• Jarvis bugün tarih ne\n• Jarvis 07:30 alarm kur\n• Jarvis 5 dakika zamanlayıcı kur\n\n" +
+                "MEDYA\n• Jarvis müziği durdur / devam ettir\n• Jarvis sonraki şarkı\n• Jarvis önceki şarkı\n\n" +
+                "HARİTA & TELEFON\n• Jarvis Kızılay'a yol tarifi aç\n• Jarvis 0555 123 45 67 numarasını ara\n• Jarvis 0555 123 45 67 numarasına geliyorum diye mesaj yaz\n\n" +
+                "NOT & WEB\n• Jarvis not al yarın kaynakçıyla konuş\n• Jarvis son notumu oku\n• Jarvis internette Ankara hava durumu ara";
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Jarvis komutları")
                 .setMessage(examples)
