@@ -2,6 +2,7 @@ package com.sesliasistan.jarvis;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.role.RoleManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,6 +24,8 @@ import java.util.List;
 
 public final class MainActivity extends Activity {
     private static final int REQUEST_PERMISSIONS = 401;
+    private static final int REQUEST_ASSISTANT_ROLE = 402;
+    private static final String KEY_ROLE_PROMPTED = "assistant_role_prompted";
 
     private TextView statusText;
     private TextView statusChip;
@@ -61,6 +63,12 @@ public final class MainActivity extends Activity {
         else registerReceiver(statusReceiver, filter);
         receiverRegistered = true;
         renderActive(isServiceRequested());
+        if (isServiceRequested() && checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                startForegroundService(new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_START));
+            } catch (RuntimeException ignored) {
+            }
+        }
     }
 
     @Override
@@ -148,9 +156,7 @@ public final class MainActivity extends Activity {
         primaryButton.setBackgroundResource(R.drawable.bg_primary_button);
         primaryButton.setMinHeight(0);
         primaryButton.setPadding(dp(16), dp(17), dp(16), dp(17));
-        primaryButton.setOnClickListener(v -> {
-            if (isServiceRequested()) stopAssistant(); else ensurePermissionsAndStart();
-        });
+        primaryButton.setOnClickListener(v -> { if (isServiceRequested()) stopAssistant(); else ensurePermissionsAndStart(); });
         LinearLayout.LayoutParams primaryLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         primaryLp.topMargin = dp(22);
         root.addView(primaryButton, primaryLp);
@@ -168,16 +174,26 @@ public final class MainActivity extends Activity {
         helpLp.topMargin = dp(12);
         root.addView(helpButton, helpLp);
 
-        TextView privacy = text("Mikrofon yalnızca asistanı sen başlattığında foreground servis içinde kullanılır. Bildirimden istediğin an durdurabilirsin.", 12, Color.rgb(104, 130, 142), Typeface.NORMAL);
+        TextView privacy = text("Mikrofon yalnızca asistanı sen başlattığında çalışır. Varsayılan asistan rolü Android'in arka plan kısıtlarına daha güvenli uyum sağlar ve istediğin zaman sistem ayarlarından değiştirilebilir.", 12, Color.rgb(104, 130, 142), Typeface.NORMAL);
         privacy.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams privacyLp = fullWidthWrap();
         privacyLp.topMargin = dp(20);
         root.addView(privacy, privacyLp);
-
         setContentView(scroll);
     }
 
     private void ensurePermissionsAndStart() {
+        RoleManager roles = getSystemService(RoleManager.class);
+        boolean alreadyPrompted = getPreferences(MODE_PRIVATE).getBoolean(KEY_ROLE_PROMPTED, false);
+        if (!alreadyPrompted && roles != null && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT) && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
+            getPreferences(MODE_PRIVATE).edit().putBoolean(KEY_ROLE_PROMPTED, true).apply();
+            startActivityForResult(roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT), REQUEST_ASSISTANT_ROLE);
+            return;
+        }
+        ensureMicrophoneAndStart();
+    }
+
+    private void ensureMicrophoneAndStart() {
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             requestNotificationPermissionIfNeeded();
             startAssistant();
@@ -194,6 +210,12 @@ public final class MainActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ASSISTANT_ROLE) ensureMicrophoneAndStart();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode != REQUEST_PERMISSIONS) return;
@@ -204,6 +226,17 @@ public final class MainActivity extends Activity {
         }
     }
 
+    private void requestAssistantRole() {
+        RoleManager roles = getSystemService(RoleManager.class);
+        if (roles != null && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT) && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
+            startActivityForResult(roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT), REQUEST_ASSISTANT_ROLE);
+        } else if (roles != null && roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
+            Toast.makeText(this, "Jarvis zaten varsayılan asistan.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Bu telefonda asistan rolü kullanılamıyor.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void startAssistant() {
         Intent intent = new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_START);
         try {
@@ -211,7 +244,8 @@ public final class MainActivity extends Activity {
             getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, true).apply();
             renderActive(true);
             statusText.setText("Başlatılıyor…");
-        } catch (Exception error) {
+        } catch (RuntimeException error) {
+            getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, false).apply();
             renderActive(false);
             statusText.setText("Asistan başlatılamadı");
             Toast.makeText(this, "Başlatma hatası: " + error.getMessage(), Toast.LENGTH_LONG).show();
@@ -221,7 +255,7 @@ public final class MainActivity extends Activity {
     private void stopAssistant() {
         getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, false).apply();
         Intent intent = new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_STOP);
-        try { startService(intent); } catch (Exception ignored) { stopService(new Intent(this, JarvisListeningService.class)); }
+        try { startService(intent); } catch (RuntimeException ignored) { stopService(new Intent(this, JarvisListeningService.class)); }
         renderActive(false);
         statusText.setText("Asistan kapalı");
     }
@@ -243,11 +277,7 @@ public final class MainActivity extends Activity {
                 .setTitle("Jarvis komutları")
                 .setMessage(examples)
                 .setPositiveButton("Tamam", null)
-                .setNeutralButton("Uygulama ayarları", (dialog, which) -> {
-                    Intent settings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    settings.setData(android.net.Uri.parse("package:" + getPackageName()));
-                    startActivity(settings);
-                })
+                .setNeutralButton("Varsayılan asistan yap", (dialog, which) -> requestAssistantRole())
                 .show();
     }
 
