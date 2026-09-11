@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Jarvis</string>
+    <string name="notification_channel_name">Jarvis Sesli Asistan</string>
+    <string name="notification_channel_description">Jarvis aktifken mikrofon dinleme durumunu gösterir.</string>
+    <string name="notification_title">Jarvis dinlemede</string>
+    <string name="notification_text">Uyandırmak için “Jarvis” de.</string>
+    <string name="notification_stop">Durdur</string>
+</resources>
