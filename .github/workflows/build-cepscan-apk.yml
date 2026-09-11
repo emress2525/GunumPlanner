@@ -5,7 +5,7 @@ on:
     branches:
       - cepscan-apk-build
     paths:
-      - 'cepscan_build.tar.gz.b64'
+      - 'cepscan_parts/**'
       - '.github/workflows/build-cepscan-apk.yml'
   workflow_dispatch:
 
@@ -38,11 +38,15 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Restore CepScan source
+      - name: Restore and verify CepScan source
         shell: bash
         run: |
           mkdir -p cepscan-src
+          cat cepscan_parts/part_* > cepscan_build.tar.gz.b64
+          test "$(wc -c < cepscan_build.tar.gz.b64)" = "51768"
+          echo '281441f4028fb934b040144fc6cdf81b94a14def6a29cb690459e3a36be62fb7  cepscan_build.tar.gz' > expected.sha256
           base64 --decode cepscan_build.tar.gz.b64 > cepscan_build.tar.gz
+          sha256sum -c expected.sha256
           tar -xzf cepscan_build.tar.gz -C cepscan-src
           test -f cepscan-src/build.gradle.kts
           test -f cepscan-src/app/build.gradle.kts
@@ -53,11 +57,13 @@ jobs:
         run: |
           gradle --no-daemon --stacktrace :app:assembleDebug
 
-      - name: Verify APK
+      - name: Verify APK signature and package
         shell: bash
         run: |
           APK='cepscan-src/app/build/outputs/apk/debug/app-debug.apk'
           test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V3-badging.txt
           cp "$APK" CepScan-V3-debug.apk
           sha256sum CepScan-V3-debug.apk | tee CepScan-V3-debug.apk.sha256
 
@@ -68,5 +74,6 @@ jobs:
           path: |
             CepScan-V3-debug.apk
             CepScan-V3-debug.apk.sha256
+            CepScan-V3-badging.txt
           if-no-files-found: error
           retention-days: 7
