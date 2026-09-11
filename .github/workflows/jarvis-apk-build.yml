@@ -15,7 +15,7 @@ permissions:
 jobs:
   verify-and-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     defaults:
       run:
         working-directory: jarvis-build
@@ -60,7 +60,26 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee "$RUNNER_TEMP/jarvis-badging.txt"
           grep -q "package: name='com.sesliasistan.jarvis'" "$RUNNER_TEMP/jarvis-badging.txt"
           grep -q "sdkVersion:'29'" "$RUNNER_TEMP/jarvis-badging.txt"
+          grep -q "targetSdkVersion:'36'" "$RUNNER_TEMP/jarvis-badging.txt"
           sha256sum "$APK" | tee "$RUNNER_TEMP/jarvis-sha256.txt"
+
+      - name: Android 16 runtime smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            set -euo pipefail
+            APK="$GITHUB_WORKSPACE/jarvis-build/app/build/outputs/apk/debug/app-debug.apk"
+            adb install -r "$APK"
+            adb shell pm path com.sesliasistan.jarvis | tee "$RUNNER_TEMP/jarvis-pm-path.txt"
+            grep -q '^package:' "$RUNNER_TEMP/jarvis-pm-path.txt"
+            adb shell am start -W -n com.sesliasistan.jarvis/.MainActivity | tee "$RUNNER_TEMP/jarvis-launch.txt"
+            grep -q 'Status: ok' "$RUNNER_TEMP/jarvis-launch.txt"
+            adb shell dumpsys package com.sesliasistan.jarvis | grep -q 'versionName=1.0.0'
 
       - name: Upload verified APK
         uses: actions/upload-artifact@v4
