@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: namaz-native-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -57,20 +61,21 @@ jobs:
       - name: Python patch regression tests
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
 
-      - name: Prepare test dependencies and overlay
+      - name: Prepare native overlay
         shell: bash
         run: |
           set -euo pipefail
           cat >> namazapp/app/build.gradle <<'GRADLE'
           dependencies { testImplementation 'junit:junit:4.13.2' }
           GRADLE
-          if [ -d namaz-native/overlay/app/src ]; then
-            cp -R namaz-native/overlay/app/src/. namazapp/app/src/
-          fi
-          if [ -f namaz-native/patch_assets.py ]; then
-            python3 namaz-native/patch_assets.py --apply namazapp
-            python3 namaz-native/patch_assets.py --self-test namazapp
-          fi
+          cp -R namaz-native/overlay/app/src/. namazapp/app/src/
+          python3 namaz-native/patch_assets.py --apply namazapp
+          python3 namaz-native/patch_assets.py --self-test namazapp
+          mkdir -p namazapp/app/src/main/res/raw
+          curl -L --fail --retry 3 --retry-delay 2 \
+            https://raw.githubusercontent.com/subhoncode/Iman-Guard/main/reminder.mp3 \
+            -o namazapp/app/src/main/res/raw/adhan.mp3
+          test -s namazapp/app/src/main/res/raw/adhan.mp3
 
       - name: Unit tests
         run: gradle -p namazapp testDebugUnitTest --stacktrace
@@ -78,13 +83,14 @@ jobs:
       - name: Assemble APK
         run: gradle -p namazapp assembleDebug --stacktrace
 
-      - name: Verify APK signature
+      - name: Verify APK signature and archive integrity
         shell: bash
         run: |
           set -euo pipefail
           ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose namazapp/app/build/outputs/apk/debug/app-debug.apk
           unzip -t namazapp/app/build/outputs/apk/debug/app-debug.apk >/dev/null
           cp namazapp/app/build/outputs/apk/debug/app-debug.apk Namaz.apk
+          sha256sum Namaz.apk
 
       - uses: actions/upload-artifact@v4
         with:
