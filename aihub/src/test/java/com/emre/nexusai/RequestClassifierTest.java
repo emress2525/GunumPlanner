@@ -8,6 +8,10 @@ public class RequestClassifierTest {
         assertEquals(RequestMode.CODE, RequestClassifier.classify("Kotlin ile Android uygulaması kodla ve test et"));
     }
 
+    @Test public void classifiesAppBuildRequestsAsCode() {
+        assertEquals(RequestMode.CODE, RequestClassifier.classify("Bana promt yazıcı uygulaması yap telefon için APK ver"));
+    }
+
     @Test public void classifiesResearch() {
         assertEquals(RequestMode.RESEARCH, RequestClassifier.classify("Bu konuyu güncel kaynaklarla araştır"));
     }
