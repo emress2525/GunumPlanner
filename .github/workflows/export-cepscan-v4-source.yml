@@ -1,0 +1,41 @@
+name: Export CepScan V4 Source
+
+on:
+  push:
+    branches:
+      - cepscan-apk-build
+    paths:
+      - '.github/workflows/export-cepscan-v4-source.yml'
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore V3 base
+        shell: bash
+        run: |
+          mkdir -p cepscan-src
+          cat cepscan_parts/part_* > cepscan_build.tar.gz.b64
+          test "$(wc -c < cepscan_build.tar.gz.b64)" = "51768"
+          base64 --decode cepscan_build.tar.gz.b64 > cepscan_build.tar.gz
+          echo '281441f4028fb934b040144fc6cdf81b94a14def6a29cb690459e3a36be62fb7  cepscan_build.tar.gz' | sha256sum -c -
+          tar -xzf cepscan_build.tar.gz -C cepscan-src
+      - name: Apply V4 patch
+        shell: bash
+        run: |
+          cat cepscan_v4_parts/part_* > cepscan_v4_patch.gz.b64
+          test "$(wc -c < cepscan_v4_patch.gz.b64)" = "13940"
+          echo 'aa8306ea3c407107f7b3ee33f5bb061350b932ece5a2ea9c1b57624e92385ea4  cepscan_v4_patch.gz.b64' | sha256sum -c -
+          base64 --decode cepscan_v4_patch.gz.b64 | gzip -d > cepscan-v4.patch
+          git apply --directory=cepscan-src cepscan-v4.patch
+          grep -n 'versionName = "4.0.0"' cepscan-src/app/build.gradle.kts
+      - name: Pack V4 source
+        shell: bash
+        run: tar -czf CepScan-V4-source.tar.gz -C cepscan-src .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CepScan-V4-Source
+          path: CepScan-V4-source.tar.gz
+          retention-days: 1
