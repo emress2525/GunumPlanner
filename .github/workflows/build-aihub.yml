@@ -26,6 +26,7 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      # Test-first gate: production build starts only after unit tests pass.
       - name: Unit tests
         run: gradle :aihub:testDebugUnitTest --stacktrace
 
