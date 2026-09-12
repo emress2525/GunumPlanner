@@ -37,8 +37,21 @@ jobs:
           base64 --decode /tmp/current-phone-local-patch.b64 > /tmp/current-phone-local-patch.zip
           echo '51a1d522f5dba4ba03d97efa4e7035ef0940ce681955a145d15d424ba3c8c741  /tmp/current-phone-local-patch.zip' | sha256sum -c -
           unzip -qo /tmp/current-phone-local-patch.zip -d unified-ai-app
+
+      - name: Apply blank URL fix and regression test
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp unified-ai-patches/ProviderFactory-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
+          cp unified-ai-patches/SettingsViewModel-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsViewModel.kt
           mkdir -p unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/cloud
           cp unified-ai-patches/ProviderFactoryUrlTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/cloud/ProviderFactoryUrlTest.kt
+          grep -Fq 'ollamaBaseUrlOrNull(settings.ollamaUrl)' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
+          grep -Fq 'toHttpUrlOrNull' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
+          ! grep -Fq 'settings.ollamaUrl.toHttpUrl()' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
+          grep -Fq 'Ollama adresi http:// veya https:// ile başlamalı.' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsViewModel.kt
+          grep -Fq 'TextButton(onClick = onOpenSettings) { Text("Modeli kur") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/chat/ChatScreen.kt
+          grep -Fq 'Button(onClick = viewModel::downloadLocalModel) { Text("Yerel modeli indir") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsScreen.kt
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -60,6 +73,37 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
 
-      - name: RED - blank Ollama URL regression test
+      - name: GREEN - blank Ollama URL regression test
         working-directory: unified-ai-app
         run: gradle :app:testDebugUnitTest --tests com.unifiedai.app.data.provider.cloud.ProviderFactoryUrlTest --stacktrace
+
+      - name: Lint and full unit tests
+        working-directory: unified-ai-app
+        run: gradle :app:lintDebug :app:testDebugUnitTest --stacktrace
+
+      - name: Assemble debug APK
+        working-directory: unified-ai-app
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Verify APK UX and integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK='unified-ai-app/app/build/outputs/apk/debug/app-debug.apk'
+          test -s "$APK"
+          unzip -t "$APK" >/dev/null
+          rm -rf /tmp/apk-dex && mkdir -p /tmp/apk-dex
+          unzip -q "$APK" 'classes*.dex' -d /tmp/apk-dex
+          strings /tmp/apk-dex/classes*.dex > /tmp/apk-strings.txt
+          grep -Fq 'Modeli kur' /tmp/apk-strings.txt
+          grep -Fq 'Yerel modeli indir' /tmp/apk-strings.txt
+          grep -Fq 'Ollama adresi http:// veya https:// ile başlamalı.' /tmp/apk-strings.txt
+          sha256sum "$APK"
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-ai-phone-local-v0-4-debug-apk
+          path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
