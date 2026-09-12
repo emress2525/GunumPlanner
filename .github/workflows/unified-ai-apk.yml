@@ -12,7 +12,7 @@ permissions:
 jobs:
   verify-test-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - name: Checkout temporary build branch
         uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
           test -f unified-ai-app/settings.gradle.kts
           test -f unified-ai-app/app/build.gradle.kts
 
-      - name: Apply and verify API 36 and test patches
+      - name: Apply verified API 36 and test patches
         shell: bash
         run: |
           set -euo pipefail
@@ -76,11 +76,36 @@ jobs:
           cp unified-ai-patches/libs.versions.toml unified-ai-app/gradle/libs.versions.toml
           cp unified-ai-patches/app-build.gradle.kts unified-ai-app/app/build.gradle.kts
           cp unified-ai-patches/ChatViewModelTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/feature/chat/ChatViewModelTest.kt
+
+      - name: Apply and verify physical-phone local AI patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            unified-ai-phone-patch/part00.bin \
+            unified-ai-phone-patch/part01.bin \
+            unified-ai-phone-patch/part02.bin \
+            unified-ai-phone-patch/part03.bin \
+            unified-ai-phone-patch/part04.bin \
+            unified-ai-phone-patch/part05.bin \
+            unified-ai-phone-patch/part06.bin \
+            unified-ai-phone-patch/part07.bin \
+            unified-ai-phone-patch/part08.bin \
+            > /tmp/phone-local-patch.zip
+          test "$(wc -c < /tmp/phone-local-patch.zip)" -eq 24812
+          echo '70372e331bb0ac44cb60ad360d55b4772da3fe9ab60d935c74b29ba288888fea  /tmp/phone-local-patch.zip' | sha256sum -c -
+          unzip -t /tmp/phone-local-patch.zip >/dev/null
+          unzip -o -q /tmp/phone-local-patch.zip -d unified-ai-app
           grep -q 'compileSdk = 36' unified-ai-app/app/build.gradle.kts
           grep -q 'targetSdk = 36' unified-ai-app/app/build.gradle.kts
-          grep -q 'composeBom = "2025.08.00"' unified-ai-app/gradle/libs.versions.toml
+          grep -q 'versionName = "0.2.0"' unified-ai-app/app/build.gradle.kts
+          grep -q 'litertlm = "0.16.1"' unified-ai-app/gradle/libs.versions.toml
           grep -q 'org.json:json:20260814' unified-ai-app/app/build.gradle.kts
           grep -q 'object : AttachmentLoader' unified-ai-app/app/src/test/java/com/unifiedai/app/feature/chat/ChatViewModelTest.kt
+          test -f unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceProvider.kt
+          test -f unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
+          test -f unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/LiteRtLmRuntime.kt
+          test -f unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/local/OnDeviceProviderTest.kt
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -121,7 +146,7 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: unified-ai-debug-apk
+          name: unified-ai-v0.2-phone-local-debug-apk
           path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
