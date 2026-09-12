@@ -19,6 +19,7 @@ public final class TextGateway {
     private NexusResult completeInternal(NexusConfig config, RequestMode mode, String prompt, String languageReference) {
         if (config == null || config.textEndpoints.isEmpty()) return NexusResult.error(ALL_ENDPOINTS_FAILED_MESSAGE);
         List<String> failures = new ArrayList<>();
+        boolean receivedButRejected = false;
         for (NexusConfig.TextEndpoint endpoint : FailoverPolicy.ordered(config.textEndpoints)) {
             try {
                 String payload = RequestPayload.openAi(endpoint.model, SystemPrompts.forMode(mode), prompt);
@@ -32,11 +33,18 @@ public final class TextGateway {
                     failures.add(endpoint.name + ": boş yanıt");
                     continue;
                 }
+                if (ResponseQuality.isTaskRefusal(languageReference, text)) {
+                    receivedButRejected = true;
+                    failures.add(endpoint.name + ": görevi yapmak yerine yetenek reddi verdi");
+                    continue;
+                }
                 if (mode == RequestMode.RESEARCH && ResponseQuality.isResearchRefusal(text)) {
+                    receivedButRejected = true;
                     failures.add(endpoint.name + ": araştırma isteğini reddetti");
                     continue;
                 }
                 if (mode == RequestMode.RESEARCH && ResponseQuality.isWrongLanguage(languageReference, text)) {
+                    receivedButRejected = true;
                     failures.add(endpoint.name + ": yanlış dilde yanıt verdi");
                     continue;
                 }
@@ -45,9 +53,15 @@ public final class TextGateway {
                 failures.add(endpoint.name + ": " + safeMessage(ex));
             }
         }
-        String message = mode == RequestMode.RESEARCH
-                ? "Araştırma motorları bu isteğe uygun bir yanıt üretemedi. Otomatik olarak tüm yedek motorlar denendi."
-                : ALL_ENDPOINTS_FAILED_MESSAGE;
+
+        String message;
+        if (mode == RequestMode.RESEARCH) {
+            message = "Araştırma motorları bu isteğe uygun bir yanıt üretemedi. Otomatik olarak tüm yedek motorlar denendi.";
+        } else if (receivedButRejected) {
+            message = "Nexus, işi yapmak yerine mazeret üreten yanıtları kabul etmedi. Tüm yedek AI motorları otomatik olarak denendi.";
+        } else {
+            message = ALL_ENDPOINTS_FAILED_MESSAGE;
+        }
         return NexusResult.error(message + (failures.isEmpty() ? "" : "\n" + String.join("\n", failures)));
     }
 
