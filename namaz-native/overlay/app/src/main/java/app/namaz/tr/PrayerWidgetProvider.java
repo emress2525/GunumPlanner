@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 
 public class PrayerWidgetProvider extends AppWidgetProvider {
@@ -25,9 +26,20 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         String name = p.getString("nextPrayerName", "Namaz");
         String time = p.getString("nextPrayerTime", "—");
         long epoch = p.getLong("nextPrayerEpoch", 0L);
+        String ayah = p.getString("dailyAyahText", "");
+        String source = p.getString("dailyAyahSource", "");
+
         RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.prayer_widget);
         v.setTextViewText(R.id.widgetPrayer, name + " · " + time);
         v.setTextViewText(R.id.widgetRemaining, remaining(epoch));
+        if (ayah == null || ayah.trim().isEmpty()) {
+            v.setViewVisibility(R.id.widgetAyah, View.GONE);
+        } else {
+            String line = "“" + ayah.trim() + "”" + (source == null || source.trim().isEmpty() ? "" : "  — " + source.trim());
+            v.setTextViewText(R.id.widgetAyah, line);
+            v.setViewVisibility(R.id.widgetAyah, View.VISIBLE);
+        }
+
         Intent open = new Intent(context, MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pi = PendingIntent.getActivity(context, 991, open,
