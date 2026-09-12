@@ -50,8 +50,7 @@ jobs:
                       'messages': [{'role':'user','content':'Reply briefly with NEXUS_OK'}]
                   }).encode()
                   request = urllib.request.Request(
-                      url,
-                      data=payload,
+                      url, data=payload,
                       headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'}
                   )
                   with urllib.request.urlopen(request, timeout=30) as response:
@@ -69,52 +68,90 @@ jobs:
           raise SystemExit('All no-login text engines failed:\n' + '\n'.join(errors))
           PY
 
-      - name: Live web search smoke test
+      - name: Live keyless web search smoke test
         run: |
           python3 - <<'PY'
           import re, urllib.parse, urllib.request
           q = urllib.parse.quote_plus('prompt generator apps best features')
-          url = 'https://html.duckduckgo.com/html/?q=' + q + '&kl=tr-tr'
-          request = urllib.request.Request(url, headers={
+          headers = {
               'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2',
-              'Accept':'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8'
-          })
-          with urllib.request.urlopen(request, timeout=30) as response:
-              html = response.read(1000000).decode('utf-8', 'replace')
-          count = len(re.findall(r'result__a', html, re.I))
-          if count < 2:
-              raise SystemExit(f'Web search returned too few organic result markers: {count}')
-          print('Live web search OK; organic result markers:', count)
+              'Accept':'text/html,application/xhtml+xml,application/rss+xml,application/xml;q=0.9,*/*;q=0.8'
+          }
+          candidates = [
+              ('Bing RSS', 'https://www.bing.com/search?q=' + q + '&format=rss', r'<item[ >]'),
+              ('DuckDuckGo Lite', 'https://lite.duckduckgo.com/lite/?q=' + q, r'result-link'),
+          ]
+          errors=[]
+          for name,url,marker in candidates:
+              try:
+                  req=urllib.request.Request(url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=30) as response:
+                      text=response.read(1000000).decode('utf-8','replace')
+                  count=len(re.findall(marker,text,re.I))
+                  print(name,'result markers:',count)
+                  if count >= 2:
+                      raise SystemExit(0)
+                  errors.append(f'{name}: only {count} results')
+              except SystemExit:
+                  raise
+              except Exception as exc:
+                  errors.append(f'{name}: {type(exc).__name__}: {exc}')
+          raise SystemExit('All keyless web search transports failed:\n'+'\n'.join(errors))
           PY
 
-      - name: Live grounded Turkish research smoke test
+      - name: Live end-to-end Turkish research smoke test
         run: |
           python3 - <<'PY'
-          import json, urllib.request
-          endpoints = [
-              ('Vireonix Auto', 'https://vireonix.ai/v1/chat/completions', 'auto'),
-              ('Animica Kimi', 'https://animica.dev/v1/chat/completions', 'kimi-k3'),
-              ('Cehpoint AI', 'https://ai-api.cehpoint.co.in/v1/chat/completions', 'cehpoint-ai'),
+          import html, json, re, urllib.parse, urllib.request, xml.etree.ElementTree as ET
+          query='prompt generator apps best features prompt engineering tools'
+          q=urllib.parse.quote_plus(query)
+          req=urllib.request.Request(
+              'https://www.bing.com/search?q='+q+'&format=rss',
+              headers={'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2','Accept':'application/rss+xml,application/xml;q=0.9,*/*;q=0.8'}
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              raw=response.read(1000000)
+          root=ET.fromstring(raw)
+          items=root.findall('.//item')[:5]
+          if len(items) < 2:
+              raise SystemExit('Bing RSS returned too few research results')
+          sources=[]
+          for item in items:
+              title=(item.findtext('title') or '').strip()
+              link=(item.findtext('link') or '').strip()
+              desc=re.sub(r'<[^>]+>',' ',html.unescape(item.findtext('description') or ''))
+              desc=re.sub(r'\s+',' ',desc).strip()
+              if link.startswith('http'):
+                  sources.append((title,link,desc))
+          if len(sources) < 2:
+              raise SystemExit('Research source parsing failed')
+          source_text='\n\n'.join(f'[{i+1}] {t}\nURL: {u}\nÖzet: {d}' for i,(t,u,d) in enumerate(sources))
+          system=('You are Nexus AI research mode. The user message contains LIVE WEB SEARCH RESULTS gathered by the app. '
+                  'Use those results as evidence. Compare alternatives. Do not claim you lack web access. Never invent a URL. '
+                  'If the user writes in Turkish, the ENTIRE answer must be Turkish.')
+          user=('KULLANICININ İSTEĞİ:\nPrompt yazıcı uygulamalarını piyasadakilerle araştır; güçlü ve zayıf yönleri karşılaştır ve en iyi ürün tasarımını öner.\n\n'
+                'CANLI WEB ARAMA SONUÇLARI:\n'+source_text+'\n\nTürkçe cevap ver; reddetme, eldeki kaynaklarla yararlı bir sentez üret.')
+          endpoints=[
+              ('Vireonix Auto','https://vireonix.ai/v1/chat/completions','auto'),
+              ('Animica Kimi','https://animica.dev/v1/chat/completions','kimi-k3'),
+              ('Cehpoint AI','https://ai-api.cehpoint.co.in/v1/chat/completions','cehpoint-ai'),
           ]
-          system = ('You are Nexus AI research mode. LIVE WEB SEARCH RESULTS are already supplied. '
-                    'Use them as evidence. Do not say you lack web access. Never invent URLs. '
-                    'The user is Turkish; the ENTIRE answer must be Turkish.')
-          user = '''KULLANICININ İSTEĞİ:\nPrompt yazıcı uygulamalarını araştır, güçlü ve zayıf yönlerini karşılaştır ve iyi bir ürün için öneri ver.\n\nCANLI WEB ARAMA SONUÇLARI:\n[1] Prompt engineering guide\nURL: https://example.com/prompt-guide\nÖzet: Prompt şablonları, değişkenler ve sürümleme özelliklerini anlatır.\n[2] Prompt tool comparison\nURL: https://example.org/tools\nÖzet: Kütüphane, test, paylaşım ve çıktı iyileştirme özelliklerini karşılaştırır.\n\nTürkçe cevap ver ve sonunda Kaynaklar bölümü yaz.'''
-          refusals = ('i cannot fulfill','i can\'t fulfill','do not have web access','information is unavailable','cannot browse')
+          refusals=('i cannot fulfill','i can\'t fulfill','do not have web access','information is unavailable','cannot browse')
           errors=[]
           for name,url,model in endpoints:
               try:
                   payload=json.dumps({'model':model,'stream':False,'messages':[{'role':'system','content':system},{'role':'user','content':user}]}).encode()
-                  req=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'})
-                  with urllib.request.urlopen(req,timeout=40) as response:
+                  request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'})
+                  with urllib.request.urlopen(request,timeout=45) as response:
                       body=json.load(response)
                   text=body['choices'][0]['message']['content'].strip()
-                  lower=text.lower()
-                  turkish = any(x in lower for x in (' ve ',' için ',' uygulama',' özellik',' kaynak',' öner')) or any(c in text for c in 'çğıöşüÇĞİÖŞÜ')
-                  if len(text) >= 80 and turkish and not any(r in lower for r in refusals):
-                      print('Grounded Turkish research OK:', name, text[:160].replace('\n',' '))
+                  lower=' '+text.lower()+' '
+                  turkish=any(x in lower for x in (' ve ',' için ',' uygulama',' özellik',' kaynak',' öner',' güçlü',' zayıf')) or any(c in text for c in 'çğıöşüÇĞİÖŞÜ')
+                  refused=any(r in lower for r in refusals)
+                  if len(text) >= 120 and turkish and not refused:
+                      print('End-to-end grounded Turkish research OK:',name,text[:200].replace('\n',' '))
                       raise SystemExit(0)
-                  errors.append(f'{name}: unsuitable research answer: {text[:140]}')
+                  errors.append(f'{name}: unsuitable answer: {text[:180]}')
               except SystemExit:
                   raise
               except Exception as exc:
@@ -126,12 +163,12 @@ jobs:
         run: |
           python3 - <<'PY'
           import json, urllib.request
-          url = 'https://ahm7xmakki.com/api/tti'
-          payload = json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
-          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.2 Android'})
-          with urllib.request.urlopen(request, timeout=90) as response:
-              body = json.load(response)
-          image_url = body.get('imageUrl','')
+          url='https://ahm7xmakki.com/api/tti'
+          payload=json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
+          request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.2 Android'})
+          with urllib.request.urlopen(request,timeout=90) as response:
+              body=json.load(response)
+          image_url=body.get('imageUrl','')
           if not image_url.startswith('https://'):
               raise SystemExit('Image endpoint did not return an HTTPS image URL')
           print('Live image endpoint returned a valid URL')
