@@ -1,0 +1,125 @@
+name: Build CepScan V4.1 APK
+
+on:
+  push:
+    branches:
+      - cepscan-apk-build
+    paths:
+      - 'cepscan_v41_patch.gz.b64'
+      - '.github/workflows/build-cepscan-v41.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android 36 SDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0' 'emulator' 'system-images;android-36;google_apis;x86_64'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Restore V4 source
+        shell: bash
+        run: |
+          mkdir -p cepscan-src
+          cat cepscan_parts/part_* > v3.b64
+          base64 --decode v3.b64 > v3.tar.gz
+          echo '281441f4028fb934b040144fc6cdf81b94a14def6a29cb690459e3a36be62fb7  v3.tar.gz' | sha256sum -c -
+          tar -xzf v3.tar.gz -C cepscan-src
+          cat cepscan_v4_parts/part_* > v4patch.b64
+          echo 'aa8306ea3c407107f7b3ee33f5bb061350b932ece5a2ea9c1b57624e92385ea4  v4patch.b64' | sha256sum -c -
+          base64 --decode v4patch.b64 | gzip -d > v4.patch
+          git apply --directory=cepscan-src v4.patch
+
+      - name: Apply V4.1 crash and UI patch
+        shell: bash
+        run: |
+          echo '914be03107336e296a94fede559c9959efdb7b8b99afddab4c11b16a4f1e26f9  cepscan_v41_patch.gz.b64' | sha256sum -c -
+          base64 --decode cepscan_v41_patch.gz.b64 | gzip -d > v41.patch
+          git apply --check --directory=cepscan-src v41.patch
+          git apply --directory=cepscan-src v41.patch
+          grep -n 'versionName = "4.1.0"' cepscan-src/app/build.gradle.kts
+          test -f cepscan-src/app/src/main/java/com/cepscan/app/domain/PreviewGuard.kt
+
+      - name: Unit tests and build
+        working-directory: cepscan-src
+        run: gradle --no-daemon --stacktrace :app:testDebugUnitTest :app:assembleDebug
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          APK='cepscan-src/app/build/outputs/apk/debug/app-debug.apk'
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V4.1-badging.txt
+          cp "$APK" CepScan-V4.1.apk
+          sha256sum CepScan-V4.1.apk | tee CepScan-V4.1.apk.sha256
+
+      - name: Enable KVM
+        shell: bash
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm || true
+
+      - name: Android 16 startup and UI smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            set -e
+            adb install -r cepscan-src/app/build/outputs/apk/debug/app-debug.apk
+            adb shell settings put system font_scale 1.15
+            adb shell am force-stop com.cepscan.app
+            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
+            sleep 5
+            test -n "$(adb shell pidof com.cepscan.app | tr -d '\r')"
+
+            echo 'iVBORw0KGgoAAAANSUhEUgAAAGQAAACICAIAAAD0IXAAAAACBElEQVR4nO3TwQkAIBDAsNP9d26XIEJCwQd5ZhZ9O8B3Zx3A2QgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsRJgL3f4AAgJf1NAAAAAASUVORK5CYII=' | base64 -d > /tmp/page.png
+            adb push /tmp/page.png /data/local/tmp/page.png >/dev/null
+            adb shell run-as com.cepscan.app mkdir -p files/scans/testdoc shared_prefs
+            adb shell run-as com.cepscan.app cp /data/local/tmp/page.png files/scans/testdoc/page_001.png
+            cat > /tmp/cepscan_docs.xml <<'XML'
+            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+            <map><string name="items">[{&quot;id&quot;:&quot;testdoc&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Tarama_20260912_232924.pdf&quot;,&quot;pageCount&quot;:2,&quot;createdAt&quot;:1789240000000,&quot;updatedAt&quot;:1789240000000,&quot;ocrText&quot;:&quot;test&quot;,&quot;correctedOcrText&quot;:&quot;&quot;,&quot;ocrUpdatedAt&quot;:1789240000000,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;exportDpi&quot;:300,&quot;folder&quot;:&quot;&quot;,&quot;tags&quot;:[],&quot;isFavorite&quot;:false,&quot;isPinned&quot;:false,&quot;isPrivate&quot;:false,&quot;isTrashed&quot;:false,&quot;searchablePdf&quot;:true,&quot;passwordProtected&quot;:false,&quot;isDraft&quot;:false,&quot;smartFields&quot;:{},&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/testdoc/page_001.png&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;,&quot;enhancementStrength&quot;:50,&quot;dewarpStrength&quot;:0,&quot;annotations&quot;:[],&quot;qualityFindings&quot;:[]}]}]</string></map>
+            XML
+            adb push /tmp/cepscan_docs.xml /data/local/tmp/cepscan_docs.xml >/dev/null
+            adb shell am force-stop com.cepscan.app
+            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs.xml shared_prefs/cepscan_docs.xml
+            adb logcat -c
+            for N in 1 2 3; do
+              adb shell am force-stop com.cepscan.app
+              adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
+              sleep 4
+              test -n "$(adb shell pidof com.cepscan.app | tr -d '\r')"
+            done
+            adb exec-out screencap -p > CepScan-V4.1-home.png
+            adb logcat -d -v threadtime > CepScan-V4.1-logcat.txt
+            ! grep -q 'Process: com.cepscan.app' CepScan-V4.1-logcat.txt
+
+      - name: Upload verified APK and UI evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: CepScan-V4.1-APK
+          path: |
+            CepScan-V4.1.apk
+            CepScan-V4.1.apk.sha256
+            CepScan-V4.1-badging.txt
+            CepScan-V4.1-home.png
+            CepScan-V4.1-logcat.txt
+          if-no-files-found: error
+          retention-days: 7
