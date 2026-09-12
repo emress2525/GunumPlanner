@@ -1,6 +1,21 @@
 {
-  "version": 2,
+  "version": 4,
   "textEndpoints": [
+    {
+      "name": "BlockRun GPT-OSS",
+      "url": "https://blockrun.ai/api/v1/chat/completions",
+      "model": "nvidia/gpt-oss-20b"
+    },
+    {
+      "name": "Vireonix Auto",
+      "url": "https://vireonix.ai/v1/chat/completions",
+      "model": "auto"
+    },
+    {
+      "name": "Animica Kimi",
+      "url": "https://animica.dev/v1/chat/completions",
+      "model": "kimi-k3"
+    },
     {
       "name": "Cehpoint AI",
       "url": "https://ai-api.cehpoint.co.in/v1/chat/completions",
