@@ -21,12 +21,22 @@ public final class CommandResult {
         OPEN_CAMERA,
         NAVIGATE_TO,
         DIAL_NUMBER,
+        DIAL_CONTACT,
         COMPOSE_SMS,
+        COMPOSE_SMS_CONTACT,
         MEDIA_PLAY_PAUSE,
         MEDIA_NEXT,
         MEDIA_PREVIOUS,
         CREATE_NOTE,
         READ_LAST_NOTE,
+        SET_REMINDER,
+        ADD_CALENDAR_EVENT,
+        SAVE_ROUTINE,
+        RUN_ROUTINE,
+        LIST_ROUTINES,
+        DELETE_ROUTINE,
+        READ_HISTORY,
+        CLEAR_HISTORY,
         HELP
     }
 
@@ -64,6 +74,23 @@ public final class CommandResult {
 
     public static CommandResult alarm(int hour, int minute) {
         return new CommandResult(Type.SET_ALARM, "", "", hour, minute, -1);
+    }
+
+    public static CommandResult detailed(Type type, String text, String secondaryText,
+                                         int hour, int minute, int value) {
+        return new CommandResult(type, text, secondaryText, hour, minute, value);
+    }
+
+    public static CommandResult relativeReminder(String text, int seconds) {
+        return detailed(Type.SET_REMINDER, text, "relative", -1, -1, seconds);
+    }
+
+    public static CommandResult absoluteReminder(String text, int dayOffset, int hour, int minute) {
+        return detailed(Type.SET_REMINDER, text, "absolute", hour, minute, dayOffset);
+    }
+
+    public static CommandResult calendarEvent(String text, int dayOffset, int hour, int minute) {
+        return detailed(Type.ADD_CALENDAR_EVENT, text, "", hour, minute, dayOffset);
     }
 
     public Type type() { return type; }
