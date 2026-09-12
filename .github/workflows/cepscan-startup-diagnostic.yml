@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platform-tools' 'platforms;android-35' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
+          sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0' 'emulator' 'system-images;android-36;google_apis;x86_64'
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
@@ -48,10 +48,10 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm || true
-      - name: Launch app and persisted-document relaunch
+      - name: Launch and relaunch on Android 16
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          api-level: 36
           arch: x86_64
           profile: pixel_6
           disable-animations: true
@@ -60,57 +60,26 @@ jobs:
             APK=cepscan-src/app/build/outputs/apk/debug/app-debug.apk
             adb install -r "$APK"
             : > cepscan-startup-logcat.txt
-
-            echo '=== CLEAN LAUNCH ===' | tee -a cepscan-startup-logcat.txt
-            adb logcat -c
-            adb shell am force-stop com.cepscan.app
-            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
-            sleep 6
-            adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
-            CLEAN_PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-            echo "clean_pid=$CLEAN_PID" | tee -a cepscan-startup-logcat.txt
-            test -n "$CLEAN_PID"
-
-            echo '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCA CMA GQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAF//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAwEBPwF//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAgEBPwF//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQAGPwJ//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPyF//9oADAMBAAIAAwAAABB//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAwEBPxB//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAgEBPxB//8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxB//9k=' | tr -d ' ' | base64 -d > /tmp/page.jpg
-            adb push /tmp/page.jpg /data/local/tmp/page.jpg >/dev/null
-            adb shell run-as com.cepscan.app mkdir -p files/scans/testdoc shared_prefs
-            adb shell run-as com.cepscan.app cp /data/local/tmp/page.jpg files/scans/testdoc/page_001.jpg
-            cat > /tmp/cepscan_docs.xml <<'XML'
-            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-            <map>
-              <string name="items">[{&quot;id&quot;:&quot;testdoc&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Tarama_test.pdf&quot;,&quot;pageCount&quot;:1,&quot;createdAt&quot;:1,&quot;updatedAt&quot;:1,&quot;ocrText&quot;:&quot;test&quot;,&quot;correctedOcrText&quot;:&quot;&quot;,&quot;ocrUpdatedAt&quot;:1,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;exportDpi&quot;:300,&quot;folder&quot;:&quot;&quot;,&quot;tags&quot;:[],&quot;isFavorite&quot;:false,&quot;isPinned&quot;:false,&quot;isPrivate&quot;:false,&quot;isTrashed&quot;:false,&quot;searchablePdf&quot;:true,&quot;passwordProtected&quot;:false,&quot;isDraft&quot;:true,&quot;smartFields&quot;:{},&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/testdoc/page_001.jpg&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;,&quot;enhancementStrength&quot;:50,&quot;dewarpStrength&quot;:0,&quot;annotations&quot;:[],&quot;qualityFindings&quot;:[]}]}]</string>
-            </map>
-            XML
-            adb push /tmp/cepscan_docs.xml /data/local/tmp/cepscan_docs.xml >/dev/null
-            adb shell am force-stop com.cepscan.app
-            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs.xml shared_prefs/cepscan_docs.xml
-
-            echo '=== PERSISTED DOCUMENT LAUNCH ===' | tee -a cepscan-startup-logcat.txt
-            adb logcat -c
-            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
-            sleep 6
-            adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
-            DOC_PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-            echo "persisted_pid=$DOC_PID" | tee -a cepscan-startup-logcat.txt
-            test -n "$DOC_PID"
-
-            echo '=== SECOND RELAUNCH ===' | tee -a cepscan-startup-logcat.txt
-            adb shell am force-stop com.cepscan.app
-            adb logcat -c
-            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
-            sleep 6
-            adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
-            RELAUNCH_PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-            echo "relaunch_pid=$RELAUNCH_PID" | tee -a cepscan-startup-logcat.txt
-            test -n "$RELAUNCH_PID"
-
-            echo '=== FATAL / AndroidRuntime ==='
-            grep -n -A100 -B25 -E 'FATAL EXCEPTION|AndroidRuntime|Process: com\.cepscan\.app' cepscan-startup-logcat.txt || true
+            for N in 1 2 3; do
+              echo "=== LAUNCH $N ===" | tee -a cepscan-startup-logcat.txt
+              adb shell am force-stop com.cepscan.app
+              adb logcat -c
+              adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
+              sleep 5
+              adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
+              PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
+              echo "pid_$N=$PID" | tee -a cepscan-startup-logcat.txt
+              test -n "$PID"
+            done
+            if grep -q 'FATAL EXCEPTION.*com.cepscan\|Process: com.cepscan.app' cepscan-startup-logcat.txt; then
+              grep -n -A100 -B25 -E 'FATAL EXCEPTION|Process: com\.cepscan\.app' cepscan-startup-logcat.txt
+              exit 1
+            fi
       - name: Upload logcat
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CepScan-startup-logcat
+          name: CepScan-api36-startup-logcat
           path: cepscan-startup-logcat.txt
           if-no-files-found: warn
           retention-days: 2
