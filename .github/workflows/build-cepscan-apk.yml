@@ -54,29 +54,7 @@ jobs:
       - name: Apply PdfEngine Kotlin compile fix
         shell: bash
         run: |
-          python3 - <<'PYFIX'
-          from pathlib import Path
-          p = Path('cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt')
-          s = p.read_text()
-          s = s.replace('        PdfDocument().use { pdf ->', '        val pdf = PdfDocument()\n        try {', 1)
-          old = '''            context.contentResolver.openOutputStream(destination, "rwt").use { output ->
-                requireNotNull(output) { "PDF hedefi açılamadı." }
-                pdf.writeTo(output)
-            }
-        }
-    }'''
-          new = '''            context.contentResolver.openOutputStream(destination, "rwt").use { output ->
-                requireNotNull(output) { "PDF hedefi açılamadı." }
-                pdf.writeTo(output)
-            }
-        } finally {
-            pdf.close()
-        }
-    }'''
-          if old not in s:
-              raise SystemExit('PdfEngine tail patch target not found')
-          p.write_text(s.replace(old, new, 1))
-          PYFIX
+          python3 -c 'from pathlib import Path; p=Path("cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt"); s=p.read_text(); s=s.replace("        PdfDocument().use { pdf ->", "        val pdf = PdfDocument()\n        try {", 1); marker="            context.contentResolver.openOutputStream(destination, \"rwt\").use { output ->\n                requireNotNull(output) { \"PDF hedefi açılamadı.\" }\n                pdf.writeTo(output)\n            }\n        }\n    }\n\n    suspend fun writeDocument"; repl="            context.contentResolver.openOutputStream(destination, \"rwt\").use { output ->\n                requireNotNull(output) { \"PDF hedefi açılamadı.\" }\n                pdf.writeTo(output)\n            }\n        } finally {\n            pdf.close()\n        }\n    }\n\n    suspend fun writeDocument"; assert marker in s, "PdfEngine tail patch target not found"; p.write_text(s.replace(marker, repl, 1))'
           grep -n "val pdf = PdfDocument\|finally\|pdf.close" cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt | head -10
 
       - name: Build debug APK
