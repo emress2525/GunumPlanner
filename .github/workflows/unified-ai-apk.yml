@@ -1,0 +1,107 @@
+name: Unified AI Android APK
+
+on:
+  push:
+    branches:
+      - unified-ai-build-temp
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout temporary build branch
+        uses: actions/checkout@v4
+
+      - name: Verify transferred source chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/chunks.sha256 <<'EOF'
+          321edaed884eecd31cd99cff2b8732a815e528c2cf4f4944c0ab2fe6a85923f9  unified-ai-parts/part00.b64
+          8d51eb9fde52540db3a3cce85a31c836242346f57cd2a0329809918f81e975f2  unified-ai-parts/part01.b64
+          4fad362777e946efa551b4ac7ece5ee328af5ee036ca18b3727a2faf69338b44  unified-ai-parts/part02.b64
+          67be39e401c9adefea756609ad816a601fab63a31fad12ab19e727cb27d6a868  unified-ai-parts/part03.b64
+          0510f3708d917ffa60597b38ea0bcb4829e6c9c8d67a20c7e751d7539ec88375  unified-ai-parts/part04.b64
+          9e1dbdf62fd3b461905d2b9ad040fc687424557e14c8187e091c9971569612c3  unified-ai-parts/part050.b64
+          1ceb551cd60f762a13c4cc857436424f9aed5d5b9c4462d51f8064c103400920  unified-ai-parts/part051.b64
+          5c7397d6106d5e4f08c8efd8ceff1fb29c0aef905e55634de0a4c94ad7c896ef  unified-ai-parts/part052.b64
+          ab609f490ceff80094dd65045e648cb44664ffe33e90f6f06ad1573429d79b51  unified-ai-parts/part053.b64
+          bbb8813994b272b8bc5589192267f38b502117c2c06ddef6d3cbe0a48f2e77ad  unified-ai-parts/part054.b64
+          341c524051c0c9df1f60a9e6532ad54896016981e1e1de65b445f3384497da07  unified-ai-parts/part055.b64
+          EOF
+          sha256sum -c /tmp/chunks.sha256
+
+      - name: Reconstruct and verify source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            unified-ai-parts/part00.b64 \
+            unified-ai-parts/part01.b64 \
+            unified-ai-parts/part02.b64 \
+            unified-ai-parts/part03.b64 \
+            unified-ai-parts/part04.b64 \
+            unified-ai-parts/part050.b64 \
+            unified-ai-parts/part051.b64 \
+            unified-ai-parts/part052.b64 \
+            unified-ai-parts/part053.b64 \
+            unified-ai-parts/part054.b64 \
+            unified-ai-parts/part055.b64 \
+            > /tmp/unified-ai-source.b64
+          test "$(wc -c < /tmp/unified-ai-source.b64)" -eq 107412
+          base64 --decode /tmp/unified-ai-source.b64 > /tmp/unified-ai-source.zip
+          echo 'fba7443946a842a6b7ea331c75a216da022b87dcc340aee9c1d8d9961c037d26  /tmp/unified-ai-source.zip' | sha256sum -c -
+          rm -rf unified-ai-app
+          mkdir unified-ai-app
+          unzip -q /tmp/unified-ai-source.zip -d unified-ai-app
+          test -f unified-ai-app/settings.gradle.kts
+          test -f unified-ai-app/app/build.gradle.kts
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 9.6.0
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android API 36
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Lint and unit tests
+        working-directory: unified-ai-app
+        run: gradle :app:lintDebug :app:testDebugUnitTest --stacktrace
+
+      - name: Assemble debug APK
+        working-directory: unified-ai-app
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Verify APK exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
+          unzip -t unified-ai-app/app/build/outputs/apk/debug/app-debug.apk >/dev/null
+          sha256sum unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-ai-debug-apk
+          path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
