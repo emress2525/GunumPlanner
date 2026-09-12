@@ -66,17 +66,20 @@ jobs:
           test -f unified-ai-app/settings.gradle.kts
           test -f unified-ai-app/app/build.gradle.kts
 
-      - name: Apply and verify API 36 dependency patch
+      - name: Apply and verify API 36 and test patches
         shell: bash
         run: |
           set -euo pipefail
           echo 'fc5b25fc866a22ef846953c62bd330530f99508eddbe1e16965e9a85e059897f  unified-ai-patches/libs.versions.toml' | sha256sum -c -
           echo '5447df09b48f6787e984a2e7874896f46ddc3a07361e63f8f7236b139f2b5b78  unified-ai-patches/app-build.gradle.kts' | sha256sum -c -
+          echo 'a8dc4dac419b12c59e7667fb29da8d9db1314dd071e980d59b9704fa768056d3  unified-ai-patches/ChatViewModelTest.kt' | sha256sum -c -
           cp unified-ai-patches/libs.versions.toml unified-ai-app/gradle/libs.versions.toml
           cp unified-ai-patches/app-build.gradle.kts unified-ai-app/app/build.gradle.kts
+          cp unified-ai-patches/ChatViewModelTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/feature/chat/ChatViewModelTest.kt
           grep -q 'compileSdk = 36' unified-ai-app/app/build.gradle.kts
           grep -q 'targetSdk = 36' unified-ai-app/app/build.gradle.kts
           grep -q 'composeBom = "2025.08.00"' unified-ai-app/gradle/libs.versions.toml
+          grep -q 'object : AttachmentLoader' unified-ai-app/app/src/test/java/com/unifiedai/app/feature/chat/ChatViewModelTest.kt
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
