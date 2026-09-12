@@ -89,7 +89,9 @@ jobs:
             sleep 5
             test -n "$(adb shell pidof com.cepscan.app | tr -d '\r')"
 
-            echo 'iVBORw0KGgoAAAANSUhEUgAAAGQAAACICAIAAAD0IXAAAAACBElEQVR4nO3TwQkAIBDAsNP9d26XIEJCwQd5ZhZ9O8B3Zx3A2QgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsBJhKcJKhKUIKxGWIqxEWIpwEmEpwkqEpQgrEZYirERYirASYSmCSoSlCCsRliKsRFiKsRJgL3f4AAgJf1NAAAAAASUVORK5CYII=' | base64 -d > /tmp/page.png
+            # Use a real Android screenshot as a guaranteed-decodable persisted page.
+            adb exec-out screencap -p > /tmp/page.png
+            test -s /tmp/page.png
             adb push /tmp/page.png /data/local/tmp/page.png >/dev/null
             adb shell run-as com.cepscan.app mkdir -p files/scans/testdoc shared_prefs
             adb shell run-as com.cepscan.app cp /data/local/tmp/page.png files/scans/testdoc/page_001.png
@@ -112,6 +114,7 @@ jobs:
             ! grep -q 'Process: com.cepscan.app' CepScan-V4.1-logcat.txt
 
       - name: Upload verified APK and UI evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: CepScan-V4.1-APK
