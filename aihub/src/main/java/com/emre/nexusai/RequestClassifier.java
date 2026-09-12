@@ -13,8 +13,14 @@ public final class RequestClassifier {
             return RequestMode.VIDEO;
         }
 
-        // Code wins over research when a user asks to research and then fix code.
-        if (containsAny(p, "kodla", "kodunu", "kod yaz", "code", "bug fix", "debug", "hata düzelt", "hata ayıkla", "compile", "derle", "test et", "kotlin", "java", "python", "javascript", "android", "api", "sql", "ilogic", "inventor")) {
+        // Code wins over research when a user asks to research and then build/fix software.
+        if (containsAny(p,
+                "kodla", "kodunu", "kod yaz", "code", "bug fix", "debug", "hata düzelt", "hata ayıkla",
+                "compile", "derle", "test et", "kotlin", "java", "python", "javascript", "android", "api", "sql", "ilogic", "inventor",
+                "apk ver", "apk oluştur", "apk üret", "apk yap", "telefon için apk",
+                "uygulama yap", "uygulaması yap", "uygulama oluştur", "uygulaması oluştur",
+                "mobil uygulama", "telefon uygulaması", "android uygulaması", "android uygulama",
+                "proje oluştur", "proje yap")) {
             return RequestMode.CODE;
         }
 
