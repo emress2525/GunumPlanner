@@ -16,6 +16,20 @@ public class ResponseQualityTest {
     }
 
     @Test
+    public void rejectsObservedApkCapabilityEvasion() {
+        String prompt = "Bana promt yazıcı uygulaması yap telefon için APK ver";
+        String answer = "Maalesef ben doğrudan derlenmiş APK dosyası üretemiyorum. Ancak sana çalışan kaynak kod yazabilirim ve bunu kendin derleyebilirsin.";
+        assertTrue(ResponseQuality.isTaskRefusal(prompt, answer));
+    }
+
+    @Test
+    public void acceptsActionableAppBuildAnswer() {
+        String prompt = "Bana Android uygulaması yap";
+        String answer = "Tam Android proje yapısı aşağıda. settings.gradle, build.gradle, AndroidManifest.xml ve MainActivity.kt dosyalarını eksiksiz veriyorum.";
+        assertFalse(ResponseQuality.isTaskRefusal(prompt, answer));
+    }
+
+    @Test
     public void flagsEnglishAnswerForClearlyTurkishPrompt() {
         String prompt = "Prompt yazıcı uygulamalarını araştır ve en iyisini yap";
         String answer = "I cannot fulfill that request because the information is unavailable and I do not have web access.";
