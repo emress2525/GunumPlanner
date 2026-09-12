@@ -48,7 +48,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm || true
-      - name: Launch and relaunch on Android 16
+      - name: Launch with persisted document on Android 16
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -57,21 +57,45 @@ jobs:
           disable-animations: true
           script: |
             set -e
-            APK=cepscan-src/app/build/outputs/apk/debug/app-debug.apk
-            adb install -r "$APK"
+            adb install -r cepscan-src/app/build/outputs/apk/debug/app-debug.apk
             : > cepscan-startup-logcat.txt
+
+            echo '=== CLEAN LAUNCH ===' | tee -a cepscan-startup-logcat.txt
+            adb shell am force-stop com.cepscan.app
+            adb logcat -c
+            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
+            sleep 5
+            adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
+            CLEAN_PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
+            echo "clean_pid=$CLEAN_PID" | tee -a cepscan-startup-logcat.txt
+            test -n "$CLEAN_PID"
+
+            echo 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZQmcAAAAASUVORK5CYII=' | base64 -d > /tmp/page.png
+            adb push /tmp/page.png /data/local/tmp/page.png >/dev/null
+            adb shell run-as com.cepscan.app mkdir -p files/scans/testdoc shared_prefs
+            adb shell run-as com.cepscan.app cp /data/local/tmp/page.png files/scans/testdoc/page_001.png
+            cat > /tmp/cepscan_docs.xml <<'XML'
+            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+            <map>
+              <string name="items">[{&quot;id&quot;:&quot;testdoc&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Tarama_test.pdf&quot;,&quot;pageCount&quot;:1,&quot;createdAt&quot;:1,&quot;updatedAt&quot;:1,&quot;ocrText&quot;:&quot;test&quot;,&quot;correctedOcrText&quot;:&quot;&quot;,&quot;ocrUpdatedAt&quot;:1,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;exportDpi&quot;:300,&quot;folder&quot;:&quot;&quot;,&quot;tags&quot;:[],&quot;isFavorite&quot;:false,&quot;isPinned&quot;:false,&quot;isPrivate&quot;:false,&quot;isTrashed&quot;:false,&quot;searchablePdf&quot;:true,&quot;passwordProtected&quot;:false,&quot;isDraft&quot;:false,&quot;smartFields&quot;:{},&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/testdoc/page_001.png&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;,&quot;enhancementStrength&quot;:50,&quot;dewarpStrength&quot;:0,&quot;annotations&quot;:[],&quot;qualityFindings&quot;:[]}]}]</string>
+            </map>
+            XML
+            adb push /tmp/cepscan_docs.xml /data/local/tmp/cepscan_docs.xml >/dev/null
+            adb shell am force-stop com.cepscan.app
+            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs.xml shared_prefs/cepscan_docs.xml
+
             for N in 1 2 3; do
-              echo "=== LAUNCH $N ===" | tee -a cepscan-startup-logcat.txt
+              echo "=== PERSISTED LAUNCH $N ===" | tee -a cepscan-startup-logcat.txt
               adb shell am force-stop com.cepscan.app
               adb logcat -c
               adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
               sleep 5
               adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
               PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-              echo "pid_$N=$PID" | tee -a cepscan-startup-logcat.txt
+              echo "persisted_pid_$N=$PID" | tee -a cepscan-startup-logcat.txt
               test -n "$PID"
             done
-            if grep -q 'FATAL EXCEPTION.*com.cepscan\|Process: com.cepscan.app' cepscan-startup-logcat.txt; then
+            if grep -q 'Process: com.cepscan.app' cepscan-startup-logcat.txt; then
               grep -n -A100 -B25 -E 'FATAL EXCEPTION|Process: com\.cepscan\.app' cepscan-startup-logcat.txt
               exit 1
             fi
