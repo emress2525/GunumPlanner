@@ -29,7 +29,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
@@ -71,12 +70,12 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.okhttp.mockwebserver)
+    testImplementation("org.json:json:20260814")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.room:room-testing:2.8.4")
 }
-
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
