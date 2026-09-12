@@ -38,6 +38,22 @@ public class CommandPlannerTest {
         assertEquals("spotify aç sonra sesi yükselt", actions.get(0).secondaryText());
     }
 
+    @Test public void doesNotSplitRelativeReminderAtSonra() {
+        List<CommandResult> actions = CommandPlanner.plan("20 dakika sonra su içmeyi hatırlat");
+        assertEquals(1, actions.size());
+        assertEquals(CommandResult.Type.SET_REMINDER, actions.get(0).type());
+        assertEquals("su içmeyi", actions.get(0).text());
+        assertEquals(1200, actions.get(0).value());
+    }
+
+    @Test public void doesNotSplitMessageBodyAtSonra() {
+        List<CommandResult> actions = CommandPlanner.plan("Ahmet'e sonra geliyorum diye mesaj yaz");
+        assertEquals(1, actions.size());
+        assertEquals(CommandResult.Type.COMPOSE_SMS_CONTACT, actions.get(0).type());
+        assertEquals("ahmet", actions.get(0).text());
+        assertEquals("sonra geliyorum", actions.get(0).secondaryText());
+    }
+
     @Test public void capsPlansAtEightActions() {
         String command = "saat kaç sonra saat kaç sonra saat kaç sonra saat kaç sonra " +
                 "saat kaç sonra saat kaç sonra saat kaç sonra saat kaç sonra saat kaç";
