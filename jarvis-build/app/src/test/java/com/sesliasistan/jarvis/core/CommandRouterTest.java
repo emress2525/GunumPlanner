@@ -114,4 +114,72 @@ public class CommandRouterTest {
         assertEquals(CommandResult.Type.WEB_SEARCH, result.type());
         assertEquals("ankara'nın nüfusu", result.text());
     }
+
+    @Test public void routesContactDialByName() {
+        CommandResult result = CommandRouter.route("Ahmet'i ara");
+        assertEquals(CommandResult.Type.DIAL_CONTACT, result.type());
+        assertEquals("ahmet", result.text());
+    }
+
+    @Test public void routesPossessiveContactDialByName() {
+        CommandResult result = CommandRouter.route("annemi ara");
+        assertEquals(CommandResult.Type.DIAL_CONTACT, result.type());
+        assertEquals("annem", result.text());
+    }
+
+    @Test public void routesContactSmsWithBody() {
+        CommandResult result = CommandRouter.route("Ahmet'e toplantıya geliyorum diye mesaj yaz");
+        assertEquals(CommandResult.Type.COMPOSE_SMS_CONTACT, result.type());
+        assertEquals("ahmet", result.text());
+        assertEquals("toplantıya geliyorum", result.secondaryText());
+    }
+
+    @Test public void routesRelativeReminder() {
+        CommandResult result = CommandRouter.route("20 dakika sonra su içmeyi hatırlat");
+        assertEquals(CommandResult.Type.SET_REMINDER, result.type());
+        assertEquals("su içmeyi", result.text());
+        assertEquals("relative", result.secondaryText());
+        assertEquals(1200, result.value());
+    }
+
+    @Test public void routesTomorrowReminderWithClockTime() {
+        CommandResult result = CommandRouter.route("yarın saat 08:00 çizimleri gönder diye hatırlat");
+        assertEquals(CommandResult.Type.SET_REMINDER, result.type());
+        assertEquals("çizimleri gönder", result.text());
+        assertEquals("absolute", result.secondaryText());
+        assertEquals(1, result.value());
+        assertEquals(8, result.hour());
+        assertEquals(0, result.minute());
+    }
+
+    @Test public void routesCalendarInsert() {
+        CommandResult result = CommandRouter.route("yarın 14:30 proje toplantısı takvime ekle");
+        assertEquals(CommandResult.Type.ADD_CALENDAR_EVENT, result.type());
+        assertEquals("proje toplantısı", result.text());
+        assertEquals(1, result.value());
+        assertEquals(14, result.hour());
+        assertEquals(30, result.minute());
+    }
+
+    @Test public void routesRoutineLifecycleCommands() {
+        CommandResult save = CommandRouter.route("rutin kaydet eve geldim: spotify aç sonra sesi yükselt");
+        assertEquals(CommandResult.Type.SAVE_ROUTINE, save.type());
+        assertEquals("eve geldim", save.text());
+        assertEquals("spotify aç sonra sesi yükselt", save.secondaryText());
+
+        CommandResult run = CommandRouter.route("eve geldim rutinini çalıştır");
+        assertEquals(CommandResult.Type.RUN_ROUTINE, run.type());
+        assertEquals("eve geldim", run.text());
+
+        assertEquals(CommandResult.Type.LIST_ROUTINES, CommandRouter.route("rutinleri söyle").type());
+
+        CommandResult delete = CommandRouter.route("eve geldim rutinini sil");
+        assertEquals(CommandResult.Type.DELETE_ROUTINE, delete.type());
+        assertEquals("eve geldim", delete.text());
+    }
+
+    @Test public void routesHistoryCommands() {
+        assertEquals(CommandResult.Type.READ_HISTORY, CommandRouter.route("geçmişi oku").type());
+        assertEquals(CommandResult.Type.CLEAR_HISTORY, CommandRouter.route("geçmişi temizle").type());
+    }
 }
