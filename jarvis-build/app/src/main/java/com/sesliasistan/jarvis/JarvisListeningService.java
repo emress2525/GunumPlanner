@@ -731,7 +731,7 @@ public final class JarvisListeningService extends Service implements Recognition
                     firstCandidate = number;
                 }
             }
-        } catch (SecurityException | RuntimeException ignored) {
+        } catch (RuntimeException ignored) {
             return "";
         } finally {
             if (cursor != null) cursor.close();
