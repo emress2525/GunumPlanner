@@ -6,6 +6,7 @@ on:
       - cepscan-apk-build
     paths:
       - 'cepscan_parts/**'
+      - 'cepscan_v4_patch.gz.b64'
       - '.github/workflows/build-cepscan-apk.yml'
   workflow_dispatch:
 
@@ -38,7 +39,7 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Restore and verify CepScan source
+      - name: Restore CepScan V3 base
         shell: bash
         run: |
           mkdir -p cepscan-src
@@ -51,11 +52,15 @@ jobs:
           test -f cepscan-src/build.gradle.kts
           test -f cepscan-src/app/build.gradle.kts
 
-      - name: Apply PdfEngine Kotlin compile fix
+      - name: Apply CepScan V4 changes
         shell: bash
         run: |
-          python3 -c 'from pathlib import Path; p=Path("cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt"); s=p.read_text(); s=s.replace("        PdfDocument().use { pdf ->", "        val pdf = PdfDocument()\n        try {", 1); marker="            context.contentResolver.openOutputStream(destination, \"rwt\").use { output ->\n                requireNotNull(output) { \"PDF hedefi açılamadı.\" }\n                pdf.writeTo(output)\n            }\n        }\n    }\n\n    suspend fun writeDocument"; repl="            context.contentResolver.openOutputStream(destination, \"rwt\").use { output ->\n                requireNotNull(output) { \"PDF hedefi açılamadı.\" }\n                pdf.writeTo(output)\n            }\n        } finally {\n            pdf.close()\n        }\n    }\n\n    suspend fun writeDocument"; assert marker in s, "PdfEngine tail patch target not found"; p.write_text(s.replace(marker, repl, 1))'
-          grep -n "val pdf = PdfDocument\|finally\|pdf.close" cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt | head -10
+          base64 --decode cepscan_v4_patch.gz.b64 | gzip -d > cepscan-v4.patch
+          cd cepscan-src
+          git apply --check ../cepscan-v4.patch
+          git apply ../cepscan-v4.patch
+          grep -n 'versionName = "4.0.0"' app/build.gradle.kts
+          test -f app/src/main/java/com/cepscan/app/ui/PdfViewerScreen.kt
 
       - name: Build debug APK
         shell: bash
@@ -69,17 +74,17 @@ jobs:
           APK='cepscan-src/app/build/outputs/apk/debug/app-debug.apk'
           test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V3-badging.txt
-          cp "$APK" CepScan-V3-debug.apk
-          sha256sum CepScan-V3-debug.apk | tee CepScan-V3-debug.apk.sha256
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V4-badging.txt
+          cp "$APK" CepScan-V4-debug.apk
+          sha256sum CepScan-V4-debug.apk | tee CepScan-V4-debug.apk.sha256
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CepScan-V3-APK
+          name: CepScan-V4-APK
           path: |
-            CepScan-V3-debug.apk
-            CepScan-V3-debug.apk.sha256
-            CepScan-V3-badging.txt
+            CepScan-V4-debug.apk
+            CepScan-V4-debug.apk.sha256
+            CepScan-V4-badging.txt
           if-no-files-found: error
           retention-days: 7
