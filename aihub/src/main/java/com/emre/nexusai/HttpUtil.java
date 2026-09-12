@@ -13,16 +13,25 @@ import okhttp3.ResponseBody;
 public final class HttpUtil {
     public static final int MAX_RESPONSE_BYTES = 1_000_000;
     public static final String JSON_CONTENT_TYPE = "application/json; charset=utf-8";
-    private static final String USER_AGENT = "NexusAI/2.1 Android";
+    private static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2";
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get(JSON_CONTENT_TYPE);
 
     private HttpUtil() { }
 
     public static Response get(String url, int connectTimeout, int readTimeout) throws Exception {
+        return getWithAccept(url, "application/json", connectTimeout, readTimeout);
+    }
+
+    public static Response getHtml(String url, int connectTimeout, int readTimeout) throws Exception {
+        return getWithAccept(url, "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8", connectTimeout, readTimeout);
+    }
+
+    private static Response getWithAccept(String url, String accept, int connectTimeout, int readTimeout) throws Exception {
         HttpsUrlValidator.requireSafe(url, "url");
         Request request = new Request.Builder()
                 .url(url)
-                .header("Accept", "application/json")
+                .header("Accept", accept)
+                .header("Accept-Language", "tr-TR,tr;q=0.9,en;q=0.7")
                 .header("User-Agent", USER_AGENT)
                 .get()
                 .build();
