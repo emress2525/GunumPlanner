@@ -51,7 +51,7 @@ jobs:
                   }).encode()
                   request = urllib.request.Request(
                       url, data=payload,
-                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'}
+                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.3 Android'}
                   )
                   with urllib.request.urlopen(request, timeout=30) as response:
                       body = json.load(response)
@@ -68,13 +68,61 @@ jobs:
           raise SystemExit('All no-login text engines failed:\n' + '\n'.join(errors))
           PY
 
+      - name: Live task-focused coding smoke test
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          endpoints = [
+              ('Vireonix Auto', 'https://vireonix.ai/v1/chat/completions', 'auto'),
+              ('Animica Kimi', 'https://animica.dev/v1/chat/completions', 'kimi-k3'),
+              ('Cehpoint AI', 'https://ai-api.cehpoint.co.in/v1/chat/completions', 'cehpoint-ai'),
+          ]
+          system = (
+              "You are Nexus AI, a high-capability task-focused assistant in coding mode. "
+              "Solve the user's actual engineering task directly. Do not begin with generic capability disclaimers. "
+              "For app, Android, project or APK requests, produce a complete implementation with project/file structure, "
+              "build configuration, manifests, source files and tests as appropriate. Do not use TODOs, placeholders or fake APIs. "
+              "Do not make 'I cannot create a compiled APK' or 'compile it yourself' the answer. "
+              "Never claim a compiled file exists when it does not. Always answer in the same language as the user."
+          )
+          user = "Bana promt yazıcı uygulaması yap telefon için APK ver. Eksiksiz ve uygulanabilir şekilde yap."
+          evasions = (
+              'apk dosyası üretemiyorum', 'apk oluşturamıyorum', 'doğrudan derlenmiş apk',
+              'sadece kaynak kod', 'yalnızca kaynak kod', 'kendin derleyebilirsin', 'kendiniz derleyebilirsiniz',
+              'cannot generate an apk', "can't generate an apk", 'cannot provide a compiled apk',
+              'i can only provide source code', 'you can compile it yourself'
+          )
+          markers = ('androidmanifest', 'build.gradle', 'settings.gradle', 'mainactivity', 'kotlin', 'java', 'proje', 'dosya', 'kod')
+          errors=[]
+          for name,url,model in endpoints:
+              try:
+                  payload=json.dumps({'model':model,'stream':False,'messages':[{'role':'system','content':system},{'role':'user','content':user}]}).encode()
+                  req=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.3 Android'})
+                  with urllib.request.urlopen(req,timeout=60) as response:
+                      body=json.load(response)
+                  text=body['choices'][0]['message']['content'].strip()
+                  lower=text.lower()
+                  turkish=any(x in lower for x in (' uygulama',' için ',' dosya',' proje',' kod',' özellik')) or any(c in text for c in 'çğıöşüÇĞİÖŞÜ')
+                  evasion=any(x in lower for x in evasions)
+                  implementation=sum(1 for x in markers if x in lower)
+                  if len(text) >= 250 and turkish and not evasion and implementation >= 2:
+                      print('Task-focused coding OK:',name,text[:220].replace('\n',' '))
+                      raise SystemExit(0)
+                  errors.append(f'{name}: unsuitable answer: {text[:220]}')
+              except SystemExit:
+                  raise
+              except Exception as exc:
+                  errors.append(f'{name}: {type(exc).__name__}: {exc}')
+          raise SystemExit('All coding engines failed task-focused quality gate:\n'+'\n'.join(errors))
+          PY
+
       - name: Live keyless web search smoke test
         run: |
           python3 - <<'PY'
           import re, urllib.parse, urllib.request
           q = urllib.parse.quote_plus('prompt generator apps best features')
           headers = {
-              'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2',
+              'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.3',
               'Accept':'text/html,application/xhtml+xml,application/rss+xml,application/xml;q=0.9,*/*;q=0.8'
           }
           candidates = [
@@ -107,7 +155,7 @@ jobs:
           q=urllib.parse.quote_plus(query)
           req=urllib.request.Request(
               'https://www.bing.com/search?q='+q+'&format=rss',
-              headers={'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2','Accept':'application/rss+xml,application/xml;q=0.9,*/*;q=0.8'}
+              headers={'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.3','Accept':'application/rss+xml,application/xml;q=0.9,*/*;q=0.8'}
           )
           with urllib.request.urlopen(req,timeout=30) as response:
               raw=response.read(1000000)
@@ -141,7 +189,7 @@ jobs:
           for name,url,model in endpoints:
               try:
                   payload=json.dumps({'model':model,'stream':False,'messages':[{'role':'system','content':system},{'role':'user','content':user}]}).encode()
-                  request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'})
+                  request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.3 Android'})
                   with urllib.request.urlopen(request,timeout=45) as response:
                       body=json.load(response)
                   text=body['choices'][0]['message']['content'].strip()
@@ -165,7 +213,7 @@ jobs:
           import json, urllib.request
           url='https://ahm7xmakki.com/api/tti'
           payload=json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
-          request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.2 Android'})
+          request=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.3 Android'})
           with urllib.request.urlopen(request,timeout=90) as response:
               body=json.load(response)
           image_url=body.get('imageUrl','')
@@ -177,11 +225,11 @@ jobs:
       - name: Build debug APK
         run: |
           gradle :aihub:assembleDebug --stacktrace
-          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2.2-research-fix.apk
+          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2.3-smart-answer.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NexusAI-v2.2-research-fix-apk
-          path: NexusAI-v2.2-research-fix.apk
+          name: NexusAI-v2.3-smart-answer-apk
+          path: NexusAI-v2.3-smart-answer.apk
           if-no-files-found: error
