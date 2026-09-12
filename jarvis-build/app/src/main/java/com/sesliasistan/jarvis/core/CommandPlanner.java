@@ -16,8 +16,9 @@ public final class CommandPlanner {
             return Collections.singletonList(CommandResult.simple(CommandResult.Type.HELP));
         }
 
-        if (normalized.startsWith(ROUTINE_SAVE_PREFIX)) {
-            return Collections.singletonList(CommandRouter.route(normalized));
+        CommandResult whole = CommandRouter.route(normalized);
+        if (normalized.startsWith(ROUTINE_SAVE_PREFIX) || isAtomicPhrase(whole.type())) {
+            return Collections.singletonList(whole);
         }
 
         String[] parts = normalized.split("\\s+(?:daha sonra|ardından|sonra)\\s+");
@@ -33,5 +34,11 @@ public final class CommandPlanner {
             actions.add(CommandResult.simple(CommandResult.Type.HELP));
         }
         return Collections.unmodifiableList(actions);
+    }
+
+    private static boolean isAtomicPhrase(CommandResult.Type type) {
+        return type == CommandResult.Type.SET_REMINDER
+                || type == CommandResult.Type.COMPOSE_SMS
+                || type == CommandResult.Type.COMPOSE_SMS_CONTACT;
     }
 }
