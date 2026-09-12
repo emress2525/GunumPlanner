@@ -10,7 +10,7 @@ public final class CommandRouter {
             "(^|\\s)(jarvis|cervis|carvis|jarviz)(?=\\s|[,.:;!?]|$)",
             Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     private static final Pattern FULL_TIME_PATTERN = Pattern.compile(
-            "(?<!\\d)([01]?\\d|2[0-3])[:.\\s]([0-5]\\d)(?!\\d)");
+            "(?<!\\d)([01]?\\d|2[0-3])[:.]([0-5]\\d)(?!\\d)");
     private static final Pattern HOUR_PATTERN = Pattern.compile(
             "(?<!\\d)([01]?\\d|2[0-3])(?!\\d)");
     private static final Pattern PHONE_PATTERN = Pattern.compile(
@@ -48,6 +48,15 @@ public final class CommandRouter {
         String command = normalize(rawCommand);
         if (command.isEmpty()) return CommandResult.simple(CommandResult.Type.HELP);
 
+        CommandResult history = parseHistory(command);
+        if (history != null) return history;
+        CommandResult routine = parseRoutine(command);
+        if (routine != null) return routine;
+        CommandResult reminder = parseReminder(command);
+        if (reminder != null) return reminder;
+        CommandResult calendar = parseCalendar(command);
+        if (calendar != null) return calendar;
+
         if (isTimeCommand(command)) return CommandResult.simple(CommandResult.Type.TIME);
         if (isDateCommand(command)) return CommandResult.simple(CommandResult.Type.DATE);
         if (isBatteryCommand(command)) return CommandResult.simple(CommandResult.Type.BATTERY_STATUS);
@@ -67,8 +76,12 @@ public final class CommandRouter {
 
         CommandResult sms = parseSms(command);
         if (sms != null) return sms;
+        CommandResult contactSms = parseContactSms(command);
+        if (contactSms != null) return contactSms;
         CommandResult dial = parseDial(command);
         if (dial != null) return dial;
+        CommandResult contactDial = parseContactDial(command);
+        if (contactDial != null) return contactDial;
         CommandResult navigation = parseNavigation(command);
         if (navigation != null) return navigation;
         CommandResult note = parseNote(command);
@@ -94,6 +107,118 @@ public final class CommandRouter {
                 .toLowerCase(TURKISH)
                 .trim()
                 .replaceAll("\\s+", " ");
+    }
+
+    private static CommandResult parseHistory(String command) {
+        if (containsAny(command, "geçmişi temizle", "geçmişimi temizle", "komut geçmişini temizle")) {
+            return CommandResult.simple(CommandResult.Type.CLEAR_HISTORY);
+        }
+        if (containsAny(command, "geçmişi oku", "geçmişimi oku", "komut geçmişini oku", "son komutları söyle")) {
+            return CommandResult.simple(CommandResult.Type.READ_HISTORY);
+        }
+        return null;
+    }
+
+    private static CommandResult parseRoutine(String command) {
+        if (containsAny(command, "rutinleri söyle", "rutinlerimi söyle", "rutinleri listele", "rutinlerimi listele")) {
+            return CommandResult.simple(CommandResult.Type.LIST_ROUTINES);
+        }
+        String savePrefix = "rutin kaydet ";
+        if (command.startsWith(savePrefix)) {
+            String rest = command.substring(savePrefix.length()).trim();
+            int colon = rest.indexOf(':');
+            if (colon <= 0 || colon >= rest.length() - 1) return CommandResult.simple(CommandResult.Type.HELP);
+            String name = rest.substring(0, colon).trim();
+            String body = rest.substring(colon + 1).trim();
+            return name.isEmpty() || body.isEmpty()
+                    ? CommandResult.simple(CommandResult.Type.HELP)
+                    : CommandResult.pair(CommandResult.Type.SAVE_ROUTINE, name, body);
+        }
+        String[] runSuffixes = {" rutinini çalıştır", " rutinini calistir", " rutini çalıştır", " rutini calistir"};
+        for (String suffix : runSuffixes) {
+            if (command.endsWith(suffix)) {
+                String name = command.substring(0, command.length() - suffix.length()).trim();
+                return name.isEmpty() ? CommandResult.simple(CommandResult.Type.HELP)
+                        : CommandResult.text(CommandResult.Type.RUN_ROUTINE, name);
+            }
+        }
+        String[] deleteSuffixes = {" rutinini sil", " rutini sil"};
+        for (String suffix : deleteSuffixes) {
+            if (command.endsWith(suffix)) {
+                String name = command.substring(0, command.length() - suffix.length()).trim();
+                return name.isEmpty() ? CommandResult.simple(CommandResult.Type.HELP)
+                        : CommandResult.text(CommandResult.Type.DELETE_ROUTINE, name);
+            }
+        }
+        return null;
+    }
+
+    private static CommandResult parseReminder(String command) {
+        if (!command.contains("hatırlat")) return null;
+
+        int sonra = command.indexOf(" sonra ");
+        if (sonra > 0) {
+            String durationText = command.substring(0, sonra).trim();
+            int seconds = parseDurationSeconds(durationText);
+            if (seconds > 0) {
+                String reminderText = command.substring(sonra + " sonra ".length()).trim();
+                reminderText = stripReminderSuffix(reminderText);
+                if (!reminderText.isEmpty()) return CommandResult.relativeReminder(reminderText, seconds);
+            }
+        }
+
+        int dayOffset = dayOffset(command);
+        if (dayOffset >= 0) {
+            Matcher time = FULL_TIME_PATTERN.matcher(command);
+            if (time.find()) {
+                int hour = Integer.parseInt(time.group(1));
+                int minute = Integer.parseInt(time.group(2));
+                String afterTime = command.substring(time.end()).trim();
+                String reminderText = stripReminderSuffix(afterTime);
+                if (!reminderText.isEmpty()) {
+                    return CommandResult.absoluteReminder(reminderText, dayOffset, hour, minute);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String stripReminderSuffix(String value) {
+        String text = value.trim();
+        text = text.replaceFirst("\\s+diye\\s+hatırlat$", "");
+        text = text.replaceFirst("\\s+hatırlat$", "");
+        text = text.replaceFirst("^bana\\s+", "");
+        return text.trim();
+    }
+
+    private static CommandResult parseCalendar(String command) {
+        String suffix = null;
+        if (command.endsWith(" takvime ekle")) suffix = " takvime ekle";
+        else if (command.endsWith(" takvime kaydet")) suffix = " takvime kaydet";
+        if (suffix == null) return null;
+
+        String body = command.substring(0, command.length() - suffix.length()).trim();
+        int dayOffset = dayOffset(body);
+        if (dayOffset < 0) dayOffset = 0;
+        body = body.replaceFirst("^(bugün|yarın)\\s+", "").trim();
+
+        int hour = -1;
+        int minute = -1;
+        Matcher time = FULL_TIME_PATTERN.matcher(body);
+        if (time.find()) {
+            hour = Integer.parseInt(time.group(1));
+            minute = Integer.parseInt(time.group(2));
+            body = (body.substring(0, time.start()) + " " + body.substring(time.end())).trim();
+            body = body.replaceFirst("^saat\\s+", "").trim();
+        }
+        return body.isEmpty() ? CommandResult.simple(CommandResult.Type.HELP)
+                : CommandResult.calendarEvent(body, dayOffset, hour, minute);
+    }
+
+    private static int dayOffset(String command) {
+        if (command.startsWith("yarın ") || command.equals("yarın")) return 1;
+        if (command.startsWith("bugün ") || command.equals("bugün")) return 0;
+        return -1;
     }
 
     private static boolean isTimeCommand(String command) {
@@ -132,15 +257,20 @@ public final class CommandRouter {
 
     private static CommandResult parseTimer(String command) {
         if (!(command.contains("zamanlayıcı") || command.contains("timer"))) return null;
-        int totalSeconds = 0;
-        Matcher hours = HOURS_DURATION_PATTERN.matcher(command);
-        if (hours.find()) totalSeconds += Integer.parseInt(hours.group(1)) * 3600;
-        Matcher minutes = MINUTES_DURATION_PATTERN.matcher(command);
-        if (minutes.find()) totalSeconds += Integer.parseInt(minutes.group(1)) * 60;
-        Matcher seconds = SECONDS_DURATION_PATTERN.matcher(command);
-        if (seconds.find()) totalSeconds += Integer.parseInt(seconds.group(1));
+        int totalSeconds = parseDurationSeconds(command);
         if (totalSeconds <= 0) return CommandResult.simple(CommandResult.Type.HELP);
         return CommandResult.number(CommandResult.Type.SET_TIMER, totalSeconds);
+    }
+
+    private static int parseDurationSeconds(String text) {
+        long totalSeconds = 0L;
+        Matcher hours = HOURS_DURATION_PATTERN.matcher(text);
+        if (hours.find()) totalSeconds += Long.parseLong(hours.group(1)) * 3600L;
+        Matcher minutes = MINUTES_DURATION_PATTERN.matcher(text);
+        if (minutes.find()) totalSeconds += Long.parseLong(minutes.group(1)) * 60L;
+        Matcher seconds = SECONDS_DURATION_PATTERN.matcher(text);
+        if (seconds.find()) totalSeconds += Long.parseLong(seconds.group(1));
+        return totalSeconds > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) totalSeconds;
     }
 
     private static CommandResult parseFlashlight(String command) {
@@ -193,11 +323,63 @@ public final class CommandRouter {
         return CommandResult.pair(CommandResult.Type.COMPOSE_SMS, number, rest);
     }
 
+    private static CommandResult parseContactSms(String command) {
+        if (!(command.contains("mesaj") || command.contains("sms")) || PHONE_PATTERN.matcher(command).find()) return null;
+        String[] endings = {" diye mesaj yaz", " diye mesaj gönder", " diye sms yaz", " diye sms gönder"};
+        for (String ending : endings) {
+            if (!command.endsWith(ending)) continue;
+            String prefix = command.substring(0, command.length() - ending.length()).trim();
+            int firstSpace = prefix.indexOf(' ');
+            if (firstSpace <= 0 || firstSpace >= prefix.length() - 1) return null;
+            String contact = cleanupDative(prefix.substring(0, firstSpace).trim());
+            String body = prefix.substring(firstSpace + 1).trim();
+            if (contact.isEmpty() || body.isEmpty()) return null;
+            return CommandResult.pair(CommandResult.Type.COMPOSE_SMS_CONTACT, contact, body);
+        }
+        return null;
+    }
+
     private static CommandResult parseDial(String command) {
         if (!(containsAny(command, " ara", "ara ", "telefon et", "çevir", "cevir") || command.endsWith("ara"))) return null;
         Matcher phone = PHONE_PATTERN.matcher(command);
         if (!phone.find()) return null;
         return CommandResult.text(CommandResult.Type.DIAL_NUMBER, sanitizePhone(phone.group(1)));
+    }
+
+    private static CommandResult parseContactDial(String command) {
+        if (PHONE_PATTERN.matcher(command).find()) return null;
+        if (command.startsWith("internette ") || command.startsWith("webde ") || command.startsWith("google")) return null;
+        String target = null;
+        if (command.endsWith(" ara")) target = command.substring(0, command.length() - " ara".length()).trim();
+        else if (command.endsWith(" telefon et")) target = command.substring(0, command.length() - " telefon et".length()).trim();
+        if (target == null || target.isEmpty()) return null;
+        target = cleanupAccusative(target);
+        if (target.isEmpty() || target.length() > 80) return null;
+        return CommandResult.text(CommandResult.Type.DIAL_CONTACT, target);
+    }
+
+    private static String cleanupAccusative(String value) {
+        String target = value.replaceFirst("['’](?:i|ı|u|ü|yi|yı|yu|yü)$", "");
+        if (!target.equals(value)) return target.trim();
+        if (target.matches(".*(?:yi|yı|yu|yü)$") && target.length() > 3) {
+            return target.substring(0, target.length() - 2).trim();
+        }
+        if (target.length() > 4 && target.matches(".*[iıuü]$")) {
+            return target.substring(0, target.length() - 1).trim();
+        }
+        return target.trim();
+    }
+
+    private static String cleanupDative(String value) {
+        String target = value.replaceFirst("['’](?:e|a|ye|ya)$", "");
+        if (!target.equals(value)) return target.trim();
+        if (target.matches(".*(?:ye|ya)$") && target.length() > 3) {
+            return target.substring(0, target.length() - 2).trim();
+        }
+        if (target.length() > 4 && target.matches(".*[ae]$")) {
+            return target.substring(0, target.length() - 1).trim();
+        }
+        return target.trim();
     }
 
     private static CommandResult parseNavigation(String command) {
