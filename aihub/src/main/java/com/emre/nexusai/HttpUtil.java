@@ -41,16 +41,24 @@ public final class HttpUtil {
     }
 
     public static byte[] getBytes(String url, int connectTimeout, int readTimeout) throws Exception {
+        return getBytes(url, connectTimeout, readTimeout, MAX_RESPONSE_BYTES);
+    }
+
+    public static byte[] getBytes(String url, int connectTimeout, int readTimeout, int maxBytes) throws Exception {
         HttpsUrlValidator.requireSafe(url, "url");
+        if (maxBytes <= 0) throw new IllegalArgumentException("maxBytes pozitif olmalı");
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("GET");
         connection.setConnectTimeout(connectTimeout);
         connection.setReadTimeout(readTimeout);
         connection.setInstanceFollowRedirects(true);
         int code = connection.getResponseCode();
-        if (code < 200 || code >= 300) throw new IllegalStateException("HTTP " + code);
+        if (code < 200 || code >= 300) {
+            connection.disconnect();
+            throw new IllegalStateException("HTTP " + code);
+        }
         try (InputStream in = connection.getInputStream()) {
-            return readBytes(in);
+            return readBytes(in, maxBytes);
         } finally {
             connection.disconnect();
         }
@@ -59,19 +67,19 @@ public final class HttpUtil {
     private static Response read(HttpURLConnection connection) throws Exception {
         int code = connection.getResponseCode();
         InputStream stream = code >= 200 && code < 400 ? connection.getInputStream() : connection.getErrorStream();
-        String body = stream == null ? "" : new String(readBytes(stream), StandardCharsets.UTF_8);
+        String body = stream == null ? "" : new String(readBytes(stream, MAX_RESPONSE_BYTES), StandardCharsets.UTF_8);
         connection.disconnect();
         return new Response(code, body);
     }
 
-    private static byte[] readBytes(InputStream in) throws Exception {
+    private static byte[] readBytes(InputStream in, int maxBytes) throws Exception {
         try (InputStream input = in; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192];
             int total = 0;
             int read;
             while ((read = input.read(buffer)) != -1) {
                 total += read;
-                if (total > MAX_RESPONSE_BYTES) throw new IllegalStateException("Yanıt çok büyük");
+                if (total > maxBytes) throw new IllegalStateException("Yanıt çok büyük");
                 out.write(buffer, 0, read);
             }
             return out.toByteArray();
