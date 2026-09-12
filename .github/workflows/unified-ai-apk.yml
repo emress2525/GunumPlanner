@@ -97,7 +97,7 @@ jobs:
           strings /tmp/apk-dex/classes*.dex > /tmp/apk-strings.txt
           grep -Fq 'Modeli kur' /tmp/apk-strings.txt
           grep -Fq 'Yerel modeli indir' /tmp/apk-strings.txt
-          grep -Fq 'Ollama adresi http:// veya https:// ile başlamalı.' /tmp/apk-strings.txt
+          grep -Fq 'ollamaBaseUrlOrNull' /tmp/apk-strings.txt
           sha256sum "$APK"
 
       - name: Upload debug APK
