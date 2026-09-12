@@ -65,8 +65,8 @@ jobs:
         shell: bash
         run: |
           cd cepscan-src
-          git apply --check ../cepscan-v4.patch
-          git apply ../cepscan-v4.patch
+          git apply --check --verbose ../cepscan-v4.patch
+          git apply --verbose ../cepscan-v4.patch
           grep -n 'versionName = "4.0.0"' app/build.gradle.kts
           test -f app/src/main/java/com/cepscan/app/ui/PdfViewerScreen.kt
 
