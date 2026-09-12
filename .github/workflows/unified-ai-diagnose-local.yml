@@ -31,8 +31,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== OnDeviceModelManager.kt ==='
+          echo '=== CURRENT local/OnDeviceModelManager.kt ==='
           cat unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
+          echo '=== PREVIOUS ondevice/OnDeviceModelManager.kt ==='
+          cat unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/ondevice/OnDeviceModelManager.kt
+          echo '=== AppContainer.kt ==='
+          cat unified-ai-app/app/src/main/java/com/unifiedai/app/AppContainer.kt
           echo '=== HttpClientFactory.kt ==='
           cat unified-ai-app/app/src/main/java/com/unifiedai/app/core/network/HttpClientFactory.kt
           echo '=== OnDeviceModelManager wiring ==='
