@@ -137,6 +137,20 @@ public final class NativeBridge {
         } catch (Exception ignored) {}
     }
 
+    @JavascriptInterface public void updateAyah(String json) {
+        try {
+            JSONObject o = new JSONObject(json);
+            String text = o.optString("tr", "").trim();
+            String source = o.optString("src", "").trim();
+            if (text.length() > 180) text = text.substring(0, 177).trim() + "…";
+            activity.getSharedPreferences(PrayerScheduler.PREFS, 0).edit()
+                    .putString("dailyAyahText", text)
+                    .putString("dailyAyahSource", source)
+                    .apply();
+            PrayerWidgetProvider.updateAll(activity);
+        } catch (Exception ignored) {}
+    }
+
     @JavascriptInterface public void stopAdhan() {
         android.content.Intent i = new android.content.Intent(activity, AdhanService.class)
                 .setAction(AdhanService.ACTION_STOP);
