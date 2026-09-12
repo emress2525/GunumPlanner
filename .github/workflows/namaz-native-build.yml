@@ -1,0 +1,60 @@
+name: Build Namaz Native APK
+
+on:
+  push:
+    branches: [ "namaz-native-v2" ]
+    paths:
+      - ".github/workflows/namaz-native-build.yml"
+      - "build-src/namaz-native-src.*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Restore complete Namaz source
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cat build-src/namaz-native-src.* > /tmp/namaz-src.b64
+          base64 -d /tmp/namaz-src.b64 > /tmp/namaz-src.tar.gz
+          rm -rf namaz-native
+          tar -xzf /tmp/namaz-src.tar.gz
+          test -f namaz-native/app/src/main/java/app/namaz/tr/MainActivity.java
+          test -f namaz-native/app/src/main/assets/index.html
+      - name: Unit tests
+        working-directory: namaz-native
+        run: gradle :app:testDebugUnitTest --stacktrace
+      - name: Build APK
+        working-directory: namaz-native
+        run: gradle :app:assembleDebug --stacktrace
+      - name: Verify APK signature and ZIP integrity
+        shell: bash
+        run: |
+          set -euxo pipefail
+          APK=namaz-native/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          unzip -t "$APK"
+          mkdir -p release
+          cp "$APK" release/Namaz.apk
+          test "$(find release -maxdepth 1 -type f | wc -l)" -eq 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Namaz-APK
+          path: release/Namaz.apk
+          if-no-files-found: error
+          retention-days: 7
