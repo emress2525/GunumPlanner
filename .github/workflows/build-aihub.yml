@@ -35,9 +35,8 @@ jobs:
       - name: Live no-login text failover smoke test
         run: |
           python3 - <<'PY'
-          import json, urllib.request, urllib.error, socket
+          import json, urllib.request
           endpoints = [
-              ('BlockRun GPT-OSS', 'https://blockrun.ai/api/v1/chat/completions', 'nvidia/gpt-oss-20b'),
               ('Vireonix Auto', 'https://vireonix.ai/v1/chat/completions', 'auto'),
               ('Animica Kimi', 'https://animica.dev/v1/chat/completions', 'kimi-k3'),
               ('Cehpoint AI', 'https://ai-api.cehpoint.co.in/v1/chat/completions', 'cehpoint-ai'),
@@ -53,9 +52,9 @@ jobs:
                   request = urllib.request.Request(
                       url,
                       data=payload,
-                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.0'}
+                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.1 Android'}
                   )
-                  with urllib.request.urlopen(request, timeout=22) as response:
+                  with urllib.request.urlopen(request, timeout=30) as response:
                       body = json.load(response)
                   text = body['choices'][0]['message']['content'].strip()
                   if text:
@@ -76,7 +75,7 @@ jobs:
           import json, urllib.request
           url = 'https://ahm7xmakki.com/api/tti'
           payload = json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
-          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.0'})
+          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.1 Android'})
           with urllib.request.urlopen(request, timeout=90) as response:
               body = json.load(response)
           image_url = body.get('imageUrl','')
@@ -88,11 +87,11 @@ jobs:
       - name: Build debug APK
         run: |
           gradle :aihub:assembleDebug --stacktrace
-          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2-no-login.apk
+          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2.1-mobile-fix.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NexusAI-v2-no-login-apk
-          path: NexusAI-v2-no-login.apk
+          name: NexusAI-v2.1-mobile-fix-apk
+          path: NexusAI-v2.1-mobile-fix.apk
           if-no-files-found: error
