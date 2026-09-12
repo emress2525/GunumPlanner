@@ -69,52 +69,12 @@ jobs:
           grep -Fq 'Button(onClick = viewModel::downloadLocalModel) { Text("Yerel modeli indir") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsScreen.kt
           ! grep -R -Fq 'Ayarlar > Telefon içi AI' unified-ai-app/app/src/main/java
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Gradle 9.6.0
-        uses: gradle/actions/setup-gradle@v6
-        with:
-          gradle-version: '9.6.0'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android API 36
-        shell: bash
-        run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
-
-      - name: Lint and unit tests
-        working-directory: unified-ai-app
-        run: gradle :app:lintDebug :app:testDebugUnitTest --stacktrace
-
-      - name: Assemble debug APK
-        working-directory: unified-ai-app
-        run: gradle :app:assembleDebug --stacktrace
-
-      - name: Verify APK UX and integrity
+      - name: Diagnose final provider factory
         shell: bash
         run: |
           set -euo pipefail
-          APK='unified-ai-app/app/build/outputs/apk/debug/app-debug.apk'
-          test -s "$APK"
-          unzip -t "$APK" >/dev/null
-          rm -rf /tmp/apk-dex && mkdir -p /tmp/apk-dex
-          unzip -q "$APK" 'classes*.dex' -d /tmp/apk-dex
-          strings /tmp/apk-dex/classes*.dex > /tmp/apk-strings.txt
-          grep -Fq 'Modeli kur' /tmp/apk-strings.txt
-          grep -Fq 'Yerel modeli indir' /tmp/apk-strings.txt
-          sha256sum "$APK"
-
-      - name: Upload debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: unified-ai-phone-local-v0-3-debug-apk
-          path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 7
+          echo '=== FINAL ProviderFactory.kt ==='
+          sed -n '1,240p' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
+          echo '=== FINAL SettingsRepository.kt ==='
+          sed -n '1,120p' unified-ai-app/app/src/main/java/com/unifiedai/app/data/repository/SettingsRepository.kt
+          exit 1
