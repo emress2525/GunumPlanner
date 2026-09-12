@@ -15,6 +15,18 @@ public final class ResponseQuality {
                 "internete erişimim yok", "web erişimim yok", "güncel bilgiye erişem");
     }
 
+    public static boolean isTaskRefusal(String prompt, String answer) {
+        if (!looksLikeBuildTask(prompt)) return false;
+        String a = normalize(answer);
+        return containsAny(a,
+                "apk dosyası üretemiyorum", "apk dosyası oluşturamıyorum", "apk oluşturamıyorum",
+                "doğrudan derlenmiş apk", "doğrudan apk üretemiyorum", "derlenmiş apk veremiyorum",
+                "sadece kaynak kod", "yalnızca kaynak kod", "kendin derleyebilirsin", "kendiniz derleyebilirsiniz",
+                "cannot generate an apk", "can't generate an apk", "cannot create an apk", "can't create an apk",
+                "cannot provide a compiled apk", "can't provide a compiled apk", "cannot directly generate an apk",
+                "i can only provide source code", "i can provide source code but", "you can compile it yourself");
+    }
+
     public static boolean isWrongLanguage(String prompt, String answer) {
         if (!looksTurkish(prompt)) return false;
         String a = " " + normalize(answer) + " ";
@@ -22,6 +34,15 @@ public final class ResponseQuality {
         int turkish = countAny(a, " ve ", " bir ", " için ", " bu ", " ile ", " olarak ", " araştır", " uygulama", " kaynak", " özellik", " en iyi ");
         boolean hasTurkishChars = answer != null && answer.matches(".*[çğıöşüÇĞİÖŞÜ].*");
         return !hasTurkishChars && english >= 3 && english > turkish + 1;
+    }
+
+    private static boolean looksLikeBuildTask(String text) {
+        String t = normalize(text);
+        return containsAny(t,
+                "apk ver", "apk oluştur", "apk üret", "apk yap", "telefon için apk",
+                "uygulama yap", "uygulaması yap", "uygulama oluştur", "uygulaması oluştur",
+                "mobil uygulama", "telefon uygulaması", "android uygulaması", "android uygulama",
+                "proje oluştur", "proje yap", "kodla", "kod yaz");
     }
 
     private static boolean looksTurkish(String text) {
