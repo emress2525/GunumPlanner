@@ -30,8 +30,20 @@
         android:id="@+id/widgetRemaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:text="Uygulamayı açarak vakitleri güncelle"
         android:textColor="#6F7F77"
         android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/widgetAyah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textColor="#35483F"
+        android:textSize="11sp"
+        android:lineSpacingExtra="1dp"
+        android:visibility="gone" />
 </LinearLayout>
