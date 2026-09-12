@@ -35,3 +35,17 @@ jobs:
           cat unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
           echo '=== URL / expected size references ==='
           grep -RInE '347251840|https?://|expected|contentLength|Content-Length|download|modelUrl|MODEL_URL' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local || true
+      - name: Probe model URL with Android-like request
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://huggingface.co/litert-community/Qwen3-0.6B-int4/resolve/main/qwen3_0.6b_nothink_q4_block32_ekv1280.litertlm?download=true'
+          rm -f /tmp/model.headers /tmp/model.range
+          curl --fail-with-body --location --max-redirs 10 --connect-timeout 20 --max-time 60 \
+            -A 'BirlesikAI/0.2 Android' -H 'Range: bytes=0-1023' \
+            -D /tmp/model.headers -o /tmp/model.range "$URL"
+          echo '=== Redirect/final headers ==='
+          grep -Ei '^(HTTP/|location:|content-length:|content-range:|content-type:|accept-ranges:)' /tmp/model.headers || true
+          echo '=== Downloaded range bytes ==='
+          wc -c /tmp/model.range
+          test "$(wc -c < /tmp/model.range)" -gt 0
