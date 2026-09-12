@@ -6,7 +6,7 @@ on:
       - cepscan-apk-build
     paths:
       - 'cepscan_parts/**'
-      - 'cepscan_v4_patch.gz.b64'
+      - 'cepscan_v4_parts/**'
       - '.github/workflows/build-cepscan-apk.yml'
   workflow_dispatch:
 
@@ -52,10 +52,18 @@ jobs:
           test -f cepscan-src/build.gradle.kts
           test -f cepscan-src/app/build.gradle.kts
 
+      - name: Restore and verify CepScan V4 patch
+        shell: bash
+        run: |
+          cat cepscan_v4_parts/part_* > cepscan_v4_patch.gz.b64
+          test "$(wc -c < cepscan_v4_patch.gz.b64)" = "13940"
+          echo 'aa8306ea3c407107f7b3ee33f5bb061350b932ece5a2ea9c1b57624e92385ea4  cepscan_v4_patch.gz.b64' | sha256sum -c -
+          base64 --decode cepscan_v4_patch.gz.b64 | gzip -d > cepscan-v4.patch
+          test -s cepscan-v4.patch
+
       - name: Apply CepScan V4 changes
         shell: bash
         run: |
-          base64 --decode cepscan_v4_patch.gz.b64 | gzip -d > cepscan-v4.patch
           cd cepscan-src
           git apply --check ../cepscan-v4.patch
           git apply ../cepscan-v4.patch
