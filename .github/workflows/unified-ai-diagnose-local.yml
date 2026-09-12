@@ -1,0 +1,37 @@
+name: Unified AI diagnose local model
+
+on:
+  push:
+    branches: [unified-ai-build-temp]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose-local-model:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct current Android source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat unified-ai-fixed/part00-00.b64 unified-ai-fixed/part00-01.b64 unified-ai-fixed/part00-02.b64 unified-ai-fixed/part00-03.b64 unified-ai-fixed/part00-04.b64 unified-ai-fixed/part00-05.b64 unified-ai-fixed/part00-06.b64 unified-ai-fixed/part00-07.b64 unified-ai-fixed/part00-08.b64 > /tmp/part00.b64
+          cat /tmp/part00.b64 unified-ai-parts/part01.b64 unified-ai-parts/part02.b64 unified-ai-parts/part03.b64 unified-ai-parts/part04.b64 unified-ai-parts/part050.b64 unified-ai-parts/part051.b64 unified-ai-parts/part052.b64 unified-ai-parts/part053.b64 unified-ai-parts/part054.b64 unified-ai-parts/part055.b64 > /tmp/unified-ai-source.b64
+          base64 --decode /tmp/unified-ai-source.b64 > /tmp/unified-ai-source.zip
+          rm -rf unified-ai-app && mkdir unified-ai-app
+          unzip -q /tmp/unified-ai-source.zip -d unified-ai-app
+          tar -xzf unified-ai-fix2.tar.gz -C unified-ai-app
+          cat unified-ai-current-patch/part00.b64 unified-ai-current-patch/part01.b64 unified-ai-current-patch/part02.b64 unified-ai-current-patch/part03-00.b64 unified-ai-current-patch/part03-01.b64 unified-ai-current-patch/part03-02.b64 unified-ai-current-patch/part03-03.b64 unified-ai-current-patch/part03-04.b64 > /tmp/current-phone-local-patch.b64
+          base64 --decode /tmp/current-phone-local-patch.b64 > /tmp/current-phone-local-patch.zip
+          unzip -qo /tmp/current-phone-local-patch.zip -d unified-ai-app
+      - name: Print local model download implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== OnDeviceModelManager.kt ==='
+          cat unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
+          echo '=== URL / expected size references ==='
+          grep -RInE '347251840|https?://|expected|contentLength|Content-Length|download|modelUrl|MODEL_URL' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local || true
