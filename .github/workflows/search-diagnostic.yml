@@ -1,0 +1,52 @@
+name: Search Transport Diagnostic
+
+on:
+  push:
+    branches: [ "ai-nexus-apk" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe keyless search endpoints
+        run: |
+          python3 - <<'PY'
+          import re, urllib.parse, urllib.request, xml.etree.ElementTree as ET
+          q = urllib.parse.quote_plus('prompt generator apps best features')
+          candidates = [
+              ('Bing RSS', 'https://www.bing.com/search?q=' + q + '&format=rss'),
+              ('DuckDuckGo Lite', 'https://lite.duckduckgo.com/lite/?q=' + q),
+              ('DuckDuckGo HTML', 'https://html.duckduckgo.com/html/?q=' + q),
+          ]
+          headers = {
+              'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2',
+              'Accept':'text/html,application/xhtml+xml,application/rss+xml,application/xml;q=0.9,*/*;q=0.8'
+          }
+          ok = False
+          for name,url in candidates:
+              try:
+                  req=urllib.request.Request(url,headers=headers)
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      raw=r.read(1000000)
+                      ctype=r.headers.get('Content-Type','')
+                      final=r.geturl()
+                  text=raw.decode('utf-8','replace')
+                  rss_items=len(re.findall(r'<item[ >]',text,re.I))
+                  ddg_links=len(re.findall(r'result__a|result-link|nofollow[^>]*class=["\'][^"\']*result',text,re.I))
+                  http_links=len(re.findall(r'https?://',text,re.I))
+                  print(f'--- {name} ---')
+                  print('final=',final)
+                  print('content-type=',ctype)
+                  print('bytes=',len(raw),'rss_items=',rss_items,'ddg_markers=',ddg_links,'http_links=',http_links)
+                  print('prefix=',repr(text[:500]))
+                  if rss_items >= 2 or ddg_links >= 2:
+                      ok = True
+              except Exception as exc:
+                  print(f'--- {name} ERROR --- {type(exc).__name__}: {exc}')
+          if not ok:
+              raise SystemExit('No candidate returned at least two recognizable search results')
+          PY
