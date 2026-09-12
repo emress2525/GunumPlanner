@@ -1,9 +1,11 @@
 package com.emre.nexusai;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
@@ -48,9 +51,12 @@ public class MainActivity extends Activity {
     private ProgressBar working;
     private TextView sendButton;
     private NexusAiEngine engine;
+    private ChatHistoryStore historyStore;
     private RequestMode selectedMode;
     private TextToSpeech tts;
     private String lastTextResult = "";
+    private View pendingSpacer;
+    private View pendingCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,8 @@ public class MainActivity extends Activity {
         w.setNavigationBarColor(BG);
 
         engine = new NexusAiEngine(this);
+        SharedPreferences prefs = getSharedPreferences("nexus_chat", MODE_PRIVATE);
+        historyStore = new ChatHistoryStore(new SharedPrefsStorage(prefs));
         initTts();
 
         ScrollView scroll = new ScrollView(this);
@@ -78,16 +86,26 @@ public class MainActivity extends Activity {
         root.addView(buildPromptPanel());
         root.addView(space(22));
 
+        LinearLayout resultHeader = new LinearLayout(this);
+        resultHeader.setOrientation(LinearLayout.HORIZONTAL);
+        resultHeader.setGravity(Gravity.CENTER_VERTICAL);
         TextView resultTitle = text("Nexus çalışma alanı", 18, TEXT, Typeface.BOLD);
-        root.addView(resultTitle);
-        TextView resultSub = text("Cevaplar, görseller ve videolar başka uygulama açmadan burada görünür.", 12, MUTED, Typeface.NORMAL);
+        resultHeader.addView(resultTitle, new LinearLayout.LayoutParams(0, -2, 1f));
+        TextView clearHistory = smallButton("SOHBETİ TEMİZLE");
+        clearHistory.setTextSize(10);
+        clearHistory.setPadding(dp(10), dp(7), dp(10), dp(7));
+        clearHistory.setOnClickListener(v -> confirmClearHistory());
+        resultHeader.addView(clearHistory, new LinearLayout.LayoutParams(-2, dp(36)));
+        root.addView(resultHeader);
+
+        TextView resultSub = text("Sohbet geçmişin bu telefonda saklanır; uygulamadan çıksan da burada kalır.", 12, MUTED, Typeface.NORMAL);
         resultSub.setPadding(0, dp(4), 0, dp(12));
         root.addView(resultSub);
 
         resultContainer = new LinearLayout(this);
         resultContainer.setOrientation(LinearLayout.VERTICAL);
         root.addView(resultContainer, new LinearLayout.LayoutParams(-1, -2));
-        showWelcome();
+        renderStoredHistory();
 
         root.addView(space(18));
         TextView privacy = text(PrivacyNotice.CLOUD_NOTICE, 11, MUTED, Typeface.NORMAL);
@@ -229,51 +247,121 @@ public class MainActivity extends Activity {
         }
 
         RequestMode mode = selectedMode == null ? RequestClassifier.classify(prompt) : selectedMode;
+        boolean wasEmpty = historyStore.load().isEmpty();
+        ChatHistoryEntry userEntry = new ChatHistoryEntry(ChatHistoryEntry.Kind.USER, "SEN", prompt, mode.label);
+        historyStore.append(userEntry);
+        if (wasEmpty) resultContainer.removeAllViews();
+        appendHistoryEntryToUi(userEntry);
+        promptInput.setText("");
+
         setWorking(true, mode);
-        resultContainer.removeAllViews();
-        resultContainer.addView(messageCard("SEN", prompt, Color.rgb(34, 39, 56)));
-        resultContainer.addView(space(10));
-        resultContainer.addView(messageCard("NEXUS • " + mode.label.toUpperCase(new Locale("tr", "TR")), "Çalışıyorum…", Color.rgb(25, 24, 45)));
+        pendingSpacer = space(4);
+        resultContainer.addView(pendingSpacer);
+        pendingCard = messageCard("NEXUS • " + mode.label.toUpperCase(new Locale("tr", "TR")), "Çalışıyorum…", Color.rgb(25, 24, 45));
+        resultContainer.addView(pendingCard);
 
         engine.execute(prompt, mode, result -> runOnUiThread(() -> {
+            removePendingCard();
             setWorking(false, mode);
             renderResult(result, mode);
         }));
     }
 
     private void renderResult(NexusResult result, RequestMode mode) {
-        resultContainer.removeAllViews();
+        String modeName = mode.label.toUpperCase(new Locale("tr", "TR"));
+        ChatHistoryEntry entry;
+
         if (result == null) {
-            resultContainer.addView(messageCard("NEXUS", "Beklenmeyen boş yanıt.", Color.rgb(55, 24, 31)));
-            return;
-        }
-
-        if (result.kind == NexusResult.Kind.ERROR) {
-            resultContainer.addView(messageCard("NEXUS • HATA", result.content, Color.rgb(55, 24, 31)));
-            return;
-        }
-
-        if (result.kind == NexusResult.Kind.TEXT) {
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.ERROR, "NEXUS • HATA", "Beklenmeyen boş yanıt.", mode.label);
+        } else if (result.kind == NexusResult.Kind.ERROR) {
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.ERROR, "NEXUS • HATA", result.content, mode.label);
+        } else if (result.kind == NexusResult.Kind.TEXT) {
             lastTextResult = result.content;
-            resultContainer.addView(messageCard("NEXUS • " + mode.label.toUpperCase(new Locale("tr", "TR")), result.content, Color.rgb(25, 24, 45)));
-            resultContainer.addView(space(10));
-            resultContainer.addView(buildTextActions(result.content));
-            if (mode == RequestMode.AUDIO) speak(result.content);
-            return;
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.TEXT, "NEXUS • " + modeName, result.content, mode.label);
+        } else if (result.kind == NexusResult.Kind.IMAGE) {
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.IMAGE, "NEXUS • GÖRSEL", result.content, mode.label);
+        } else if (result.kind == NexusResult.Kind.VIDEO) {
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.VIDEO, "NEXUS • VİDEO", result.content, mode.label);
+        } else {
+            entry = new ChatHistoryEntry(ChatHistoryEntry.Kind.ERROR, "NEXUS • HATA", "Desteklenmeyen yanıt türü.", mode.label);
         }
 
-        if (result.kind == NexusResult.Kind.IMAGE) {
-            resultContainer.addView(messageCard("NEXUS • GÖRSEL", "Görsel üretildi.", Color.rgb(25, 24, 45)));
-            resultContainer.addView(space(10));
-            showRemoteImage(result.content);
+        historyStore.append(entry);
+        appendHistoryEntryToUi(entry);
+        if (result != null && result.kind == NexusResult.Kind.TEXT && mode == RequestMode.AUDIO) speak(result.content);
+    }
+
+    private void renderStoredHistory() {
+        resultContainer.removeAllViews();
+        List<ChatHistoryEntry> entries = historyStore.load();
+        if (entries.isEmpty()) {
+            showWelcome();
             return;
         }
-
-        if (result.kind == NexusResult.Kind.VIDEO) {
-            resultContainer.addView(messageCard("NEXUS • VİDEO", "Video üretildi. Oynatmak için dokun.", Color.rgb(25, 24, 45)));
-            resultContainer.addView(space(10));
-            showVideo(result.content);
+        for (ChatHistoryEntry entry : entries) {
+            if (entry.kind == ChatHistoryEntry.Kind.TEXT) lastTextResult = entry.content;
+            appendHistoryEntryToUi(entry);
         }
+    }
+
+    private void appendHistoryEntryToUi(ChatHistoryEntry entry) {
+        if (entry == null) return;
+        switch (entry.kind) {
+            case USER:
+                resultContainer.addView(messageCard(entry.label, entry.content, Color.rgb(34, 39, 56)));
+                break;
+            case TEXT:
+                resultContainer.addView(messageCard(entry.label, entry.content, Color.rgb(25, 24, 45)));
+                resultContainer.addView(space(8));
+                resultContainer.addView(buildTextActions(entry.content));
+                break;
+            case ERROR:
+                resultContainer.addView(messageCard(entry.label, entry.content, Color.rgb(55, 24, 31)));
+                break;
+            case IMAGE:
+                resultContainer.addView(messageCard(entry.label, "Görsel üretildi.", Color.rgb(25, 24, 45)));
+                resultContainer.addView(space(8));
+                showRemoteImage(entry.content);
+                break;
+            case VIDEO:
+                resultContainer.addView(messageCard(entry.label, "Video üretildi. Oynatmak için dokun.", Color.rgb(25, 24, 45)));
+                resultContainer.addView(space(8));
+                showVideo(entry.content);
+                break;
+        }
+        resultContainer.addView(space(12));
+    }
+
+    private void removePendingCard() {
+        if (pendingSpacer != null) resultContainer.removeView(pendingSpacer);
+        if (pendingCard != null) resultContainer.removeView(pendingCard);
+        pendingSpacer = null;
+        pendingCard = null;
+    }
+
+    private void confirmClearHistory() {
+        if (working != null && working.getVisibility() == View.VISIBLE) {
+            Toast.makeText(this, "Nexus çalışırken sohbet temizlenemez.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (historyStore.load().isEmpty()) {
+            Toast.makeText(this, "Temizlenecek sohbet yok.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Sohbeti temizle?")
+                .setMessage("Bu telefonda kayıtlı Nexus sohbet geçmişi silinecek.")
+                .setNegativeButton("Vazgeç", null)
+                .setPositiveButton("Temizle", (dialog, which) -> clearHistory())
+                .show();
+    }
+
+    private void clearHistory() {
+        historyStore.clear();
+        lastTextResult = "";
+        promptInput.setText("");
+        showWelcome();
+        Toast.makeText(this, "Sohbet geçmişi temizlendi.", Toast.LENGTH_SHORT).show();
     }
 
     private View buildTextActions(String content) {
@@ -456,6 +544,29 @@ public class MainActivity extends Activity {
 
     private int dp(int value) {
         return Math.round(value * getResources().getDisplayMetrics().density);
+    }
+
+    private static final class SharedPrefsStorage implements ChatHistoryStore.Storage {
+        private final SharedPreferences prefs;
+
+        SharedPrefsStorage(SharedPreferences prefs) {
+            this.prefs = prefs;
+        }
+
+        @Override
+        public String get(String key, String fallback) {
+            return prefs.getString(key, fallback);
+        }
+
+        @Override
+        public void put(String key, String value) {
+            prefs.edit().putString(key, value).apply();
+        }
+
+        @Override
+        public void remove(String key) {
+            prefs.edit().remove(key).apply();
+        }
     }
 
     @Override
