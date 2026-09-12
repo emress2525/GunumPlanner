@@ -38,12 +38,14 @@ jobs:
           echo '51a1d522f5dba4ba03d97efa4e7035ef0940ce681955a145d15d424ba3c8c741  /tmp/current-phone-local-patch.zip' | sha256sum -c -
           unzip -qo /tmp/current-phone-local-patch.zip -d unified-ai-app
 
-      - name: Apply blank URL fix and regression tests
+      - name: Apply verified fixes and regression tests
         shell: bash
         run: |
           set -euo pipefail
           cp unified-ai-patches/ProviderFactory-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
           cp unified-ai-patches/SettingsViewModel-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsViewModel.kt
+          cp unified-ai-patches/ResumableModelDownloader-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/ResumableModelDownloader.kt
+          cp unified-ai-patches/OnDeviceModelManager-fixed.kt unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
           mkdir -p unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/cloud
           cp unified-ai-patches/ProviderFactoryUrlTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/cloud/ProviderFactoryUrlTest.kt
           mkdir -p unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/local
@@ -52,8 +54,22 @@ jobs:
           grep -Fq 'toHttpUrlOrNull' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
           ! grep -Fq 'settings.ollamaUrl.toHttpUrl()' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/cloud/ProviderFactory.kt
           grep -Fq 'Ollama adresi http:// veya https:// ile başlamalı.' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsViewModel.kt
+          grep -Fq 'header("Range", "bytes=$chunkStart-$chunkEnd")' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/ResumableModelDownloader.kt
+          grep -Fq 'header("Accept-Encoding", "identity")' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/ResumableModelDownloader.kt
+          grep -Fq 'DOWNLOAD_ATTEMPTS_PER_CHUNK = 3' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/OnDeviceModelManager.kt
           grep -Fq 'TextButton(onClick = onOpenSettings) { Text("Modeli kur") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/chat/ChatScreen.kt
           grep -Fq 'Button(onClick = viewModel::downloadLocalModel) { Text("Yerel modeli indir") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsScreen.kt
+
+      - name: Live model CDN range probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://huggingface.co/litert-community/Qwen3-0.6B-int4/resolve/main/qwen3_0.6b_nothink_q4_block32_ekv1280.litertlm?download=true'
+          curl --fail-with-body --location --max-redirs 10 --connect-timeout 20 --max-time 60 \
+            -A 'BirlesikAI/0.5 Android' -H 'Range: bytes=0-1023' \
+            -D /tmp/model.headers -o /tmp/model.range "$URL"
+          test "$(wc -c < /tmp/model.range)" -eq 1024
+          grep -Eiq '^content-range: bytes 0-1023/347251840' /tmp/model.headers
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -75,7 +91,7 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
 
-      - name: RED - zero-byte model download regression
+      - name: GREEN - zero-byte and resume model download regression
         working-directory: unified-ai-app
         run: gradle :app:testDebugUnitTest --tests com.unifiedai.app.data.provider.local.ResumableModelDownloaderTest --stacktrace
 
@@ -104,12 +120,14 @@ jobs:
           grep -Fq 'Modeli kur' /tmp/apk-strings.txt
           grep -Fq 'Yerel modeli indir' /tmp/apk-strings.txt
           grep -Fq 'ollamaBaseUrlOrNull' /tmp/apk-strings.txt
+          grep -Fq 'ResumableModelDownloader' /tmp/apk-strings.txt
+          grep -Fq 'Content-Range' /tmp/apk-strings.txt
           sha256sum "$APK"
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: unified-ai-phone-local-v0-4-debug-apk
+          name: unified-ai-phone-local-v0-5-debug-apk
           path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
