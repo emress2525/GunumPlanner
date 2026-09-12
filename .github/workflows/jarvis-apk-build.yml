@@ -70,6 +70,9 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump permissions "$APK" | tee "$RUNNER_TEMP/jarvis-permissions.txt"
           grep -q "android.permission.READ_CONTACTS" "$RUNNER_TEMP/jarvis-permissions.txt"
           grep -q "android.permission.RECORD_AUDIO" "$RUNNER_TEMP/jarvis-permissions.txt"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | tee "$RUNNER_TEMP/jarvis-manifest.txt"
+          grep -q "com.sesliasistan.jarvis.JarvisListeningService" "$RUNNER_TEMP/jarvis-manifest.txt"
+          grep -q "com.sesliasistan.jarvis.ReminderReceiver" "$RUNNER_TEMP/jarvis-manifest.txt"
           sha256sum "$APK" | tee "$RUNNER_TEMP/jarvis-sha256.txt"
 
       - name: Enable KVM acceleration
@@ -95,8 +98,9 @@ jobs:
             grep -q 'Status: ok' "$RUNNER_TEMP/jarvis-launch.txt"
             adb shell dumpsys package com.sesliasistan.jarvis > "$RUNNER_TEMP/jarvis-package.txt"
             grep -q 'versionName=2.0.0' "$RUNNER_TEMP/jarvis-package.txt"
-            grep -q 'JarvisListeningService' "$RUNNER_TEMP/jarvis-package.txt"
-            grep -q 'ReminderReceiver' "$RUNNER_TEMP/jarvis-package.txt"
+            adb shell pidof com.sesliasistan.jarvis | tee "$RUNNER_TEMP/jarvis-pid.txt"
+            test -s "$RUNNER_TEMP/jarvis-pid.txt"
+            adb shell dumpsys activity activities | grep -q 'com.sesliasistan.jarvis/.MainActivity'
 
       - name: Upload verified APK
         uses: actions/upload-artifact@v4
