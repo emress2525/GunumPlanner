@@ -51,6 +51,34 @@ jobs:
           test -f cepscan-src/build.gradle.kts
           test -f cepscan-src/app/build.gradle.kts
 
+      - name: Apply PdfEngine Kotlin compile fix
+        shell: bash
+        run: |
+          python3 - <<'PYFIX'
+          from pathlib import Path
+          p = Path('cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt')
+          s = p.read_text()
+          s = s.replace('        PdfDocument().use { pdf ->', '        val pdf = PdfDocument()\n        try {', 1)
+          old = '''            context.contentResolver.openOutputStream(destination, "rwt").use { output ->
+                requireNotNull(output) { "PDF hedefi açılamadı." }
+                pdf.writeTo(output)
+            }
+        }
+    }'''
+          new = '''            context.contentResolver.openOutputStream(destination, "rwt").use { output ->
+                requireNotNull(output) { "PDF hedefi açılamadı." }
+                pdf.writeTo(output)
+            }
+        } finally {
+            pdf.close()
+        }
+    }'''
+          if old not in s:
+              raise SystemExit('PdfEngine tail patch target not found')
+          p.write_text(s.replace(old, new, 1))
+          PYFIX
+          grep -n "val pdf = PdfDocument\|finally\|pdf.close" cepscan-src/app/src/main/java/com/cepscan/app/pdf/PdfEngine.kt | head -10
+
       - name: Build debug APK
         shell: bash
         working-directory: cepscan-src
