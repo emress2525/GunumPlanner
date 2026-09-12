@@ -17,31 +17,34 @@ jobs:
       - name: Checkout temporary build branch
         uses: actions/checkout@v4
 
-      - name: Verify transferred source chunks
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/chunks.sha256 <<'EOF'
-          321edaed884eecd31cd99cff2b8732a815e528c2cf4f4944c0ab2fe6a85923f9  unified-ai-parts/part00.b64
-          8d51eb9fde52540db3a3cce85a31c836242346f57cd2a0329809918f81e975f2  unified-ai-parts/part01.b64
-          4fad362777e946efa551b4ac7ece5ee328af5ee036ca18b3727a2faf69338b44  unified-ai-parts/part02.b64
-          67be39e401c9adefea756609ad816a601fab63a31fad12ab19e727cb27d6a868  unified-ai-parts/part03.b64
-          0510f3708d917ffa60597b38ea0bcb4829e6c9c8d67a20c7e751d7539ec88375  unified-ai-parts/part04.b64
-          9e1dbdf62fd3b461905d2b9ad040fc687424557e14c8187e091c9971569612c3  unified-ai-parts/part050.b64
-          1ceb551cd60f762a13c4cc857436424f9aed5d5b9c4462d51f8064c103400920  unified-ai-parts/part051.b64
-          5c7397d6106d5e4f08c8efd8ceff1fb29c0aef905e55634de0a4c94ad7c896ef  unified-ai-parts/part052.b64
-          ab609f490ceff80094dd65045e648cb44664ffe33e90f6f06ad1573429d79b51  unified-ai-parts/part053.b64
-          bbb8813994b272b8bc5589192267f38b502117c2c06ddef6d3cbe0a48f2e77ad  unified-ai-parts/part054.b64
-          341c524051c0c9df1f60a9e6532ad54896016981e1e1de65b445f3384497da07  unified-ai-parts/part055.b64
-          EOF
-          sha256sum -c /tmp/chunks.sha256
-
       - name: Reconstruct and verify source archive
         shell: bash
         run: |
           set -euo pipefail
           cat \
-            unified-ai-parts/part00.b64 \
+            unified-ai-fixed/part00-00.b64 \
+            unified-ai-fixed/part00-01.b64 \
+            unified-ai-fixed/part00-02.b64 \
+            unified-ai-fixed/part00-03.b64 \
+            unified-ai-fixed/part00-04.b64 \
+            unified-ai-fixed/part00-05.b64 \
+            unified-ai-fixed/part00-06.b64 \
+            unified-ai-fixed/part00-07.b64 \
+            unified-ai-fixed/part00-08.b64 \
+            > /tmp/part00.b64
+          echo '321edaed884eecd31cd99cff2b8732a815e528c2cf4f4944c0ab2fe6a85923f9  /tmp/part00.b64' | sha256sum -c -
+          echo '8d51eb9fde52540db3a3cce85a31c836242346f57cd2a0329809918f81e975f2  unified-ai-parts/part01.b64' | sha256sum -c -
+          echo '4fad362777e946efa551b4ac7ece5ee328af5ee036ca18b3727a2faf69338b44  unified-ai-parts/part02.b64' | sha256sum -c -
+          echo '67be39e401c9adefea756609ad816a601fab63a31fad12ab19e727cb27d6a868  unified-ai-parts/part03.b64' | sha256sum -c -
+          echo '0510f3708d917ffa60597b38ea0bcb4829e6c9c8d67a20c7e751d7539ec88375  unified-ai-parts/part04.b64' | sha256sum -c -
+          echo '9e1dbdf62fd3b461905d2b9ad040fc687424557e14c8187e091c9971569612c3  unified-ai-parts/part050.b64' | sha256sum -c -
+          echo '1ceb551cd60f762a13c4cc857436424f9aed5d5b9c4462d51f8064c103400920  unified-ai-parts/part051.b64' | sha256sum -c -
+          echo '5c7397d6106d5e4f08c8efd8ceff1fb29c0aef905e55634de0a4c94ad7c896ef  unified-ai-parts/part052.b64' | sha256sum -c -
+          echo 'ab609f490ceff80094dd65045e648cb44664ffe33e90f6f06ad1573429d79b51  unified-ai-parts/part053.b64' | sha256sum -c -
+          echo 'bbb8813994b272b8bc5589192267f38b502117c2c06ddef6d3cbe0a48f2e77ad  unified-ai-parts/part054.b64' | sha256sum -c -
+          echo '341c524051c0c9df1f60a9e6532ad54896016981e1e1de65b445f3384497da07  unified-ai-parts/part055.b64' | sha256sum -c -
+          cat \
+            /tmp/part00.b64 \
             unified-ai-parts/part01.b64 \
             unified-ai-parts/part02.b64 \
             unified-ai-parts/part03.b64 \
@@ -56,6 +59,7 @@ jobs:
           test "$(wc -c < /tmp/unified-ai-source.b64)" -eq 107412
           base64 --decode /tmp/unified-ai-source.b64 > /tmp/unified-ai-source.zip
           echo 'fba7443946a842a6b7ea331c75a216da022b87dcc340aee9c1d8d9961c037d26  /tmp/unified-ai-source.zip' | sha256sum -c -
+          unzip -t /tmp/unified-ai-source.zip >/dev/null
           rm -rf unified-ai-app
           mkdir unified-ai-app
           unzip -q /tmp/unified-ai-source.zip -d unified-ai-app
