@@ -52,7 +52,7 @@ jobs:
                   request = urllib.request.Request(
                       url,
                       data=payload,
-                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.1 Android'}
+                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'}
                   )
                   with urllib.request.urlopen(request, timeout=30) as response:
                       body = json.load(response)
@@ -69,13 +69,66 @@ jobs:
           raise SystemExit('All no-login text engines failed:\n' + '\n'.join(errors))
           PY
 
+      - name: Live web search smoke test
+        run: |
+          python3 - <<'PY'
+          import re, urllib.parse, urllib.request
+          q = urllib.parse.quote_plus('prompt generator apps best features')
+          url = 'https://html.duckduckgo.com/html/?q=' + q + '&kl=tr-tr'
+          request = urllib.request.Request(url, headers={
+              'User-Agent':'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 NexusAI/2.2',
+              'Accept':'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8'
+          })
+          with urllib.request.urlopen(request, timeout=30) as response:
+              html = response.read(1000000).decode('utf-8', 'replace')
+          count = len(re.findall(r'result__a', html, re.I))
+          if count < 2:
+              raise SystemExit(f'Web search returned too few organic result markers: {count}')
+          print('Live web search OK; organic result markers:', count)
+          PY
+
+      - name: Live grounded Turkish research smoke test
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          endpoints = [
+              ('Vireonix Auto', 'https://vireonix.ai/v1/chat/completions', 'auto'),
+              ('Animica Kimi', 'https://animica.dev/v1/chat/completions', 'kimi-k3'),
+              ('Cehpoint AI', 'https://ai-api.cehpoint.co.in/v1/chat/completions', 'cehpoint-ai'),
+          ]
+          system = ('You are Nexus AI research mode. LIVE WEB SEARCH RESULTS are already supplied. '
+                    'Use them as evidence. Do not say you lack web access. Never invent URLs. '
+                    'The user is Turkish; the ENTIRE answer must be Turkish.')
+          user = '''KULLANICININ İSTEĞİ:\nPrompt yazıcı uygulamalarını araştır, güçlü ve zayıf yönlerini karşılaştır ve iyi bir ürün için öneri ver.\n\nCANLI WEB ARAMA SONUÇLARI:\n[1] Prompt engineering guide\nURL: https://example.com/prompt-guide\nÖzet: Prompt şablonları, değişkenler ve sürümleme özelliklerini anlatır.\n[2] Prompt tool comparison\nURL: https://example.org/tools\nÖzet: Kütüphane, test, paylaşım ve çıktı iyileştirme özelliklerini karşılaştırır.\n\nTürkçe cevap ver ve sonunda Kaynaklar bölümü yaz.'''
+          refusals = ('i cannot fulfill','i can\'t fulfill','do not have web access','information is unavailable','cannot browse')
+          errors=[]
+          for name,url,model in endpoints:
+              try:
+                  payload=json.dumps({'model':model,'stream':False,'messages':[{'role':'system','content':system},{'role':'user','content':user}]}).encode()
+                  req=urllib.request.Request(url,data=payload,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.2 Android'})
+                  with urllib.request.urlopen(req,timeout=40) as response:
+                      body=json.load(response)
+                  text=body['choices'][0]['message']['content'].strip()
+                  lower=text.lower()
+                  turkish = any(x in lower for x in (' ve ',' için ',' uygulama',' özellik',' kaynak',' öner')) or any(c in text for c in 'çğıöşüÇĞİÖŞÜ')
+                  if len(text) >= 80 and turkish and not any(r in lower for r in refusals):
+                      print('Grounded Turkish research OK:', name, text[:160].replace('\n',' '))
+                      raise SystemExit(0)
+                  errors.append(f'{name}: unsuitable research answer: {text[:140]}')
+              except SystemExit:
+                  raise
+              except Exception as exc:
+                  errors.append(f'{name}: {type(exc).__name__}: {exc}')
+          raise SystemExit('All grounded research engines failed:\n'+'\n'.join(errors))
+          PY
+
       - name: Live no-login image smoke test
         run: |
           python3 - <<'PY'
           import json, urllib.request
           url = 'https://ahm7xmakki.com/api/tti'
           payload = json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
-          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.1 Android'})
+          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.2 Android'})
           with urllib.request.urlopen(request, timeout=90) as response:
               body = json.load(response)
           image_url = body.get('imageUrl','')
@@ -87,11 +140,11 @@ jobs:
       - name: Build debug APK
         run: |
           gradle :aihub:assembleDebug --stacktrace
-          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2.1-mobile-fix.apk
+          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2.2-research-fix.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NexusAI-v2.1-mobile-fix-apk
-          path: NexusAI-v2.1-mobile-fix.apk
+          name: NexusAI-v2.2-research-fix-apk
+          path: NexusAI-v2.2-research-fix.apk
           if-no-files-found: error
