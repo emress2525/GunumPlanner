@@ -41,7 +41,9 @@ public final class MainActivity extends Activity {
             if (!JarvisListeningService.ACTION_STATUS.equals(intent.getAction())) return;
             String status = intent.getStringExtra(JarvisListeningService.EXTRA_STATUS);
             String transcript = intent.getStringExtra(JarvisListeningService.EXTRA_TRANSCRIPT);
-            boolean active = intent.getBooleanExtra(JarvisListeningService.EXTRA_ACTIVE, isServiceRequested());
+            boolean active = intent.getBooleanExtra(
+                    JarvisListeningService.EXTRA_ACTIVE,
+                    isServiceRequested());
             if (status != null && !status.trim().isEmpty()) statusText.setText(status);
             if (transcript != null && !transcript.trim().isEmpty()) transcriptText.setText(transcript);
             renderActive(active);
@@ -67,11 +69,12 @@ public final class MainActivity extends Activity {
         }
         receiverRegistered = true;
         renderActive(isServiceRequested());
-        if (isServiceRequested() && checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+        if (isServiceRequested()
+                && checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             try {
-                startForegroundService(new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_START));
-            } catch (RuntimeException ignored) {
-            }
+                startForegroundService(new Intent(this, JarvisListeningService.class)
+                        .setAction(JarvisListeningService.ACTION_START));
+            } catch (RuntimeException ignored) { }
         }
     }
 
@@ -106,18 +109,23 @@ public final class MainActivity extends Activity {
             v.setPadding(dp(24), dp(18) + top, dp(24), dp(30) + bottom);
             return insets;
         });
-        scroll.addView(root, new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.WRAP_CONTENT));
+        scroll.addView(root, new ScrollView.LayoutParams(
+                ScrollView.LayoutParams.MATCH_PARENT,
+                ScrollView.LayoutParams.WRAP_CONTENT));
 
-        TextView eyebrow = text("JARVIS  /  SESLİ ASİSTAN  v1.1", 13, Color.rgb(77, 235, 255), Typeface.BOLD);
+        TextView eyebrow = text("JARVIS  /  SESLİ ASİSTAN  v2.0", 13,
+                Color.rgb(77, 235, 255), Typeface.BOLD);
         eyebrow.setLetterSpacing(0.16f);
         root.addView(eyebrow, fullWidthWrap());
 
-        TextView title = text("Söyle.\nBen halledeyim.", 31, Color.rgb(243, 251, 255), Typeface.BOLD);
+        TextView title = text("Söyle.\nBen halledeyim.", 31,
+                Color.rgb(243, 251, 255), Typeface.BOLD);
         LinearLayout.LayoutParams titleLp = fullWidthWrap();
         titleLp.topMargin = dp(14);
         root.addView(title, titleLp);
 
-        statusChip = text("●  BEKLEMEDE", 12, Color.rgb(145, 168, 182), Typeface.BOLD);
+        statusChip = text("●  BEKLEMEDE", 12,
+                Color.rgb(145, 168, 182), Typeface.BOLD);
         statusChip.setBackgroundResource(R.drawable.bg_status_chip);
         LinearLayout.LayoutParams chipLp = wrap();
         chipLp.topMargin = dp(18);
@@ -134,7 +142,11 @@ public final class MainActivity extends Activity {
         statusText.setGravity(Gravity.CENTER);
         root.addView(statusText, fullWidthWrap());
 
-        TextView helper = text("“Jarvis” de; uygulama, cihaz, medya, zaman, harita, telefon ve not komutlarını doğal Türkçe söyle.", 14, Color.rgb(145, 168, 182), Typeface.NORMAL);
+        TextView helper = text(
+                "“Jarvis” de; telefon, uygulama, medya, hatırlatıcı, takvim ve rutin komutlarını doğal Türkçe söyle. Birden fazla işi “sonra” diyerek sıraya koyabilirsin.",
+                14,
+                Color.rgb(145, 168, 182),
+                Typeface.NORMAL);
         helper.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams helperLp = fullWidthWrap();
         helperLp.topMargin = dp(8);
@@ -148,11 +160,13 @@ public final class MainActivity extends Activity {
         panelLp.topMargin = dp(24);
         root.addView(panel, panelLp);
 
-        TextView lastHeardLabel = text("SON DUYULAN", 11, Color.rgb(77, 235, 255), Typeface.BOLD);
+        TextView lastHeardLabel = text("SON DUYULAN", 11,
+                Color.rgb(77, 235, 255), Typeface.BOLD);
         lastHeardLabel.setLetterSpacing(0.14f);
         panel.addView(lastHeardLabel, fullWidthWrap());
 
-        transcriptText = text("Henüz bir şey duymadım.", 16, Color.rgb(243, 251, 255), Typeface.NORMAL);
+        transcriptText = text("Henüz bir şey duymadım.", 16,
+                Color.rgb(243, 251, 255), Typeface.NORMAL);
         LinearLayout.LayoutParams transcriptLp = fullWidthWrap();
         transcriptLp.topMargin = dp(8);
         panel.addView(transcriptText, transcriptLp);
@@ -165,8 +179,13 @@ public final class MainActivity extends Activity {
         primaryButton.setBackgroundResource(R.drawable.bg_primary_button);
         primaryButton.setMinHeight(0);
         primaryButton.setPadding(dp(16), dp(17), dp(16), dp(17));
-        primaryButton.setOnClickListener(v -> { if (isServiceRequested()) stopAssistant(); else ensurePermissionsAndStart(); });
-        LinearLayout.LayoutParams primaryLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        primaryButton.setOnClickListener(v -> {
+            if (isServiceRequested()) stopAssistant();
+            else ensurePermissionsAndStart();
+        });
+        LinearLayout.LayoutParams primaryLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         primaryLp.topMargin = dp(22);
         root.addView(primaryButton, primaryLp);
 
@@ -179,11 +198,17 @@ public final class MainActivity extends Activity {
         helpButton.setMinHeight(0);
         helpButton.setPadding(dp(16), dp(14), dp(16), dp(14));
         helpButton.setOnClickListener(v -> showCommandExamples());
-        LinearLayout.LayoutParams helpLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams helpLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         helpLp.topMargin = dp(12);
         root.addView(helpButton, helpLp);
 
-        TextView privacy = text("Mikrofon yalnızca asistanı başlattığında kullanılır. Kamera izni yalnızca fener kontrolü içindir ve reddedilirse diğer komutlar çalışmaya devam eder.", 12, Color.rgb(104, 130, 142), Typeface.NORMAL);
+        TextView privacy = text(
+                "Mikrofon yalnızca asistan açıkken kullanılır. Kamera izni sadece fener, kişiler izni sadece isimden arama/mesaj içindir. Bu opsiyonel izinleri reddetsen de diğer komutlar çalışır.",
+                12,
+                Color.rgb(104, 130, 142),
+                Typeface.NORMAL);
         privacy.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams privacyLp = fullWidthWrap();
         privacyLp.topMargin = dp(20);
@@ -194,9 +219,14 @@ public final class MainActivity extends Activity {
     private void ensurePermissionsAndStart() {
         RoleManager roles = getSystemService(RoleManager.class);
         boolean alreadyPrompted = getPreferences(MODE_PRIVATE).getBoolean(KEY_ROLE_PROMPTED, false);
-        if (!alreadyPrompted && roles != null && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT) && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
+        if (!alreadyPrompted
+                && roles != null
+                && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT)
+                && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
             getPreferences(MODE_PRIVATE).edit().putBoolean(KEY_ROLE_PROMPTED, true).apply();
-            startActivityForResult(roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT), REQUEST_ASSISTANT_ROLE);
+            startActivityForResult(
+                    roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT),
+                    REQUEST_ASSISTANT_ROLE);
             return;
         }
         ensurePermissionsAndStartService();
@@ -204,9 +234,19 @@ public final class MainActivity extends Activity {
 
     private void ensurePermissionsAndStartService() {
         List<String> permissions = new ArrayList<>();
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.RECORD_AUDIO);
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.CAMERA);
-        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.CAMERA);
+        }
+        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_CONTACTS);
+        }
+        if (Build.VERSION.SDK_INT >= 33
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
         if (permissions.isEmpty()) {
             startAssistant();
             return;
@@ -226,19 +266,40 @@ public final class MainActivity extends Activity {
         if (requestCode != REQUEST_PERMISSIONS) return;
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             startAssistant();
+            List<String> missing = new ArrayList<>();
             if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Fener komutu kamera izni verilene kadar kullanılamaz.", Toast.LENGTH_SHORT).show();
+                missing.add("fener");
+            }
+            if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                missing.add("isimden arama/mesaj");
+            }
+            if (Build.VERSION.SDK_INT >= 33
+                    && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                missing.add("hatırlatıcı bildirimi");
+            }
+            if (!missing.isEmpty()) {
+                Toast.makeText(
+                        this,
+                        "Opsiyonel izin verilmedi: " + String.join(", ") + ". Diğer özellikler çalışır.",
+                        Toast.LENGTH_LONG).show();
             }
         } else {
             statusText.setText("Mikrofon izni gerekli");
-            Toast.makeText(this, "Jarvis'in seni duyabilmesi için mikrofon izni gerekli.", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    this,
+                    "Jarvis'in seni duyabilmesi için mikrofon izni gerekli.",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
     private void requestAssistantRole() {
         RoleManager roles = getSystemService(RoleManager.class);
-        if (roles != null && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT) && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
-            startActivityForResult(roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT), REQUEST_ASSISTANT_ROLE);
+        if (roles != null
+                && roles.isRoleAvailable(RoleManager.ROLE_ASSISTANT)
+                && !roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
+            startActivityForResult(
+                    roles.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT),
+                    REQUEST_ASSISTANT_ROLE);
         } else if (roles != null && roles.isRoleHeld(RoleManager.ROLE_ASSISTANT)) {
             Toast.makeText(this, "Jarvis zaten varsayılan asistan.", Toast.LENGTH_SHORT).show();
         } else {
@@ -247,14 +308,21 @@ public final class MainActivity extends Activity {
     }
 
     private void startAssistant() {
-        Intent intent = new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_START);
+        Intent intent = new Intent(this, JarvisListeningService.class)
+                .setAction(JarvisListeningService.ACTION_START);
         try {
             startForegroundService(intent);
-            getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, true).apply();
+            getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(JarvisListeningService.KEY_ACTIVE, true)
+                    .apply();
             renderActive(true);
             statusText.setText("Başlatılıyor…");
         } catch (RuntimeException error) {
-            getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, false).apply();
+            getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(JarvisListeningService.KEY_ACTIVE, false)
+                    .apply();
             renderActive(false);
             statusText.setText("Asistan başlatılamadı");
             Toast.makeText(this, "Başlatma hatası: " + error.getMessage(), Toast.LENGTH_LONG).show();
@@ -262,34 +330,45 @@ public final class MainActivity extends Activity {
     }
 
     private void stopAssistant() {
-        getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).edit().putBoolean(JarvisListeningService.KEY_ACTIVE, false).apply();
-        Intent intent = new Intent(this, JarvisListeningService.class).setAction(JarvisListeningService.ACTION_STOP);
-        try { startService(intent); } catch (RuntimeException ignored) { stopService(new Intent(this, JarvisListeningService.class)); }
+        getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE)
+                .edit()
+                .putBoolean(JarvisListeningService.KEY_ACTIVE, false)
+                .apply();
+        Intent intent = new Intent(this, JarvisListeningService.class)
+                .setAction(JarvisListeningService.ACTION_STOP);
+        try {
+            startService(intent);
+        } catch (RuntimeException ignored) {
+            stopService(new Intent(this, JarvisListeningService.class));
+        }
         renderActive(false);
         statusText.setText("Asistan kapalı");
     }
 
     private boolean isServiceRequested() {
-        return getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE).getBoolean(JarvisListeningService.KEY_ACTIVE, false);
+        return getSharedPreferences(JarvisListeningService.PREFS, MODE_PRIVATE)
+                .getBoolean(JarvisListeningService.KEY_ACTIVE, false);
     }
 
     private void renderActive(boolean active) {
         orbView.setActive(active);
         primaryButton.setText(active ? "ASİSTANI DURDUR" : "ASİSTANI BAŞLAT");
         statusChip.setText(active ? "●  DİNLEMEDE" : "●  BEKLEMEDE");
-        statusChip.setTextColor(active ? Color.rgb(77, 235, 255) : Color.rgb(145, 168, 182));
+        statusChip.setTextColor(active
+                ? Color.rgb(77, 235, 255)
+                : Color.rgb(145, 168, 182));
     }
 
     private void showCommandExamples() {
         String examples =
-                "UYGULAMALAR\n• Jarvis Spotify aç\n• Jarvis Telegram aç\n\n" +
-                "CİHAZ\n• Jarvis feneri aç / kapat\n• Jarvis sesi yükselt / azalt / kapat / fulle\n• Jarvis pil yüzde kaç\n• Jarvis kamerayı aç\n• Jarvis Wi‑Fi / Bluetooth / konum / ekran ayarlarını aç\n\n" +
-                "ZAMAN\n• Jarvis saat kaç\n• Jarvis bugün tarih ne\n• Jarvis 07:30 alarm kur\n• Jarvis 5 dakika zamanlayıcı kur\n\n" +
-                "MEDYA\n• Jarvis müziği durdur / devam ettir\n• Jarvis sonraki şarkı\n• Jarvis önceki şarkı\n\n" +
-                "HARİTA & TELEFON\n• Jarvis Kızılay'a yol tarifi aç\n• Jarvis 0555 123 45 67 numarasını ara\n• Jarvis 0555 123 45 67 numarasına geliyorum diye mesaj yaz\n\n" +
-                "NOT & WEB\n• Jarvis not al yarın kaynakçıyla konuş\n• Jarvis son notumu oku\n• Jarvis internette Ankara hava durumu ara";
+                "ÇOKLU KOMUT\n• Jarvis Spotify aç sonra sesi yükselt\n• Jarvis kamerayı aç ardından 5 dakika zamanlayıcı kur\n\n" +
+                "UYGULAMA & CİHAZ\n• Jarvis Spotify aç\n• Jarvis feneri aç / kapat\n• Jarvis sesi yükselt / azalt / kapat / fulle\n• Jarvis pil yüzde kaç\n• Jarvis Wi‑Fi / Bluetooth / konum / ekran ayarlarını aç\n\n" +
+                "ZAMAN & HATIRLATICI\n• Jarvis 07:30 alarm kur\n• Jarvis 5 dakika zamanlayıcı kur\n• Jarvis 20 dakika sonra su içmeyi hatırlat\n• Jarvis yarın saat 08:00 çizimleri gönder diye hatırlat\n\n" +
+                "TAKVİM & RUTİN\n• Jarvis yarın 14:30 proje toplantısı takvime ekle\n• Jarvis rutin kaydet eve geldim: Spotify aç sonra sesi yükselt\n• Jarvis eve geldim rutinini çalıştır\n• Jarvis rutinleri söyle\n\n" +
+                "KİŞİLER & HARİTA\n• Jarvis Ahmet'i ara\n• Jarvis Ahmet'e geliyorum diye mesaj yaz\n• Jarvis Kızılay'a yol tarifi aç\n\n" +
+                "NOT, GEÇMİŞ & WEB\n• Jarvis not al yarın kaynakçıyla konuş\n• Jarvis son notumu oku\n• Jarvis geçmişi oku / temizle\n• Jarvis internette Ankara hava durumu ara";
         new android.app.AlertDialog.Builder(this)
-                .setTitle("Jarvis komutları")
+                .setTitle("Jarvis v2 komutları")
                 .setMessage(examples)
                 .setPositiveButton("Tamam", null)
                 .setNeutralButton("Varsayılan asistan yap", (dialog, which) -> requestAssistantRole())
@@ -306,7 +385,19 @@ public final class MainActivity extends Activity {
         return view;
     }
 
-    private LinearLayout.LayoutParams fullWidthWrap() { return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); }
-    private LinearLayout.LayoutParams wrap() { return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT); }
-    private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }
+    private LinearLayout.LayoutParams fullWidthWrap() {
+        return new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private LinearLayout.LayoutParams wrap() {
+        return new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
+    }
 }
