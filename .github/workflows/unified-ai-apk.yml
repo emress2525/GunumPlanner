@@ -107,6 +107,14 @@ jobs:
           test -f unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/LiteRtLmRuntime.kt
           test -f unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/local/OnDeviceProviderTest.kt
 
+      - name: Apply verified LiteRT response extraction fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '38bc69bc2cb4c43aaa7c759d2624eeca251652fae9d80401e5c9e5f4e591312d  unified-ai-phone-fixes/LiteRtLmRuntime.kt' | sha256sum -c -
+          cp unified-ai-phone-fixes/LiteRtLmRuntime.kt unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/LiteRtLmRuntime.kt
+          grep -q 'conversation.sendMessage(prompt).toString()' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/local/LiteRtLmRuntime.kt
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
