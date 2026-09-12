@@ -1,17 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "textEndpoints": [
-    {
-      "name": "Kilo Free",
-      "url": "https://api.kilo.ai/api/openrouter/chat/completions",
-      "model": "kilo-auto/free"
-    },
     {
       "name": "Cehpoint AI",
       "url": "https://ai-api.cehpoint.co.in/v1/chat/completions",
       "model": "cehpoint-ai"
+    },
+    {
+      "name": "Kilo Auto Free",
+      "url": "https://api.kilo.ai/api/openrouter/chat/completions",
+      "model": "kilo-auto/free"
     }
   ],
-  "imageEndpoint": "https://quillly.com/api/image-generator/generate",
-  "videoEndpoint": "https://www.ahm7xmakki.com/api/ptv"
+  "imageEndpoint": "https://ahm7xmakki.com/api/tti",
+  "videoEndpoint": "https://ahm7xmakki.com/api/ptv"
 }
