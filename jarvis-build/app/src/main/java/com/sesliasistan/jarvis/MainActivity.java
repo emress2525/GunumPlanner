@@ -280,7 +280,7 @@ public final class MainActivity extends Activity {
             if (!missing.isEmpty()) {
                 Toast.makeText(
                         this,
-                        "Opsiyonel izin verilmedi: " + String.join(", ") + ". Diğer özellikler çalışır.",
+                        "Opsiyonel izin verilmedi: " + String.join(", ", missing) + ". Diğer özellikler çalışır.",
                         Toast.LENGTH_LONG).show();
             }
         } else {
