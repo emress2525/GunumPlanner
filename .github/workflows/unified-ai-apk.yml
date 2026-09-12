@@ -38,17 +38,36 @@ jobs:
           cp unified-ai-patches/app-build.gradle.kts unified-ai-app/app/build.gradle.kts
           cp unified-ai-patches/ChatViewModelTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/feature/chat/ChatViewModelTest.kt
 
-      - name: Apply phone-local AI fix
+      - name: Apply prior phone-local runtime
         shell: bash
         run: |
           set -euo pipefail
           test "$(git hash-object unified-ai-fix2.tar.gz)" = "4e998f9d4edfcc5026a8c8066a127bfac8522209"
           tar -xzf unified-ai-fix2.tar.gz -C unified-ai-app
           cp unified-ai-patches/OnDeviceProviderTest.kt unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/ondevice/OnDeviceProviderTest.kt
-          grep -q 'litertlm-android:latest.release' unified-ai-app/app/build.gradle.kts
-          grep -q 'class OnDeviceModelManager' unified-ai-app/app/src/main/java/com/unifiedai/app/data/provider/ondevice/OnDeviceModelManager.kt
-          grep -q 'val ollamaUrl: String = ""' unified-ai-app/app/src/main/java/com/unifiedai/app/data/repository/SettingsRepository.kt
-          grep -q 'filterNot { it.isFinal }' unified-ai-app/app/src/test/java/com/unifiedai/app/data/provider/ondevice/OnDeviceProviderTest.kt
+
+      - name: Apply current verified phone-local UX
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            unified-ai-current-patch/part00.b64 \
+            unified-ai-current-patch/part01.b64 \
+            unified-ai-current-patch/part02.b64 \
+            unified-ai-current-patch/part03-00.b64 \
+            unified-ai-current-patch/part03-01.b64 \
+            unified-ai-current-patch/part03-02.b64 \
+            unified-ai-current-patch/part03-03.b64 \
+            unified-ai-current-patch/part03-04.b64 \
+            > /tmp/current-phone-local-patch.b64
+          test "$(wc -c < /tmp/current-phone-local-patch.b64)" -eq 39624
+          base64 --decode /tmp/current-phone-local-patch.b64 > /tmp/current-phone-local-patch.zip
+          echo '51a1d522f5dba4ba03d97efa4e7035ef0940ce681955a145d15d424ba3c8c741  /tmp/current-phone-local-patch.zip' | sha256sum -c -
+          unzip -t /tmp/current-phone-local-patch.zip >/dev/null
+          unzip -qo /tmp/current-phone-local-patch.zip -d unified-ai-app
+          grep -Fq 'TextButton(onClick = onOpenSettings) { Text("Modeli kur") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/chat/ChatScreen.kt
+          grep -Fq 'Button(onClick = viewModel::downloadLocalModel) { Text("Yerel modeli indir") }' unified-ai-app/app/src/main/java/com/unifiedai/app/feature/settings/SettingsScreen.kt
+          ! grep -R -Fq 'Ayarlar > Telefon içi AI' unified-ai-app/app/src/main/java
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -78,18 +97,24 @@ jobs:
         working-directory: unified-ai-app
         run: gradle :app:assembleDebug --stacktrace
 
-      - name: Verify APK exists
+      - name: Verify APK UX and integrity
         shell: bash
         run: |
           set -euo pipefail
-          test -s unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
-          unzip -t unified-ai-app/app/build/outputs/apk/debug/app-debug.apk >/dev/null
-          sha256sum unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
+          APK='unified-ai-app/app/build/outputs/apk/debug/app-debug.apk'
+          test -s "$APK"
+          unzip -t "$APK" >/dev/null
+          rm -rf /tmp/apk-dex && mkdir -p /tmp/apk-dex
+          unzip -q "$APK" 'classes*.dex' -d /tmp/apk-dex
+          strings /tmp/apk-dex/classes*.dex > /tmp/apk-strings.txt
+          grep -Fq 'Modeli kur' /tmp/apk-strings.txt
+          grep -Fq 'Yerel modeli indir' /tmp/apk-strings.txt
+          sha256sum "$APK"
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: unified-ai-phone-local-debug-apk
+          name: unified-ai-phone-local-v0-3-debug-apk
           path: unified-ai-app/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
