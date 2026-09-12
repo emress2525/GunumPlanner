@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -26,19 +26,54 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      # Test-first gate: production build starts only after unit tests pass.
       - name: Unit tests
         run: gradle :aihub:testDebugUnitTest --stacktrace
 
       - name: Lint
         run: gradle :aihub:lintDebug --stacktrace
 
+      - name: Live no-login text smoke test
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          url = 'https://ai-api.cehpoint.co.in/v1/chat/completions'
+          payload = json.dumps({
+              'model': 'cehpoint-ai',
+              'stream': False,
+              'messages': [{'role':'user','content':'Reply with exactly NEXUS_OK'}]
+          }).encode()
+          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json'})
+          with urllib.request.urlopen(request, timeout=35) as response:
+              body = json.load(response)
+          text = body['choices'][0]['message']['content'].strip()
+          if not text:
+              raise SystemExit('Empty live AI response')
+          print('Live AI endpoint returned:', text[:120])
+          PY
+
+      - name: Live no-login image smoke test
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          url = 'https://ahm7xmakki.com/api/tti'
+          payload = json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
+          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json'})
+          with urllib.request.urlopen(request, timeout=90) as response:
+              body = json.load(response)
+          image_url = body.get('imageUrl','')
+          if not image_url.startswith('https://'):
+              raise SystemExit('Image endpoint did not return an HTTPS image URL')
+          print('Live image endpoint returned a valid URL')
+          PY
+
       - name: Build debug APK
-        run: gradle :aihub:assembleDebug --stacktrace
+        run: |
+          gradle :aihub:assembleDebug --stacktrace
+          cp aihub/build/outputs/apk/debug/aihub-debug.apk NexusAI-v2-no-login.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NexusAI-debug-apk
-          path: aihub/build/outputs/apk/debug/aihub-debug.apk
+          name: NexusAI-v2-no-login-apk
+          path: NexusAI-v2-no-login.apk
           if-no-files-found: error
