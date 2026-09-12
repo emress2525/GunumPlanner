@@ -64,11 +64,10 @@ jobs:
       - name: Apply CepScan V4 changes
         shell: bash
         run: |
-          cd cepscan-src
-          git apply --check --verbose ../cepscan-v4.patch
-          git apply --verbose ../cepscan-v4.patch
-          grep -n 'versionName = "4.0.0"' app/build.gradle.kts
-          test -f app/src/main/java/com/cepscan/app/ui/PdfViewerScreen.kt
+          git apply --check --verbose --directory=cepscan-src cepscan-v4.patch
+          git apply --verbose --directory=cepscan-src cepscan-v4.patch
+          grep -n 'versionName = "4.0.0"' cepscan-src/app/build.gradle.kts
+          test -f cepscan-src/app/src/main/java/com/cepscan/app/ui/PdfViewerScreen.kt
 
       - name: Build debug APK
         shell: bash
