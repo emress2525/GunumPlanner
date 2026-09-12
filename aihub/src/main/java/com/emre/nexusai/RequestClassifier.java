@@ -14,7 +14,7 @@ public final class RequestClassifier {
         }
 
         // Code wins over research when a user asks to research and then fix code.
-        if (containsAny(p, "kodla", "kodunu", "kod yaz", "code", "bug", "hata düzelt", "compile", "derle", "test et", "kotlin", "java", "python", "javascript", "android", "api", "sql", "ilogic", "inventor")) {
+        if (containsAny(p, "kodla", "kodunu", "kod yaz", "code", "bug fix", "debug", "hata düzelt", "hata ayıkla", "compile", "derle", "test et", "kotlin", "java", "python", "javascript", "android", "api", "sql", "ilogic", "inventor")) {
             return RequestMode.CODE;
         }
 
