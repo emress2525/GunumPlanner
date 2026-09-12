@@ -10,8 +10,8 @@ android {
         applicationId 'com.emre.nexusai'
         minSdk 26
         targetSdk 35
-        versionCode 4
-        versionName '2.2.0'
+        versionCode 5
+        versionName '2.3.0'
     }
 
     buildTypes {
@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0'
+    implementation 'org.jsoup:jsoup:1.18.3'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.json:json:20240303'
