@@ -32,23 +32,42 @@ jobs:
       - name: Lint
         run: gradle :aihub:lintDebug --stacktrace
 
-      - name: Live no-login text smoke test
+      - name: Live no-login text failover smoke test
         run: |
           python3 - <<'PY'
-          import json, urllib.request
-          url = 'https://ai-api.cehpoint.co.in/v1/chat/completions'
-          payload = json.dumps({
-              'model': 'cehpoint-ai',
-              'stream': False,
-              'messages': [{'role':'user','content':'Reply with exactly NEXUS_OK'}]
-          }).encode()
-          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json'})
-          with urllib.request.urlopen(request, timeout=35) as response:
-              body = json.load(response)
-          text = body['choices'][0]['message']['content'].strip()
-          if not text:
-              raise SystemExit('Empty live AI response')
-          print('Live AI endpoint returned:', text[:120])
+          import json, urllib.request, urllib.error, socket
+          endpoints = [
+              ('BlockRun GPT-OSS', 'https://blockrun.ai/api/v1/chat/completions', 'nvidia/gpt-oss-20b'),
+              ('Vireonix Auto', 'https://vireonix.ai/v1/chat/completions', 'auto'),
+              ('Animica Kimi', 'https://animica.dev/v1/chat/completions', 'kimi-k3'),
+              ('Cehpoint AI', 'https://ai-api.cehpoint.co.in/v1/chat/completions', 'cehpoint-ai'),
+          ]
+          errors = []
+          for name, url, model in endpoints:
+              try:
+                  payload = json.dumps({
+                      'model': model,
+                      'stream': False,
+                      'messages': [{'role':'user','content':'Reply briefly with NEXUS_OK'}]
+                  }).encode()
+                  request = urllib.request.Request(
+                      url,
+                      data=payload,
+                      headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'NexusAI/2.0'}
+                  )
+                  with urllib.request.urlopen(request, timeout=22) as response:
+                      body = json.load(response)
+                  text = body['choices'][0]['message']['content'].strip()
+                  if text:
+                      print(f'Live text engine OK: {name}: {text[:100]}')
+                      raise SystemExit(0)
+                  errors.append(f'{name}: empty response')
+              except SystemExit:
+                  raise
+              except Exception as exc:
+                  errors.append(f'{name}: {type(exc).__name__}: {exc}')
+                  print(errors[-1])
+          raise SystemExit('All no-login text engines failed:\n' + '\n'.join(errors))
           PY
 
       - name: Live no-login image smoke test
@@ -57,7 +76,7 @@ jobs:
           import json, urllib.request
           url = 'https://ahm7xmakki.com/api/tti'
           payload = json.dumps({'prompt':'minimal blue circle icon on white background','ratio':'1:1'}).encode()
-          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json'})
+          request = urllib.request.Request(url, data=payload, headers={'Content-Type':'application/json','User-Agent':'NexusAI/2.0'})
           with urllib.request.urlopen(request, timeout=90) as response:
               body = json.load(response)
           image_url = body.get('imageUrl','')
