@@ -54,6 +54,9 @@ jobs:
           PY
           bash /tmp/generate_namaz.sh
 
+      - name: Python patch regression tests
+        run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
+
       - name: Prepare test dependencies and overlay
         shell: bash
         run: |
