@@ -71,7 +71,7 @@ jobs:
         run: |
           set -euo pipefail
           echo 'fc5b25fc866a22ef846953c62bd330530f99508eddbe1e16965e9a85e059897f  unified-ai-patches/libs.versions.toml' | sha256sum -c -
-          echo 'ea842b96812b8554931d46d45e2384bf7b10b92c2f5052fed4a3d77453561450  unified-ai-patches/app-build.gradle.kts' | sha256sum -c -
+          test "$(git hash-object unified-ai-patches/app-build.gradle.kts)" = "a13643fe576dfd7581f6c4dda99aba8dd3f65173"
           echo 'a8dc4dac419b12c59e7667fb29da8d9db1314dd071e980d59b9704fa768056d3  unified-ai-patches/ChatViewModelTest.kt' | sha256sum -c -
           cp unified-ai-patches/libs.versions.toml unified-ai-app/gradle/libs.versions.toml
           cp unified-ai-patches/app-build.gradle.kts unified-ai-app/app/build.gradle.kts
