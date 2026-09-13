@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetTrackerRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:background="@drawable/widget_surface"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bugünün namazları"
+        android:textColor="#66766F"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp">
+        <TextView
+            android:id="@+id/widgetTrackerProgress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0/5"
+            android:textColor="#123A30"
+            android:textStyle="bold"
+            android:textSize="28sp" />
+        <TextView
+            android:id="@+id/widgetTrackerDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="○ ○ ○ ○ ○"
+            android:textColor="#0C6B50"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Takip ekranını açmak için dokun"
+        android:textColor="#78867F"
+        android:textSize="10sp" />
+</LinearLayout>
