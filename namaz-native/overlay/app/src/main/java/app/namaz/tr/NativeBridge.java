@@ -120,6 +120,7 @@ public final class NativeBridge {
             activity.getSharedPreferences(PrayerScheduler.PREFS, 0)
                     .edit().putString(PrayerScheduler.KEY_SCHEDULE_JSON, json).apply();
             PrayerScheduler.scheduleFromJson(activity, json);
+            WidgetSuiteUpdater.updateAll(activity);
         } catch (Exception e) {
             emitToast("Arka plan namaz hatırlatmaları ayarlanamadı.");
         }
@@ -142,8 +143,10 @@ public final class NativeBridge {
             e.putString("widgetAksam", o.optString("aksam", "—"));
             e.putString("widgetYatsi", o.optString("yatsi", "—"));
             e.putInt("widgetTracked", Math.max(0, Math.min(5, o.optInt("tracked", 0))));
+            String resume = o.optString("resume", "").trim();
+            if (!resume.isEmpty()) e.putString("widgetQuranResume", resume);
             e.apply();
-            PrayerWidgetProvider.updateAll(activity);
+            WidgetSuiteUpdater.updateAll(activity);
         } catch (Exception ignored) {}
     }
 
@@ -157,8 +160,23 @@ public final class NativeBridge {
                     .putString("dailyAyahText", text)
                     .putString("dailyAyahSource", source)
                     .apply();
-            PrayerWidgetProvider.updateAll(activity);
+            WidgetSuiteUpdater.updateAll(activity);
         } catch (Exception ignored) {}
+    }
+
+    @JavascriptInterface public void updateQuranResume(String text) {
+        String clean = text == null ? "" : text.trim();
+        if (clean.length() > 80) clean = clean.substring(0, 77).trim() + "…";
+        activity.getSharedPreferences(PrayerScheduler.PREFS, 0).edit()
+                .putString("widgetQuranResume", clean).apply();
+        QuranResumeWidgetProvider.updateAll(activity);
+    }
+
+    @JavascriptInterface public void setPrayerStatusEnabled(boolean enabled) {
+        activity.getSharedPreferences(PrayerScheduler.PREFS, 0).edit()
+                .putBoolean("prayerStatusEnabled", enabled).apply();
+        if (enabled) PrayerStatusNotification.update(activity);
+        else PrayerStatusNotification.cancel(activity);
     }
 
     @JavascriptInterface public void stopAdhan() {
