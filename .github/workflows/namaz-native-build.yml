@@ -79,8 +79,11 @@ jobs:
           python3 namaz-native/patch_assets.py --self-test namazapp
           python3 namaz-native/market_upgrade.py --apply namazapp
           python3 namaz-native/market_upgrade.py --self-test namazapp
+          python3 namaz-native/book_expansion.py --apply namazapp
+          python3 namaz-native/book_expansion.py --self-test namazapp
           grep -q 'AndroidBridge.updateAyah' namazapp/app/src/main/assets/app.js
           grep -q 'id="namazHocasi"' namazapp/app/src/main/assets/index.html
+          grep -q '32 Farz Öğretim Şeması' namazapp/app/src/main/assets/index.html
           grep -q 'widgetTracker' namazapp/app/src/main/res/layout/prayer_widget.xml
           mkdir -p namazapp/app/src/main/res/raw
           python3 - <<'PY'
@@ -114,7 +117,9 @@ jobs:
           unzip -t "$APK" >/dev/null
           ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "package: name='app.namaz.tr.prayer3'"
           unzip -l "$APK" | grep -q 'res/raw/adhan.mp3'
-          unzip -p "$APK" assets/index.html | grep -q 'Namaz Hocası'
+          unzip -p "$APK" assets/index.html > /tmp/namaz-index.html
+          grep -q 'Namaz Hocası' /tmp/namaz-index.html
+          grep -q '32 Farz Öğretim Şeması' /tmp/namaz-index.html
           cp "$APK" Namaz.apk
           sha256sum Namaz.apk
 
