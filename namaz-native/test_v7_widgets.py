@@ -28,8 +28,8 @@ INFO_XML = [
 
 class V7WidgetSuiteTests(unittest.TestCase):
     def test_shared_widget_data_layer_exists(self):
-        repo = (JAVA / 'WidgetDataRepository.java')
-        utils = (JAVA / 'WidgetRenderUtils.java')
+        repo = JAVA / 'WidgetDataRepository.java'
+        utils = JAVA / 'WidgetRenderUtils.java'
         self.assertTrue(repo.exists())
         self.assertTrue(utils.exists())
         text = repo.read_text(encoding='utf-8')
@@ -89,9 +89,21 @@ class V7WidgetSuiteTests(unittest.TestCase):
             'Namaz — Namaz Takibi',
             'Namaz — Günün Ayeti',
             'Namaz — Hicrî Tarih',
-            "Namaz — Kur'an'a Devam",
+            'Namaz — Kur’an’a Devam',
         ]:
             self.assertIn(label, strings)
+
+    def test_v7_upgrade_registers_receivers_and_lock_screen_toggle(self):
+        patcher = Path('namaz-native/v7_upgrade.py')
+        self.assertTrue(patcher.exists())
+        text = patcher.read_text(encoding='utf-8')
+        for provider in [p.replace('.java', '') for p in PROVIDERS]:
+            self.assertIn(provider, text)
+        for info in INFO_XML:
+            self.assertIn(info.replace('.xml', ''), text)
+        self.assertIn('prayerStatus', text)
+        self.assertIn('AndroidBridge.setPrayerStatusEnabled', text)
+        self.assertIn('Namaz V7', text)
 
     def test_workflow_packages_distinct_v7_and_checks_assets(self):
         workflow = Path('.github/workflows/namaz-native-build.yml').read_text(encoding='utf-8')
@@ -101,6 +113,7 @@ class V7WidgetSuiteTests(unittest.TestCase):
             'versionCode 7',
             "versionName '7.0.0'",
             'Namaz V7',
+            'v7_upgrade.py --apply namazapp',
             'Namaz-V7.apk',
             'Namaz-V7-APK',
             'app.namaz.tr.v7',
