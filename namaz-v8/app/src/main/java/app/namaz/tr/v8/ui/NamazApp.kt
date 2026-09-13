@@ -2,21 +2,107 @@ package app.namaz.tr.v8.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoStories
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.MenuBook
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.SelfImprovement
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import app.namaz.tr.v8.model.AppDestination
+import app.namaz.tr.v8.model.UserProfile
+import app.namaz.tr.v8.model.UserSettings
+import app.namaz.tr.v8.settings.DataStoreUserSettingsRepository
+import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun NamazApp() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Namaz V8", style = MaterialTheme.typography.headlineMedium)
+    val context = LocalContext.current
+    val repository = remember(context) { DataStoreUserSettingsRepository(context.applicationContext) }
+    val settings by repository.settings.collectAsState(initial = UserSettings())
+    val scope = rememberCoroutineScope()
+
+    if (!settings.onboardingDone || settings.profile == null) {
+        OnboardingScreen { profile: UserProfile ->
+            scope.launch { repository.setProfile(profile) }
+        }
+        return
+    }
+
+    RootNavigation()
+}
+
+@Composable
+private fun RootNavigation() {
+    val navController = rememberNavController()
+    val backStack by navController.currentBackStackEntryAsState()
+    val currentRoute = backStack?.destination?.route
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                AppDestination.entries.forEach { destination ->
+                    NavigationBarItem(
+                        selected = currentRoute == destination.route,
+                        onClick = {
+                            navController.navigate(destination.route) {
+                                popUpTo(AppDestination.TODAY.route) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = { Icon(iconFor(destination), contentDescription = destination.title) },
+                        label = { Text(destination.title) },
+                    )
+                }
+            }
+        },
+    ) { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = AppDestination.TODAY.route,
+            modifier = Modifier.padding(padding),
+        ) {
+            composable(AppDestination.TODAY.route) { PlaceholderScreen("Bugün", "Namaz verileri hazırlanıyor") }
+            composable(AppDestination.QURAN.route) { PlaceholderScreen("Kur’an", "Kur’an Pro sonraki fazda burada olacak") }
+            composable(AppDestination.LEARN.route) { PlaceholderScreen("Öğren", "Akademi sonraki fazda native olarak taşınacak") }
+            composable(AppDestination.WORSHIP.route) { PlaceholderScreen("İbadet", "Dua, zikir ve diğer araçlar burada olacak") }
+            composable(AppDestination.MORE.route) { PlaceholderScreen("Daha Fazla", "Kıble, ayarlar ve sağlık kontrolleri burada") }
         }
     }
+}
+
+@Composable
+private fun PlaceholderScreen(title: String, subtitle: String) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("$title\n$subtitle")
+    }
+}
+
+private fun iconFor(destination: AppDestination): ImageVector = when (destination) {
+    AppDestination.TODAY -> Icons.Outlined.Home
+    AppDestination.QURAN -> Icons.Outlined.MenuBook
+    AppDestination.LEARN -> Icons.Outlined.AutoStories
+    AppDestination.WORSHIP -> Icons.Outlined.SelfImprovement
+    AppDestination.MORE -> Icons.Outlined.MoreHoriz
 }
