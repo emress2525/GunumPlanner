@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -45,9 +44,8 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val state = combine(prayerRepository.settings, now) { settings, instant ->
-        val zonedNow = instant.atZone(settings.zoneId)
-        settings to zonedNow
-    }.flatMapLatest { (_, zonedNow) ->
+        instant.atZone(settings.zoneId)
+    }.flatMapLatest { zonedNow ->
         val date = zonedNow.toLocalDate()
         combine(
             prayerRepository.schedulesFor(date),
@@ -75,8 +73,8 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     fun togglePrayed(prayer: Prayer) {
-        val current = state.value.data ?: return
-        val row = current.prayerRows.firstOrNull { it.prayer == prayer } ?: return
+        val data = state.value.data ?: return
+        val row = data.prayerRows.firstOrNull { it.prayer == prayer } ?: return
         val nextState = if (row.trackState == PrayerTrackState.UNSET) {
             PrayerTrackState.PRAYED
         } else {
@@ -86,19 +84,9 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setTrackState(prayer: Prayer, trackState: PrayerTrackState) {
-        val data = state.value.data ?: return
-        val date = data.prayerRows.firstOrNull { it.prayer == prayer }
-            ?.let { data.nextPrayer.at.toLocalDate().let { nextDate ->
-                if (data.prayerRows.any { row -> row.prayer == prayer }) {
-                    state.value.data?.let { currentData ->
-                        currentData.prayerRows.firstOrNull { row -> row.prayer == prayer }
-                    }
-                    null
-                } else nextDate
-            } }
-        val settingsDate = java.time.LocalDate.now(java.time.ZoneId.of("Europe/Istanbul"))
+        val date = state.value.data?.date ?: return
         viewModelScope.launch {
-            trackerRepository.set(date ?: settingsDate, prayer, trackState)
+            trackerRepository.set(date, prayer, trackState)
         }
     }
 }
