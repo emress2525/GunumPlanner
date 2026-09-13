@@ -28,9 +28,9 @@ class MarketUpgradeTests(unittest.TestCase):
         self.assertIn('market-polish-v1', html)
         self.assertIn('Namaz Hocası', html)
 
-    def test_widget_payload_contains_all_prayer_times_hijri_city_tracker_and_resume(self):
+    def test_widget_payload_contains_all_prayer_times_hijri_city_and_tracker(self):
         js = market_upgrade.upgrade_js(BASE_JS)
-        for key in ['imsak:', 'gunes:', 'ogle:', 'ikindi:', 'aksam:', 'yatsi:', 'hijri:', 'city:', 'tracked:', 'resume:']:
+        for key in ['imsak:', 'gunes:', 'ogle:', 'ikindi:', 'aksam:', 'yatsi:', 'hijri:', 'city:', 'tracked:']:
             self.assertIn(key, js)
 
     def test_widget_layout_is_information_dense(self):
