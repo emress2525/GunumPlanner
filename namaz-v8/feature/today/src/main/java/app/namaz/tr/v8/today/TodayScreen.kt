@@ -35,10 +35,7 @@ fun TodayScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text("Bugün", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-        Card(
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-            modifier = Modifier.fillMaxWidth(),
-        ) {
+        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer), modifier = Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("Sıradaki Namaz", style = MaterialTheme.typography.labelLarge)
                 if (state.nextPrayer != null) {
@@ -52,18 +49,9 @@ fun TodayScreen(
         Text("Vakitler", style = MaterialTheme.typography.titleLarge)
         state.trackablePrayers.forEach { prayer ->
             Card(Modifier.fillMaxWidth()) {
-                Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column(Modifier.weight(1f)) {
-                        Text(prayer.title, style = MaterialTheme.typography.titleMedium)
-                        Text(prayer.timeText, style = MaterialTheme.typography.bodyLarge)
-                    }
-                    Checkbox(
-                        checked = prayer.name in state.completed,
-                        onCheckedChange = { onPrayerCompleted(prayer.name, it) },
-                    )
+                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) { Text(prayer.title, style = MaterialTheme.typography.titleMedium); Text(prayer.timeText, style = MaterialTheme.typography.bodyLarge) }
+                    Checkbox(checked = prayer.name in state.completed, onCheckedChange = { onPrayerCompleted(prayer.name, it) })
                 }
             }
         }
@@ -76,5 +64,23 @@ fun TodayScreen(
             }
         }
         Button(onClick = onOpenPrayerDetails, modifier = Modifier.fillMaxWidth()) { Text("Namaz ayarları ve ayrıntılar") }
+
+        Text("Günün Manevî Akışı", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 4.dp))
+        TodayCard("Kur’an hedefi", "Kur’an Pro’da günlük hatim hedefini gör, kaldığın yerden devam et.", "Kaynak: uygulamadaki çevrimdışı Kur’an paketi")
+        TodayCard("Günün ayeti", "Ra'd 13:28 — Meal ve tefsiri Kur’an sekmesinden aç.", "Kur’an 13:28")
+        TodayCard("Günün duası", "Rabbi zidnî ilmâ — Rabbim! İlmimi artır.", "Kur’an 20:114")
+        TodayCard("Bugün öğren", "Abdest veya beş vakit namazdan bir dersi Öğren Akademisi’nde tamamla.", "Diyanet İlmihal I")
+        TodayCard("Zikir", "Kendi hedefini İbadet > Zikir Sayacı’ndan takip edebilirsin.", "Kişisel takip aracı")
+    }
+}
+
+@Composable
+private fun TodayCard(title: String, body: String, source: String) {
+    Card(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(14.dp)) {
+            Text(title, fontWeight = FontWeight.Bold)
+            Text(body)
+            Text(source, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+        }
     }
 }

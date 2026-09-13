@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -8,27 +10,19 @@
 
     <application
         android:name=".NamazApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".alarm.PrayerAlarmReceiver"
-            android:exported="false" />
-
-        <receiver
-            android:name=".alarm.BootReceiver"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name=".alarm.PrayerAlarmReceiver" android:exported="false" />
+        <receiver android:name=".alarm.BootReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
@@ -36,9 +30,14 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".adhan.AdhanService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+        <service android:name=".adhan.AdhanService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
+
+        <receiver android:name=".widget.NextPrayerWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_next_info" /></receiver>
+        <receiver android:name=".widget.CountdownWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_countdown_info" /></receiver>
+        <receiver android:name=".widget.PrayerTimesWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_times_info" /></receiver>
+        <receiver android:name=".widget.PrayerTrackerWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_tracker_info" /></receiver>
+        <receiver android:name=".widget.DailyAyahWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_ayah_info" /></receiver>
+        <receiver android:name=".widget.HijriDateWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_hijri_info" /></receiver>
+        <receiver android:name=".widget.QuranResumeWidgetProvider" android:exported="false"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_quran_info" /></receiver>
     </application>
 </manifest>
