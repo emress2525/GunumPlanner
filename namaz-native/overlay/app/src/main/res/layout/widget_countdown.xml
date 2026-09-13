@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetCountdownRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_surface"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/widgetCountdownName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Akşam"
+        android:textColor="#66766F"
+        android:textStyle="bold"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/widgetCountdownTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="19:08"
+        android:textColor="#123A30"
+        android:textStyle="bold"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/widgetCountdownRemaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="1 sa 15 dk kaldı"
+        android:textColor="#0C6B50"
+        android:textStyle="bold"
+        android:textSize="13sp" />
+</LinearLayout>
