@@ -65,8 +65,8 @@ jobs:
         shell: bash
         run: |
           cat cepscan_v41_parts/part_* > cepscan_v41_patch.gz.b64
-          test "$(wc -c < cepscan_v41_patch.gz.b64)" = "5648"
-          echo '8dfddfe852d9344708d9896bcb6da5c759e396a9291bee636ae7cfc123629243  cepscan_v41_patch.gz.b64' | sha256sum -c -
+          test "$(wc -c < cepscan_v41_patch.gz.b64)" = "6060"
+          echo 'f7d9146f4479d20e4b0d04c44da2bd9565aa6ea09540b27739f4232240682a9d  cepscan_v41_patch.gz.b64' | sha256sum -c -
           base64 --decode cepscan_v41_patch.gz.b64 | gzip -d > cepscan-v41.patch
           git apply --check --directory=cepscan-src cepscan-v41.patch
           git apply --directory=cepscan-src cepscan-v41.patch
