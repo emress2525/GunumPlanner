@@ -33,6 +33,12 @@ class V6PackagingTests(unittest.TestCase):
         ).read_text(encoding='utf-8')
         self.assertIn('<string name="app_name">Namaz V6</string>', strings)
 
+    def test_widget_header_is_v6(self):
+        widget = Path(
+            'namaz-native/overlay/app/src/main/res/layout/prayer_widget.xml'
+        ).read_text(encoding='utf-8')
+        self.assertIn('android:text="☾  Namaz V6"', widget)
+
 
 if __name__ == '__main__':
     unittest.main()
