@@ -39,6 +39,21 @@ class V6PackagingTests(unittest.TestCase):
         ).read_text(encoding='utf-8')
         self.assertIn('android:text="☾  Namaz V6"', widget)
 
+    def test_workflow_relocks_exact_widget_xml_attribute_after_legacy_patchers(self):
+        workflow = Path('.github/workflows/namaz-native-build.yml').read_text(encoding='utf-8')
+        self.assertIn(
+            "text=text.replace('android:text=\"☾  Namaz V5\"', 'android:text=\"☾  Namaz V6\"')",
+            workflow,
+        )
+        self.assertIn(
+            "text=text.replace('android:text=\"☾  Namaz\"', 'android:text=\"☾  Namaz V6\"')",
+            workflow,
+        )
+        self.assertIn(
+            "if 'android:text=\"☾  Namaz V6\"' not in text:",
+            workflow,
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
