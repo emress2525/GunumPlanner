@@ -128,11 +128,21 @@ public final class NativeBridge {
     @JavascriptInterface public void updateWidget(String json) {
         try {
             JSONObject o = new JSONObject(json);
-            activity.getSharedPreferences(PrayerScheduler.PREFS, 0).edit()
-                    .putString("nextPrayerName", o.optString("name", "Namaz"))
-                    .putString("nextPrayerTime", o.optString("time", "—"))
-                    .putLong("nextPrayerEpoch", o.optLong("epoch", 0L))
-                    .apply();
+            android.content.SharedPreferences.Editor e = activity
+                    .getSharedPreferences(PrayerScheduler.PREFS, 0).edit();
+            e.putString("nextPrayerName", o.optString("name", "Namaz"));
+            e.putString("nextPrayerTime", o.optString("time", "—"));
+            e.putLong("nextPrayerEpoch", o.optLong("epoch", 0L));
+            e.putString("widgetCity", o.optString("city", ""));
+            e.putString("widgetHijri", o.optString("hijri", ""));
+            e.putString("widgetImsak", o.optString("imsak", "—"));
+            e.putString("widgetGunes", o.optString("gunes", "—"));
+            e.putString("widgetOgle", o.optString("ogle", "—"));
+            e.putString("widgetIkindi", o.optString("ikindi", "—"));
+            e.putString("widgetAksam", o.optString("aksam", "—"));
+            e.putString("widgetYatsi", o.optString("yatsi", "—"));
+            e.putInt("widgetTracked", Math.max(0, Math.min(5, o.optInt("tracked", 0))));
+            e.apply();
             PrayerWidgetProvider.updateAll(activity);
         } catch (Exception ignored) {}
     }
