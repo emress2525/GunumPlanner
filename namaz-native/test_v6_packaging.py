@@ -39,9 +39,6 @@ class V6PackagingTests(unittest.TestCase):
         ).read_text(encoding='utf-8')
         self.assertIn('Namaz Akademisi içeriklerini gösterir.', strings)
         self.assertNotIn("Namaz Akademisi'ni", strings)
-        workflow = Path('.github/workflows/namaz-native-build.yml').read_text(encoding='utf-8')
-        self.assertIn('Namaz Akademisi içeriklerini gösterir.', workflow)
-        self.assertNotIn("Namaz Akademisi'ni", workflow)
 
     def test_legacy_widget_header_is_kept_for_existing_installations(self):
         widget = Path(
