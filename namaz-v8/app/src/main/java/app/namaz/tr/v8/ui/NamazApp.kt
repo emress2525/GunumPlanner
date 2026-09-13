@@ -1,36 +1,39 @@
 package app.namaz.tr.v8.ui
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.SelfImprovement
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,15 +46,18 @@ import app.namaz.tr.v8.health.HealthAction
 import app.namaz.tr.v8.health.NotificationHealthInspector
 import app.namaz.tr.v8.health.NotificationHealthScreen
 import app.namaz.tr.v8.health.NotificationHealthViewModel
+import app.namaz.tr.v8.learn.LearnScreen
 import app.namaz.tr.v8.model.AppDestination
 import app.namaz.tr.v8.model.AppMode
 import app.namaz.tr.v8.model.UserProfile
 import app.namaz.tr.v8.model.UserSettings
 import app.namaz.tr.v8.prayerui.PrayerScreen
+import app.namaz.tr.v8.quran.QuranScreen
 import app.namaz.tr.v8.settings.DataStoreUserSettingsRepository
 import app.namaz.tr.v8.today.TodayScreen
 import app.namaz.tr.v8.today.TodayViewModel
 import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
+import app.namaz.tr.v8.worship.WorshipScreen
 import kotlinx.coroutines.launch
 
 private const val PRAYER_DETAILS_ROUTE = "prayer-details"
@@ -89,6 +95,11 @@ private fun RootNavigation(
     val currentRoute = backStack?.destination?.route
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val baseDensity = LocalDensity.current
+    val uiPrefs = remember(context) { context.getSharedPreferences("ui_prefs_v8", Context.MODE_PRIVATE) }
+    var fontScale by rememberSaveable {
+        mutableFloatStateOf(uiPrefs.getFloat("font_scale", 1f).coerceIn(1f, 1.3f))
+    }
     val prayerSettings by graph.prayerSettings.settings.collectAsState(initial = null)
     val qazaTotal by graph.qazaStore.total.collectAsState(initial = 0)
     val todayViewModel: TodayViewModel = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
@@ -97,100 +108,81 @@ private fun RootNavigation(
     })
     val todayState by todayViewModel.state.collectAsState()
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                AppDestination.entries.forEach { destination ->
-                    NavigationBarItem(
-                        selected = currentRoute == destination.route,
-                        onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(AppDestination.TODAY.route) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+    CompositionLocalProvider(
+        LocalDensity provides Density(baseDensity.density, baseDensity.fontScale * fontScale),
+    ) {
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    AppDestination.entries.forEach { destination ->
+                        NavigationBarItem(
+                            selected = currentRoute == destination.route,
+                            onClick = {
+                                navController.navigate(destination.route) {
+                                    popUpTo(AppDestination.TODAY.route) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = { Icon(iconFor(destination), contentDescription = destination.title) },
+                            label = { Text(destination.title) },
+                        )
+                    }
+                }
+            },
+        ) { padding ->
+            NavHost(navController, AppDestination.TODAY.route, Modifier.padding(padding)) {
+                composable(AppDestination.TODAY.route) {
+                    TodayScreen(todayState, todayViewModel::setCompleted) { navController.navigate(PRAYER_DETAILS_ROUTE) }
+                }
+                composable(PRAYER_DETAILS_ROUTE) {
+                    prayerSettings?.let { runtime ->
+                        PrayerScreen(
+                            settings = runtime,
+                            qazaTotal = qazaTotal,
+                            onMadhabChange = { scope.launch { graph.prayerSettings.setMadhab(it); todayViewModel.refresh() } },
+                            onAdjustmentChange = { prayer, minutes -> scope.launch { graph.prayerSettings.setAdjustment(prayer, minutes); todayViewModel.refresh() } },
+                            onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
+                            onBack = { navController.popBackStack() },
+                        )
+                    } ?: PlaceholderScreen("Namaz", "Ayarlar yükleniyor")
+                }
+                composable(AppDestination.QURAN.route) { QuranScreen() }
+                composable(AppDestination.LEARN.route) { LearnScreen() }
+                composable(AppDestination.WORSHIP.route) { WorshipScreen() }
+                composable(AppDestination.MORE.route) {
+                    MoreHubScreen(
+                        appMode = appMode,
+                        onModeChange = onModeChange,
+                        runtime = prayerSettings,
+                        fontScale = fontScale,
+                        onFontScale = { requested ->
+                            val safeScale = requested.coerceIn(1f, 1.3f)
+                            fontScale = safeScale
+                            uiPrefs.edit().putFloat("font_scale", safeScale).apply()
                         },
-                        icon = { Icon(iconFor(destination), contentDescription = destination.title) },
-                        label = { Text(destination.title) },
+                        onHealth = { navController.navigate(HEALTH_ROUTE) },
+                    )
+                }
+                composable(HEALTH_ROUTE) {
+                    val healthViewModel = remember(context) { NotificationHealthViewModel(NotificationHealthInspector(context.applicationContext)) }
+                    val healthItems by healthViewModel.items.collectAsState()
+                    LaunchedEffect(Unit) { healthViewModel.refresh() }
+                    NotificationHealthScreen(
+                        items = healthItems,
+                        onAction = { action ->
+                            performHealthAction(context, action)
+                            healthViewModel.refresh()
+                        },
+                        onBack = { navController.popBackStack() },
                     )
                 }
             }
-        },
-    ) { padding ->
-        NavHost(navController, AppDestination.TODAY.route, Modifier.padding(padding)) {
-            composable(AppDestination.TODAY.route) {
-                TodayScreen(todayState, todayViewModel::setCompleted) { navController.navigate(PRAYER_DETAILS_ROUTE) }
-            }
-            composable(PRAYER_DETAILS_ROUTE) {
-                prayerSettings?.let { runtime ->
-                    PrayerScreen(
-                        settings = runtime,
-                        qazaTotal = qazaTotal,
-                        onMadhabChange = { scope.launch { graph.prayerSettings.setMadhab(it); todayViewModel.refresh() } },
-                        onAdjustmentChange = { prayer, minutes -> scope.launch { graph.prayerSettings.setAdjustment(prayer, minutes); todayViewModel.refresh() } },
-                        onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
-                        onBack = { navController.popBackStack() },
-                    )
-                } ?: PlaceholderScreen("Namaz", "Ayarlar yükleniyor")
-            }
-            composable(AppDestination.QURAN.route) { PlaceholderScreen("Kur’an", "Kur’an Pro sonraki fazda burada olacak") }
-            composable(AppDestination.LEARN.route) { PlaceholderScreen("Öğren", "Akademi sonraki fazda native olarak taşınacak") }
-            composable(AppDestination.WORSHIP.route) { PlaceholderScreen("İbadet", "Dua, zikir ve diğer araçlar burada olacak") }
-            composable(AppDestination.MORE.route) {
-                MoreScreen(
-                    appMode = appMode,
-                    onModeChange = onModeChange,
-                    onHealth = { navController.navigate(HEALTH_ROUTE) },
-                )
-            }
-            composable(HEALTH_ROUTE) {
-                val healthViewModel = remember(context) { NotificationHealthViewModel(NotificationHealthInspector(context.applicationContext)) }
-                val healthItems by healthViewModel.items.collectAsState()
-                LaunchedEffect(Unit) { healthViewModel.refresh() }
-                NotificationHealthScreen(
-                    items = healthItems,
-                    onAction = { action ->
-                        performHealthAction(context, action)
-                        healthViewModel.refresh()
-                    },
-                    onBack = { navController.popBackStack() },
-                )
-            }
         }
     }
 }
 
-@Composable
-private fun MoreScreen(
-    appMode: AppMode,
-    onModeChange: (AppMode) -> Unit,
-    onHealth: () -> Unit,
-) {
-    Column(Modifier.fillMaxSize().padding(20.dp)) {
-        Text("Daha Fazla", style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)
-        Text(
-            "Görünüm: ${if (appMode == AppMode.SIMPLE) "Basit Mod" else "Tam Mod"}",
-            modifier = Modifier.padding(top = 14.dp),
-        )
-        Text(
-            "Mod değiştirmek hiçbir özelliği kilitlemez; sadece öncelik ve görünüm düzenini değiştirir.",
-            modifier = Modifier.padding(vertical = 8.dp),
-        )
-        Button(
-            onClick = { onModeChange(if (appMode == AppMode.SIMPLE) AppMode.FULL else AppMode.SIMPLE) },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(if (appMode == AppMode.SIMPLE) "Tam Mod'a geç" else "Basit Mod'a geç")
-        }
-        Button(
-            onClick = onHealth,
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-        ) { Text("Bildirim Sağlık Merkezi") }
-        Text("Kıble, widget, seyahat ve diğer araçlar sonraki fazlarda burada büyüyecek.", modifier = Modifier.padding(top = 16.dp))
-    }
-}
-
-private fun performHealthAction(context: android.content.Context, action: HealthAction) {
+private fun performHealthAction(context: Context, action: HealthAction) {
     val appUri = Uri.parse("package:${context.packageName}")
     val intent = when (action) {
         HealthAction.OPEN_NOTIFICATION_SETTINGS -> Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
@@ -217,7 +209,7 @@ private fun PlaceholderScreen(title: String, subtitle: String) {
 
 private fun iconFor(destination: AppDestination): ImageVector = when (destination) {
     AppDestination.TODAY -> Icons.Outlined.Home
-    AppDestination.QURAN -> Icons.Outlined.MenuBook
+    AppDestination.QURAN -> Icons.AutoMirrored.Outlined.MenuBook
     AppDestination.LEARN -> Icons.Outlined.AutoStories
     AppDestination.WORSHIP -> Icons.Outlined.SelfImprovement
     AppDestination.MORE -> Icons.Outlined.MoreHoriz
