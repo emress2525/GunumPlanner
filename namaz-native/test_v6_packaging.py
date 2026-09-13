@@ -54,6 +54,13 @@ class V6PackagingTests(unittest.TestCase):
             workflow,
         )
 
+    def test_adhan_fetch_avoids_unauthenticated_github_api_rate_limit(self):
+        workflow = Path('.github/workflows/namaz-native-build.yml').read_text(encoding='utf-8')
+        self.assertNotIn('api.github.com/repos/Kiwifu/adhan-mp3/git/blobs', workflow)
+        self.assertIn('raw.githubusercontent.com/Kiwifu/adhan-mp3', workflow)
+        self.assertIn('curl -fL --retry 3', workflow)
+        self.assertIn('adhan audio unexpectedly small', workflow)
+
 
 if __name__ == '__main__':
     unittest.main()
