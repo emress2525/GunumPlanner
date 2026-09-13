@@ -2,6 +2,8 @@ package app.namaz.tr.v8
 
 import android.content.Context
 import androidx.room.Room
+import app.namaz.tr.v8.alarm.DataStorePrayerAlarmPreferencesStore
+import app.namaz.tr.v8.alarm.PrayerAlarmPreferencesStore
 import app.namaz.tr.v8.prayer.AdhanPrayerCalculator
 import app.namaz.tr.v8.prayer.DataStorePrayerSettingsStore
 import app.namaz.tr.v8.prayer.DataStoreQazaStore
@@ -19,6 +21,7 @@ class AppGraph(context: Context) {
 
     val prayerSettings: PrayerSettingsStore = DataStorePrayerSettingsStore(appContext)
     val qazaStore: QazaStore = DataStoreQazaStore(appContext)
+    val alarmPreferences: PrayerAlarmPreferencesStore = DataStorePrayerAlarmPreferencesStore(appContext)
     val prayerRepository: PrayerRepository = DefaultPrayerRepository(
         dao = database.prayerDayDao(),
         recordDao = database.prayerRecordDao(),

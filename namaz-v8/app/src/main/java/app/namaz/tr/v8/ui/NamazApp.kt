@@ -22,7 +22,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,29 +29,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.namaz.tr.v8.AppGraph
 import app.namaz.tr.v8.model.AppDestination
-import app.namaz.tr.v8.model.UserProfile
-import app.namaz.tr.v8.model.UserSettings
 import app.namaz.tr.v8.prayerui.PrayerScreen
-import app.namaz.tr.v8.settings.DataStoreUserSettingsRepository
 import app.namaz.tr.v8.today.TodayScreen
 import app.namaz.tr.v8.today.TodayViewModel
-import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 private const val PRAYER_DETAILS_ROUTE = "prayer-details"
 
 @Composable
-fun NamazApp() {
-    val context = LocalContext.current
-    val userSettings = remember(context) { DataStoreUserSettingsRepository(context.applicationContext) }
-    val graph = remember(context) { AppGraph(context.applicationContext) }
-    val settings by userSettings.settings.collectAsState(initial = UserSettings())
-    val scope = rememberCoroutineScope()
-    if (!settings.onboardingDone || settings.profile == null) {
-        OnboardingScreen { profile: UserProfile -> scope.launch { userSettings.setProfile(profile) } }
-        return
-    }
+fun NamazApp(graph: AppGraph) {
     RootNavigation(graph)
 }
 
