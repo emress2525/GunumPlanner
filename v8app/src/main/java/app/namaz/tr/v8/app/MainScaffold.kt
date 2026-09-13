@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import app.namaz.tr.v8.today.TodayScreen
 
 @Composable
 fun MainScaffold(
@@ -63,12 +64,7 @@ fun MainScaffold(
             startDestination = AppDestination.TODAY.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(AppDestination.TODAY.route) {
-                DestinationPlaceholder(
-                    title = "Bugün",
-                    subtitle = "Sıradaki namaz, vakitler ve günlük ibadet akışı burada olacak."
-                )
-            }
+            composable(AppDestination.TODAY.route) { TodayScreen() }
             composable(AppDestination.QURAN.route) {
                 DestinationPlaceholder(
                     title = "Kur’an",
