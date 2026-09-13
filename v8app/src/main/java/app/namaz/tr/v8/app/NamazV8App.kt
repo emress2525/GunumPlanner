@@ -1,74 +1,56 @@
 package app.namaz.tr.v8.app
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.namaz.tr.v8.onboarding.OnboardingRepository
+import app.namaz.tr.v8.onboarding.OnboardingScreen
+import app.namaz.tr.v8.onboarding.OnboardingState
+import kotlinx.coroutines.launch
 
 private val Emerald = Color(0xFF0F5C4B)
 private val Cream = Color(0xFFF6F1E6)
+private val DeepEmerald = Color(0xFF083D33)
+
+private val NamazLightColors = lightColorScheme(
+    primary = Emerald,
+    onPrimary = Color.White,
+    secondary = DeepEmerald,
+    background = Cream,
+    surface = Cream,
+    onBackground = Color(0xFF1C2521),
+    onSurface = Color(0xFF1C2521)
+)
 
 @Composable
 fun NamazV8App() {
-    MaterialTheme {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Cream),
-            color = Cream
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp, vertical = 28.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
-            ) {
-                Text(
-                    text = "Namaz V8",
-                    color = Emerald,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "İslami yaşam ve öğrenme merkezi",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFF4A544F)
-                )
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(22.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = "Native V8 temeli hazır",
-                            color = Emerald,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            text = "Bugün, namaz, Kur’an, öğrenme ve ibadet modülleri bu native yapı üzerinde çalışacak.",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+    val context = LocalContext.current.applicationContext
+    val repository = remember(context) { OnboardingRepository(context) }
+    val state by repository.state.collectAsStateWithLifecycle(
+        initialValue = OnboardingState(profile = null, mode = AppMode.SIMPLE)
+    )
+    val scope = rememberCoroutineScope()
+
+    MaterialTheme(colorScheme = NamazLightColors) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            if (state.profile == null) {
+                OnboardingScreen { profile, mode ->
+                    scope.launch { repository.complete(profile, mode) }
                 }
+            } else {
+                MainScaffold(
+                    mode = state.mode,
+                    onModeChange = { mode -> scope.launch { repository.setMode(mode) } }
+                )
             }
         }
     }
