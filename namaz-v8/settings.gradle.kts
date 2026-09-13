@@ -18,3 +18,4 @@ rootProject.name = "NamazV8"
 include(":app")
 include(":core:model")
 include(":core:settings")
+include(":core:prayer")
