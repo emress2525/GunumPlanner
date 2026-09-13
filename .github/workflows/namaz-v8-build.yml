@@ -1,4 +1,4 @@
-name: Build Namaz V8 Development APK
+name: Build Namaz V8 Tam APK
 
 on:
   push:
@@ -59,35 +59,56 @@ jobs:
         run: gradle -p namaz-v8 lintDebug --stacktrace
       - name: Assemble APK
         run: gradle -p namaz-v8 :app:assembleDebug --stacktrace
-      - name: Verify native-only source contract
+      - name: Verify complete native source contract
         shell: bash
         run: |
           set -euo pipefail
+          APP=namaz-v8/app/src/main/java/app/namaz/tr/v8/ui/NamazApp.kt
           if grep -R --line-number --include='*.kt' --include='*.java' 'android.webkit.WebView' namaz-v8; then
             echo 'WebView dependency found in V8 source' >&2
             exit 1
           fi
-      - name: Verify APK signature package and manifest
+          grep -Fq 'QuranScreen()' "$APP"
+          grep -Fq 'LearnScreen()' "$APP"
+          grep -Fq 'WorshipScreen()' "$APP"
+          grep -Fq 'MoreHubScreen(' "$APP"
+          if grep -R --line-number -E 'sonraki fazda|sonraki fazlarda' namaz-v8/app/src/main namaz-v8/feature; then
+            echo 'Incomplete phase placeholder found in V8 user interface' >&2
+            exit 1
+          fi
+          test -f namaz-v8/feature/quran/src/main/java/app/namaz/tr/v8/quran/QuranFeature.kt
+          test -f namaz-v8/feature/learn/src/main/java/app/namaz/tr/v8/learn/LearningFeature.kt
+          test -f namaz-v8/feature/worship/src/main/java/app/namaz/tr/v8/worship/WorshipFeature.kt
+      - name: Verify APK signature package manifest and offline assets
         shell: bash
         run: |
           set -euo pipefail
           APK=namaz-v8/app/build/outputs/apk/debug/app-debug.apk
-          cp "$APK" Namaz-V8-Development.apk
-          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose Namaz-V8-Development.apk
-          unzip -t Namaz-V8-Development.apk >/dev/null
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging Namaz-V8-Development.apk | tee /tmp/v8-badging.txt
+          FINAL=Namaz-V8-Tam.apk
+          cp "$APK" "$FINAL"
+          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose "$FINAL"
+          unzip -t "$FINAL" >/dev/null
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging "$FINAL" | tee /tmp/v8-badging.txt
           grep -q "package: name='app.namaz.tr.v8' versionCode='8' versionName='8.0.0'" /tmp/v8-badging.txt
           grep -q "application-label:'Namaz V8'" /tmp/v8-badging.txt
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump xmltree Namaz-V8-Development.apk AndroidManifest.xml > /tmp/v8-manifest.txt
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump xmltree "$FINAL" AndroidManifest.xml > /tmp/v8-manifest.txt
           grep -q 'PrayerAlarmReceiver' /tmp/v8-manifest.txt
           grep -q 'BootReceiver' /tmp/v8-manifest.txt
           grep -q 'AdhanService' /tmp/v8-manifest.txt
-          unzip -l Namaz-V8-Development.apk | grep -q 'res/raw/adhan.mp3'
-          unzip -l Namaz-V8-Development.apk | grep -q 'assets/quran/114.json'
-          unzip -l Namaz-V8-Development.apk | grep -q 'assets/content-sources.json'
-          sha256sum Namaz-V8-Development.apk
+          grep -q 'NextPrayerWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'CountdownWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'PrayerTimesWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'PrayerTrackerWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'DailyAyahWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'HijriDateWidgetProvider' /tmp/v8-manifest.txt
+          grep -q 'QuranResumeWidgetProvider' /tmp/v8-manifest.txt
+          unzip -l "$FINAL" | grep -q 'res/raw/adhan.mp3'
+          unzip -l "$FINAL" | grep -q 'assets/quran/114.json'
+          unzip -l "$FINAL" | grep -q 'assets/tafseer/elmalili/114.md'
+          unzip -l "$FINAL" | grep -q 'assets/content-sources.json'
+          sha256sum "$FINAL"
       - uses: actions/upload-artifact@v4
         with:
-          name: Namaz-V8-Development-APK
-          path: Namaz-V8-Development.apk
+          name: Namaz-V8-Tam-APK
+          path: Namaz-V8-Tam.apk
           if-no-files-found: error
