@@ -1,0 +1,66 @@
+name: Build Namaz V8 Foundation APK
+
+on:
+  push:
+    branches: [ "namaz-clean-rebuild" ]
+    paths:
+      - "v8app/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - ".github/workflows/namaz-v8-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: namaz-v8-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Test V8
+        run: gradle :v8app:testDebugUnitTest --stacktrace
+
+      - name: Lint V8
+        run: gradle :v8app:lintDebug --stacktrace
+
+      - name: Build V8 debug and release
+        run: gradle :v8app:assembleDebug :v8app:assembleRelease --stacktrace
+
+      - name: Verify APK metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="v8app/build/outputs/apk/debug/v8app-debug.apk"
+          test -s "$APK"
+          BADGING="$ANDROID_HOME/build-tools/35.0.0/aapt dump badging $APK"
+          eval "$BADGING" | grep -q "package: name='app.namaz.tr.v8' versionCode='8' versionName='8.0.0-dev1'"
+          eval "$BADGING" | grep -q "application-label:'Namaz V8'"
+          cp "$APK" Namaz-V8-Foundation.apk
+          test -s Namaz-V8-Foundation.apk
+
+      - name: Upload V8 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Namaz-V8-Foundation-APK
+          path: Namaz-V8-Foundation.apk
+          if-no-files-found: error
