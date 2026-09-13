@@ -37,6 +37,7 @@ import app.namaz.tr.v8.settings.DataStoreUserSettingsRepository
 import app.namaz.tr.v8.today.TodayScreen
 import app.namaz.tr.v8.today.TodayViewModel
 import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 private const val PRAYER_DETAILS_ROUTE = "prayer-details"
@@ -48,7 +49,6 @@ fun NamazApp() {
     val graph = remember(context) { AppGraph(context.applicationContext) }
     val settings by userSettings.settings.collectAsState(initial = UserSettings())
     val scope = rememberCoroutineScope()
-
     if (!settings.onboardingDone || settings.profile == null) {
         OnboardingScreen { profile: UserProfile -> scope.launch { userSettings.setProfile(profile) } }
         return
@@ -63,10 +63,10 @@ private fun RootNavigation(graph: AppGraph) {
     val currentRoute = backStack?.destination?.route
     val scope = rememberCoroutineScope()
     val prayerSettings by graph.prayerSettings.settings.collectAsState(initial = null)
+    val qazaTotal by graph.qazaStore.total.collectAsState(initial = 0)
     val todayViewModel: TodayViewModel = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-            TodayViewModel(graph.prayerRepository) as T
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = TodayViewModel(graph.prayerRepository) as T
     })
     val todayState by todayViewModel.state.collectAsState()
 
@@ -92,18 +92,16 @@ private fun RootNavigation(graph: AppGraph) {
     ) { padding ->
         NavHost(navController, AppDestination.TODAY.route, Modifier.padding(padding)) {
             composable(AppDestination.TODAY.route) {
-                TodayScreen(
-                    state = todayState,
-                    onPrayerCompleted = todayViewModel::setCompleted,
-                    onOpenPrayerDetails = { navController.navigate(PRAYER_DETAILS_ROUTE) },
-                )
+                TodayScreen(todayState, todayViewModel::setCompleted) { navController.navigate(PRAYER_DETAILS_ROUTE) }
             }
             composable(PRAYER_DETAILS_ROUTE) {
                 prayerSettings?.let { runtime ->
                     PrayerScreen(
                         settings = runtime,
+                        qazaTotal = qazaTotal,
                         onMadhabChange = { scope.launch { graph.prayerSettings.setMadhab(it); todayViewModel.refresh() } },
                         onAdjustmentChange = { prayer, minutes -> scope.launch { graph.prayerSettings.setAdjustment(prayer, minutes); todayViewModel.refresh() } },
+                        onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
                         onBack = { navController.popBackStack() },
                     )
                 } ?: PlaceholderScreen("Namaz", "Ayarlar yükleniyor")

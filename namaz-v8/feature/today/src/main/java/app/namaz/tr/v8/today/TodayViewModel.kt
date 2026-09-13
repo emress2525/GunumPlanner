@@ -2,6 +2,7 @@ package app.namaz.tr.v8.today
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.namaz.tr.v8.model.PrayerCompletion
 import app.namaz.tr.v8.model.PrayerInstant
 import app.namaz.tr.v8.model.PrayerName
 import app.namaz.tr.v8.model.PrayerSchedule
@@ -14,32 +15,27 @@ import java.time.ZoneId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-data class NextPrayerUi(
-    val name: String,
-    val timeText: String,
-    val remainingText: String,
-    val instant: Instant,
-)
-
-data class PrayerRowUi(
-    val name: PrayerName,
-    val title: String,
-    val timeText: String,
-)
-
+data class NextPrayerUi(val name: String, val timeText: String, val remainingText: String, val instant: Instant)
+data class PrayerRowUi(val name: PrayerName, val title: String, val timeText: String)
 data class TodayUiState(
     val city: String,
     val methodLabel: String,
     val nextPrayer: NextPrayerUi?,
     val trackablePrayers: List<PrayerRowUi>,
     val sunrise: PrayerRowUi?,
+    val completed: Set<PrayerName> = emptySet(),
     val hijriPlaceholder: String? = null,
 )
 
 class TodayUiStateMapper {
-    fun map(schedule: PrayerSchedule, now: Instant): TodayUiState {
+    fun map(
+        schedule: PrayerSchedule,
+        now: Instant,
+        completions: Map<PrayerName, PrayerCompletion> = emptyMap(),
+    ): TodayUiState {
         val zone = ZoneId.of(schedule.zoneId)
         fun row(prayer: PrayerInstant) = PrayerRowUi(
             name = prayer.name,
@@ -51,15 +47,11 @@ class TodayUiStateMapper {
             city = schedule.location.city,
             methodLabel = schedule.methodLabel,
             nextPrayer = next?.let { prayer ->
-                NextPrayerUi(
-                    name = prayer.name.displayName,
-                    timeText = row(prayer).timeText,
-                    remainingText = remaining(now, prayer.instant),
-                    instant = prayer.instant,
-                )
+                NextPrayerUi(prayer.name.displayName, row(prayer).timeText, remaining(now, prayer.instant), prayer.instant)
             },
             trackablePrayers = schedule.trackablePrayers.map(::row),
             sunrise = row(schedule.sunrise),
+            completed = completions.filterValues { it.completed }.keys,
         )
     }
 
@@ -84,9 +76,12 @@ class TodayViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            repository.observeDay(LocalDate.now(clock.withZone(zoneId))).collect { schedule ->
-                _state.value = schedule?.let { mapper.map(it, clock.instant()) }
-            }
+            val date = LocalDate.now(clock.withZone(zoneId))
+            repository.observeDay(date)
+                .combine(repository.observeCompletions(date)) { schedule, completions ->
+                    schedule?.let { mapper.map(it, clock.instant(), completions) }
+                }
+                .collect { _state.value = it }
         }
     }
 

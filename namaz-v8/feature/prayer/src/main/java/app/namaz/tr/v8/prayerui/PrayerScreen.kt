@@ -23,8 +23,10 @@ import app.namaz.tr.v8.prayer.PrayerRuntimeSettings
 @Composable
 fun PrayerScreen(
     settings: PrayerRuntimeSettings,
+    qazaTotal: Int,
     onMadhabChange: (MadhabChoice) -> Unit,
     onAdjustmentChange: (PrayerName, Int) -> Unit,
+    onQazaTotalChange: (Int) -> Unit,
     onBack: () -> Unit,
 ) {
     Column(
@@ -51,10 +53,7 @@ fun PrayerScreen(
         PrayerName.entries.forEach { prayer ->
             val current = settings.config.adjustmentsMinutes[prayer] ?: 0
             Card(Modifier.fillMaxWidth()) {
-                Row(
-                    Modifier.fillMaxWidth().padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
+                Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("${prayer.displayName}: ${if (current >= 0) "+" else ""}$current dk")
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         OutlinedButton(onClick = { onAdjustmentChange(prayer, current - 1) }) { Text("−") }
@@ -63,6 +62,20 @@ fun PrayerScreen(
                 }
             }
         }
+
+        Text("Kaza takibi", style = MaterialTheme.typography.titleLarge)
+        Card(Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("Başlangıç sayısını ben giriyorum", style = MaterialTheme.typography.titleMedium)
+                Text("Uygulama geçmiş namazlardan kendi kendine borç hesaplamaz.")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(onClick = { onQazaTotalChange((qazaTotal - 1).coerceAtLeast(0)) }) { Text("−") }
+                    Text("$qazaTotal", style = MaterialTheme.typography.headlineSmall)
+                    OutlinedButton(onClick = { onQazaTotalChange(qazaTotal + 1) }) { Text("+") }
+                }
+            }
+        }
+
         OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) { Text("Geri") }
     }
 }

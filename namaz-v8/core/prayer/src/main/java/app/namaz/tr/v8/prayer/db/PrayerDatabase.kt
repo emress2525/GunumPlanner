@@ -4,10 +4,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [PrayerDayEntity::class],
-    version = 1,
+    entities = [PrayerDayEntity::class, PrayerRecordEntity::class],
+    version = 2,
     exportSchema = false,
 )
 abstract class PrayerDatabase : RoomDatabase() {
     abstract fun prayerDayDao(): PrayerDayDao
+    abstract fun prayerRecordDao(): PrayerRecordDao
 }

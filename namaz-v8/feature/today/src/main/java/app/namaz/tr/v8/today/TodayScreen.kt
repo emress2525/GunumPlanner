@@ -31,10 +31,7 @@ fun TodayScreen(
         return
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(18.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text("Bugün", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -47,14 +44,11 @@ fun TodayScreen(
                 if (state.nextPrayer != null) {
                     Text("${state.nextPrayer.name} · ${state.nextPrayer.timeText}", style = MaterialTheme.typography.headlineSmall)
                     Text("${state.nextPrayer.remainingText} kaldı", style = MaterialTheme.typography.titleMedium)
-                } else {
-                    Text("Bugünün farz vakitleri tamamlandı", style = MaterialTheme.typography.titleMedium)
-                }
+                } else Text("Bugünün farz vakitleri tamamlandı", style = MaterialTheme.typography.titleMedium)
                 Text(state.city, style = MaterialTheme.typography.bodyLarge)
                 Text(state.methodLabel, style = MaterialTheme.typography.bodySmall)
             }
         }
-
         Text("Vakitler", style = MaterialTheme.typography.titleLarge)
         state.trackablePrayers.forEach { prayer ->
             Card(Modifier.fillMaxWidth()) {
@@ -67,13 +61,12 @@ fun TodayScreen(
                         Text(prayer.timeText, style = MaterialTheme.typography.bodyLarge)
                     }
                     Checkbox(
-                        checked = false,
+                        checked = prayer.name in state.completed,
                         onCheckedChange = { onPrayerCompleted(prayer.name, it) },
                     )
                 }
             }
         }
-
         state.sunrise?.let {
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp)) {
@@ -82,9 +75,6 @@ fun TodayScreen(
                 }
             }
         }
-
-        Button(onClick = onOpenPrayerDetails, modifier = Modifier.fillMaxWidth()) {
-            Text("Namaz ayarları ve ayrıntılar")
-        }
+        Button(onClick = onOpenPrayerDetails, modifier = Modifier.fillMaxWidth()) { Text("Namaz ayarları ve ayrıntılar") }
     }
 }
