@@ -24,9 +24,9 @@ class V5UpgradeTests(unittest.TestCase):
         out = upgrade_html(self.html)
         for token in ['id="nextPrayer"', 'id="countdown"', 'id="prayers"', 'id="verseAr"', 'id="verseTr"', 'id="verseSrc"', 'id="lastRead"', 'id="dateText"', 'id="locText"']:
             self.assertIn(token, out)
-        self.assertIn('Bugün öğren', out)
+        self.assertIn('BUGÜN ÖĞREN', out)
         self.assertIn('Namaz Hocası', out)
-        self.assertIn('Günün duası', out)
+        self.assertIn('GÜNÜN DUASI', out)
 
     def test_adds_beginner_learning_path_and_reference_library(self):
         out = upgrade_html(self.html)
