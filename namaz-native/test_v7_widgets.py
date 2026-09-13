@@ -93,7 +93,7 @@ class V7WidgetSuiteTests(unittest.TestCase):
         ]:
             self.assertIn(label, strings)
 
-    def test_v7_upgrade_registers_receivers_and_lock_screen_toggle(self):
+    def test_v7_upgrade_registers_receivers_lock_screen_toggle_and_safe_component_names(self):
         patcher = Path('namaz-native/v7_upgrade.py')
         self.assertTrue(patcher.exists())
         text = patcher.read_text(encoding='utf-8')
@@ -101,6 +101,9 @@ class V7WidgetSuiteTests(unittest.TestCase):
             self.assertIn(provider, text)
         for info in INFO_XML:
             self.assertIn(info.replace('.xml', ''), text)
+        for component in ['MainActivity', 'AdhanService', 'PrayerAlarmReceiver', 'BootReceiver']:
+            self.assertIn(f'app.namaz.tr.{component}', text)
+        self.assertIn('app.namaz.tr.NextPrayerWidgetProvider', text)
         self.assertIn('prayerStatus', text)
         self.assertIn('AndroidBridge.setPrayerStatusEnabled', text)
         self.assertIn('Namaz V7', text)
