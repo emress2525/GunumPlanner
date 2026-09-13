@@ -20,12 +20,21 @@ LOCK_SCREEN_FIELD = '''<div class="field"><label style="display:flex;gap:10px;al
 
 def patch_manifest(xml: str) -> str:
     xml = re.sub(r'\s*<receiver android:name="\.PrayerWidgetProvider".*?</receiver>', '', xml, flags=re.S)
-    if '.NextPrayerWidgetProvider' in xml:
+    replacements = {
+        'android:name=".MainActivity"': 'android:name="app.namaz.tr.MainActivity"',
+        'android:name=".AdhanService"': 'android:name="app.namaz.tr.AdhanService"',
+        'android:name=".PrayerAlarmReceiver"': 'android:name="app.namaz.tr.PrayerAlarmReceiver"',
+        'android:name=".BootReceiver"': 'android:name="app.namaz.tr.BootReceiver"',
+    }
+    for old, new in replacements.items():
+        xml = xml.replace(old, new)
+    if 'app.namaz.tr.NextPrayerWidgetProvider' in xml:
         return xml
     parts = []
     for cls, meta, label in WIDGET_RECEIVERS:
+        fqcn = f'app.namaz.tr.{cls}'
         parts.append(
-            f'''\n    <receiver android:name=".{cls}" android:exported="true" android:label="@string/{label}">\n'''
+            f'''\n    <receiver android:name="{fqcn}" android:exported="true" android:label="@string/{label}">\n'''
             f'''      <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>\n'''
             f'''      <meta-data android:name="android.appwidget.provider" android:resource="@xml/{meta}" />\n'''
             f'''    </receiver>'''
@@ -76,11 +85,13 @@ def apply(root: Path) -> None:
 
 
 def self_test(root: Path | None = None) -> None:
-    sample_manifest = '<manifest><application><receiver android:name=".PrayerWidgetProvider"><meta-data /></receiver></application></manifest>'
+    sample_manifest = '<manifest><application><activity android:name=".MainActivity"/><service android:name=".AdhanService"/><receiver android:name=".PrayerAlarmReceiver"/><receiver android:name=".BootReceiver"/><receiver android:name=".PrayerWidgetProvider"><meta-data /></receiver></application></manifest>'
     patched = patch_manifest(sample_manifest)
     assert 'PrayerWidgetProvider' not in patched
+    for component in ['MainActivity', 'AdhanService', 'PrayerAlarmReceiver', 'BootReceiver']:
+        assert f'app.namaz.tr.{component}' in patched
     for cls, meta, label in WIDGET_RECEIVERS:
-        assert cls in patched and meta in patched and label in patched
+        assert f'app.namaz.tr.{cls}' in patched and meta in patched and label in patched
     sample_html = '<button class="pill" type="button" onclick="stopAdhan()" style="margin-bottom:14px">Çalan ezanı durdur</button><b>NAMAZ V6</b>'
     patched_html = patch_html(sample_html)
     assert 'id="prayerStatus"' in patched_html and 'NAMAZ V7' in patched_html
@@ -91,8 +102,10 @@ def self_test(root: Path | None = None) -> None:
         actual_manifest = (root / 'app/src/main/AndroidManifest.xml').read_text(encoding='utf-8')
         actual_html = (root / 'app/src/main/assets/index.html').read_text(encoding='utf-8')
         actual_js = (root / 'app/src/main/assets/app.js').read_text(encoding='utf-8')
+        for component in ['MainActivity', 'AdhanService', 'PrayerAlarmReceiver', 'BootReceiver']:
+            assert f'app.namaz.tr.{component}' in actual_manifest
         for cls, meta, _ in WIDGET_RECEIVERS:
-            assert cls in actual_manifest and meta in actual_manifest
+            assert f'app.namaz.tr.{cls}' in actual_manifest and meta in actual_manifest
         assert 'id="prayerStatus"' in actual_html
         assert 'AndroidBridge.setPrayerStatusEnabled' in actual_js
         assert 'resume:' in actual_js
