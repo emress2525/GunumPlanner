@@ -1,8 +1,8 @@
-name: Build Namaz V8 Phase 1 APK
+name: Build Namaz V8 Development APK
 
 on:
   push:
-    branches: [ "namaz-v8-native", "namaz-clean-rebuild" ]
+    branches: [ "namaz-v8-native" ]
     paths:
       - "namaz-v8/**"
       - "namaz-native/**"
@@ -21,24 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - uses: android-actions/setup-android@v3
-
       - name: Install Android SDK
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
-
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
       - name: Verify V7 regression suite
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
-
       - name: Fetch verified adhan audio
         shell: bash
         run: |
@@ -47,16 +41,24 @@ jobs:
           ADHAN_URL='https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Turkey_1_(%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7).mp3'
           curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 "$ADHAN_URL" -o namaz-v8/app/src/main/res/raw/adhan.mp3
           test "$(stat -c%s namaz-v8/app/src/main/res/raw/adhan.mp3)" -gt 100000
-
+      - name: Fetch pinned offline Quran pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          REF=34b43b044fb36528be7b2380733bb965b7c5b385
+          BASE="https://raw.githubusercontent.com/kurancilar/json/$REF"
+          mkdir -p namaz-v8/app/src/main/assets/quran namaz-v8/app/src/main/assets/tafseer/elmalili
+          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 "'"$BASE"'/sure/{}.json" -o "namaz-v8/app/src/main/assets/quran/{}.json"'
+          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 "'"$BASE"'/tafseer/elmalili/{}.md" -o "namaz-v8/app/src/main/assets/tafseer/elmalili/{}.md"'
+          test "$(find namaz-v8/app/src/main/assets/quran -name '*.json' | wc -l)" -eq 114
+          test "$(find namaz-v8/app/src/main/assets/tafseer/elmalili -name '*.md' | wc -l)" -eq 114
+          test "$(stat -c%s namaz-v8/app/src/main/assets/quran/2.json)" -gt 100000
       - name: Unit tests
         run: gradle -p namaz-v8 testDebugUnitTest --stacktrace
-
       - name: Lint
         run: gradle -p namaz-v8 lintDebug --stacktrace
-
       - name: Assemble APK
         run: gradle -p namaz-v8 :app:assembleDebug --stacktrace
-
       - name: Verify native-only source contract
         shell: bash
         run: |
@@ -65,27 +67,27 @@ jobs:
             echo 'WebView dependency found in V8 source' >&2
             exit 1
           fi
-
       - name: Verify APK signature package and manifest
         shell: bash
         run: |
           set -euo pipefail
           APK=namaz-v8/app/build/outputs/apk/debug/app-debug.apk
-          cp "$APK" Namaz-V8-Phase1.apk
-          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose Namaz-V8-Phase1.apk
-          unzip -t Namaz-V8-Phase1.apk >/dev/null
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging Namaz-V8-Phase1.apk | tee /tmp/v8-badging.txt
+          cp "$APK" Namaz-V8-Development.apk
+          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose Namaz-V8-Development.apk
+          unzip -t Namaz-V8-Development.apk >/dev/null
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging Namaz-V8-Development.apk | tee /tmp/v8-badging.txt
           grep -q "package: name='app.namaz.tr.v8' versionCode='8' versionName='8.0.0'" /tmp/v8-badging.txt
           grep -q "application-label:'Namaz V8'" /tmp/v8-badging.txt
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump xmltree Namaz-V8-Phase1.apk AndroidManifest.xml > /tmp/v8-manifest.txt
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump xmltree Namaz-V8-Development.apk AndroidManifest.xml > /tmp/v8-manifest.txt
           grep -q 'PrayerAlarmReceiver' /tmp/v8-manifest.txt
           grep -q 'BootReceiver' /tmp/v8-manifest.txt
           grep -q 'AdhanService' /tmp/v8-manifest.txt
-          unzip -l Namaz-V8-Phase1.apk | grep -q 'res/raw/adhan.mp3'
-          sha256sum Namaz-V8-Phase1.apk
-
+          unzip -l Namaz-V8-Development.apk | grep -q 'res/raw/adhan.mp3'
+          unzip -l Namaz-V8-Development.apk | grep -q 'assets/quran/114.json'
+          unzip -l Namaz-V8-Development.apk | grep -q 'assets/content-sources.json'
+          sha256sum Namaz-V8-Development.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Namaz-V8-Phase1-APK
-          path: Namaz-V8-Phase1.apk
+          name: Namaz-V8-Development-APK
+          path: Namaz-V8-Development.apk
           if-no-files-found: error

@@ -1,0 +1,12 @@
+{
+  "quranPack": {
+    "repository": "kurancilar/json",
+    "commit": "34b43b044fb36528be7b2380733bb965b7c5b385",
+    "license": "MIT repository license; individual text/translation attribution remains visible in app",
+    "arabic": "Qur'an Arabic text as distributed by the source repository",
+    "meal": "Diyanet Vakfı Turkish translation field from the source repository",
+    "tafsir": "Elmalılı Hamdi Yazır tafsir files from the source repository"
+  },
+  "prayerCalculation": "Adhan algorithm. Turkey approximation: Fajr 18°, Isha 17°, explicit Turkey method adjustments. It is not presented as an official Diyanet API feed.",
+  "policy": "Religious learning entries show sources and madhhab differences. Personal fatwa cases are directed to a qualified authority."
+}

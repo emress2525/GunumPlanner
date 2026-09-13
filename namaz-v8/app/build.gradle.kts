@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":feature:today"))
     implementation(project(":feature:prayer"))
     implementation(project(":feature:health"))
+    implementation(project(":feature:quran"))
     val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
     implementation(composeBom)
     androidTestImplementation(composeBom)
