@@ -4,46 +4,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:padding="16dp"
-    android:background="#F5FAF7">
+    android:padding="14dp"
+    android:background="#F7FBF8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="☾  Namaz"
+            android:textColor="#0A5B45"
+            android:textStyle="bold"
+            android:textSize="13sp" />
+        <TextView
+            android:id="@+id/widgetHijri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="—"
+            android:textColor="#64776E"
+            android:textStyle="bold"
+            android:textSize="10sp" />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/widgetCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Namaz"
-        android:textColor="#0D5B46"
-        android:textStyle="bold"
-        android:textSize="13sp" />
+        android:layout_marginTop="2dp"
+        android:text="—"
+        android:textColor="#829087"
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/widgetPrayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         android:text="Namaz · —"
-        android:textColor="#17231F"
+        android:textColor="#15251E"
         android:textStyle="bold"
-        android:textSize="20sp" />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/widgetRemaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:text="Uygulamayı açarak vakitleri güncelle"
-        android:textColor="#6F7F77"
-        android:textSize="12sp" />
+        android:layout_marginTop="1dp"
+        android:text="Vakitleri güncellemek için uygulamayı aç"
+        android:textColor="#0D6B51"
+        android:textStyle="bold"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:id="@+id/widgetTimes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="6">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="İmsak" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetImsak" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Güneş" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetGunes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Öğle" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetOgle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="İkindi" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetIkindi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Akşam" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetAksam" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Yatsı" android:textSize="8sp" android:textColor="#7A8981" />
+            <TextView android:id="@+id/widgetYatsi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textStyle="bold" android:textSize="10sp" android:textColor="#24362E" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widgetTracker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:paddingTop="7dp"
+        android:text="Bugün namaz takibi · 0/5"
+        android:textColor="#52665C"
+        android:textStyle="bold"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/widgetAyah"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:maxLines="3"
+        android:layout_marginTop="7dp"
+        android:maxLines="2"
         android:ellipsize="end"
-        android:textColor="#35483F"
-        android:textSize="11sp"
+        android:textColor="#34483E"
+        android:textSize="10sp"
         android:lineSpacingExtra="1dp"
         android:visibility="gone" />
 </LinearLayout>
