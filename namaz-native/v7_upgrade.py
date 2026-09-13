@@ -2,28 +2,30 @@
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 WIDGET_RECEIVERS = [
-    ("NextPrayerWidgetProvider", "widget_next_prayer_info"),
-    ("CountdownWidgetProvider", "widget_countdown_info"),
-    ("PrayerTimesWidgetProvider", "widget_prayer_times_info"),
-    ("PrayerTrackerWidgetProvider", "widget_tracker_info"),
-    ("DailyAyahWidgetProvider", "widget_daily_ayah_info"),
-    ("HijriDateWidgetProvider", "widget_hijri_info"),
-    ("QuranResumeWidgetProvider", "widget_quran_resume_info"),
+    ("NextPrayerWidgetProvider", "widget_next_prayer_info", "widget_next_prayer_label"),
+    ("CountdownWidgetProvider", "widget_countdown_info", "widget_countdown_label"),
+    ("PrayerTimesWidgetProvider", "widget_prayer_times_info", "widget_prayer_times_label"),
+    ("PrayerTrackerWidgetProvider", "widget_tracker_info", "widget_tracker_label"),
+    ("DailyAyahWidgetProvider", "widget_daily_ayah_info", "widget_daily_ayah_label"),
+    ("HijriDateWidgetProvider", "widget_hijri_info", "widget_hijri_label"),
+    ("QuranResumeWidgetProvider", "widget_quran_resume_info", "widget_quran_resume_label"),
 ]
 
 LOCK_SCREEN_FIELD = '''<div class="field"><label style="display:flex;gap:10px;align-items:center"><input id="prayerStatus" type="checkbox" checked> Kilit ekranında namaz durumu</label><div class="sub" style="margin-top:6px">Telefon üreticisine göre gerçek kilit ekranı widget desteği değişebilir. Bu seçenek sessiz, herkese görünür namaz durumu bildirimi kullanır.</div></div>'''
 
 
 def patch_manifest(xml: str) -> str:
+    xml = re.sub(r'\s*<receiver android:name="\.PrayerWidgetProvider".*?</receiver>', '', xml, flags=re.S)
     if '.NextPrayerWidgetProvider' in xml:
         return xml
     parts = []
-    for cls, meta in WIDGET_RECEIVERS:
+    for cls, meta, label in WIDGET_RECEIVERS:
         parts.append(
-            f'''\n    <receiver android:name=".{cls}" android:exported="true">\n'''
+            f'''\n    <receiver android:name=".{cls}" android:exported="true" android:label="@string/{label}">\n'''
             f'''      <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>\n'''
             f'''      <meta-data android:name="android.appwidget.provider" android:resource="@xml/{meta}" />\n'''
             f'''    </receiver>'''
@@ -36,8 +38,7 @@ def patch_html(html: str) -> str:
         needle = '<button class="pill" type="button" onclick="stopAdhan()" style="margin-bottom:14px">Çalan ezanı durdur</button>'
         if needle in html:
             html = html.replace(needle, needle + LOCK_SCREEN_FIELD)
-    html = html.replace('NAMAZ V6', 'NAMAZ V7').replace('Namaz V6', 'Namaz V7')
-    return html
+    return html.replace('NAMAZ V6', 'NAMAZ V7').replace('Namaz V6', 'Namaz V7')
 
 
 def patch_js(js: str) -> str:
@@ -54,6 +55,8 @@ def patch_js(js: str) -> str:
         "try{AndroidBridge.schedulePrayers(JSON.stringify({mode:cfg.adhanMode||'full',prayers}))}catch(e){}const next=",
         "try{AndroidBridge.schedulePrayers(JSON.stringify({mode:cfg.adhanMode||'full',prayers}))}catch(e){}try{AndroidBridge.setPrayerStatusEnabled(cfg.prayerStatus!==false)}catch(e){}const next="
     )
+    js = js.replace("tracked:(()=>{const r=readJSON('prayerRecords',{}),d=r[C.isoDateLocal(now)]||{};return C.prayerOrder.filter(p=>!!d[p]).length})()}))",
+                    "tracked:(()=>{const r=readJSON('prayerRecords',{}),d=r[C.isoDateLocal(now)]||{};return C.prayerOrder.filter(p=>!!d[p]).length})(),resume:(document.getElementById('lastRead')||{}).textContent||''}))")
     return js
 
 
@@ -66,7 +69,6 @@ def apply(root: Path) -> None:
     html = root / 'app/src/main/assets/index.html'
     js = root / 'app/src/main/assets/app.js'
     strings = root / 'app/src/main/res/values/strings.xml'
-
     manifest.write_text(patch_manifest(manifest.read_text(encoding='utf-8')), encoding='utf-8')
     html.write_text(patch_html(html.read_text(encoding='utf-8')), encoding='utf-8')
     js.write_text(patch_js(js.read_text(encoding='utf-8')), encoding='utf-8')
@@ -74,28 +76,26 @@ def apply(root: Path) -> None:
 
 
 def self_test(root: Path | None = None) -> None:
-    sample_manifest = '<manifest><application><activity android:name=".MainActivity" /></application></manifest>'
+    sample_manifest = '<manifest><application><receiver android:name=".PrayerWidgetProvider"><meta-data /></receiver></application></manifest>'
     patched = patch_manifest(sample_manifest)
-    for cls, meta in WIDGET_RECEIVERS:
-        assert cls in patched and meta in patched
-
+    assert 'PrayerWidgetProvider' not in patched
+    for cls, meta, label in WIDGET_RECEIVERS:
+        assert cls in patched and meta in patched and label in patched
     sample_html = '<button class="pill" type="button" onclick="stopAdhan()" style="margin-bottom:14px">Çalan ezanı durdur</button><b>NAMAZ V6</b>'
     patched_html = patch_html(sample_html)
     assert 'id="prayerStatus"' in patched_html and 'NAMAZ V7' in patched_html
-
     sample_js = "let cfg=readJSON('cfg',{adhanMode:'full'});try{AndroidBridge.schedulePrayers(JSON.stringify({mode:cfg.adhanMode||'full',prayers}))}catch(e){}const next=x;"
     patched_js = patch_js(sample_js)
-    assert 'prayerStatus:true' in patched_js
-    assert 'AndroidBridge.setPrayerStatusEnabled' in patched_js
-
+    assert 'prayerStatus:true' in patched_js and 'AndroidBridge.setPrayerStatusEnabled' in patched_js
     if root:
         actual_manifest = (root / 'app/src/main/AndroidManifest.xml').read_text(encoding='utf-8')
         actual_html = (root / 'app/src/main/assets/index.html').read_text(encoding='utf-8')
         actual_js = (root / 'app/src/main/assets/app.js').read_text(encoding='utf-8')
-        for cls, meta in WIDGET_RECEIVERS:
+        for cls, meta, _ in WIDGET_RECEIVERS:
             assert cls in actual_manifest and meta in actual_manifest
         assert 'id="prayerStatus"' in actual_html
         assert 'AndroidBridge.setPrayerStatusEnabled' in actual_js
+        assert 'resume:' in actual_js
 
 
 def main() -> int:
