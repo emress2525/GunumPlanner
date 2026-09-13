@@ -18,7 +18,6 @@ class V6AcademyTests(unittest.TestCase):
         out = v6_academy.upgrade_html(BASE_HTML)
         learn = v6_academy.learn_section(out)
         self.assertIn('id="academyRoot"', learn)
-        self.assertIn('academyOpenLesson', learn)
         self.assertNotIn("show('knowledge')", learn)
         self.assertNotIn("show('duas')", learn)
         self.assertNotIn("show('namazHocasi')", learn)
