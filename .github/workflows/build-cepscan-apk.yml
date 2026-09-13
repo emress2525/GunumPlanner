@@ -8,6 +8,8 @@ on:
       - 'cepscan_parts/**'
       - 'cepscan_v4_parts/**'
       - 'cepscan-v41.patch.gz'
+      - 'tools/apply_cepscan_v42.py'
+      - 'tools/test_no_recycled_bitmap.py'
       - '.github/workflows/build-cepscan-apk.yml'
   workflow_dispatch:
 
@@ -72,6 +74,16 @@ jobs:
           grep -n 'PreferenceSafety' cepscan-src/app/src/main/java/com/cepscan/app/data/ScanRepository.kt
           grep -n 'Belgelerde ara' cepscan-src/app/src/main/java/com/cepscan/app/ui/components/DocumentComponents.kt
 
+      - name: Apply CepScan V4.2 recycled bitmap fix
+        shell: bash
+        run: |
+          python tools/apply_cepscan_v42.py cepscan-src
+          grep -n 'versionName = "4.2.0"' cepscan-src/app/build.gradle.kts
+
+      - name: Run recycled bitmap regression test
+        shell: bash
+        run: python tools/test_no_recycled_bitmap.py cepscan-src
+
       - name: Run startup safety smoke test
         shell: bash
         run: |
@@ -89,18 +101,18 @@ jobs:
           APK='cepscan-src/app/build/outputs/apk/debug/app-debug.apk'
           test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V4.1-badging.txt
-          grep "versionName='4.1.0'" CepScan-V4.1-badging.txt
-          cp "$APK" CepScan-V4.1-debug.apk
-          sha256sum CepScan-V4.1-debug.apk | tee CepScan-V4.1-debug.apk.sha256
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee CepScan-V4.2-badging.txt
+          grep "versionName='4.2.0'" CepScan-V4.2-badging.txt
+          cp "$APK" CepScan-V4.2-debug.apk
+          sha256sum CepScan-V4.2-debug.apk | tee CepScan-V4.2-debug.apk.sha256
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CepScan-V4.1-APK
+          name: CepScan-V4.2-APK
           path: |
-            CepScan-V4.1-debug.apk
-            CepScan-V4.1-debug.apk.sha256
-            CepScan-V4.1-badging.txt
+            CepScan-V4.2-debug.apk
+            CepScan-V4.2-debug.apk.sha256
+            CepScan-V4.2-badging.txt
           if-no-files-found: error
           retention-days: 7
