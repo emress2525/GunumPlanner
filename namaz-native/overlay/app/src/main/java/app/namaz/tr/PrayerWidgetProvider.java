@@ -30,8 +30,19 @@ public class PrayerWidgetProvider extends AppWidgetProvider {
         String source = p.getString("dailyAyahSource", "");
 
         RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.prayer_widget);
+        v.setTextViewText(R.id.widgetCity, p.getString("widgetCity", ""));
+        v.setTextViewText(R.id.widgetHijri, p.getString("widgetHijri", ""));
         v.setTextViewText(R.id.widgetPrayer, name + " · " + time);
         v.setTextViewText(R.id.widgetRemaining, remaining(epoch));
+        v.setTextViewText(R.id.widgetImsak, p.getString("widgetImsak", "—"));
+        v.setTextViewText(R.id.widgetGunes, p.getString("widgetGunes", "—"));
+        v.setTextViewText(R.id.widgetOgle, p.getString("widgetOgle", "—"));
+        v.setTextViewText(R.id.widgetIkindi, p.getString("widgetIkindi", "—"));
+        v.setTextViewText(R.id.widgetAksam, p.getString("widgetAksam", "—"));
+        v.setTextViewText(R.id.widgetYatsi, p.getString("widgetYatsi", "—"));
+        int tracked = Math.max(0, Math.min(5, p.getInt("widgetTracked", 0)));
+        v.setTextViewText(R.id.widgetTracker, "Bugün namaz takibi · " + tracked + "/5");
+
         if (ayah == null || ayah.trim().isEmpty()) {
             v.setViewVisibility(R.id.widgetAyah, View.GONE);
         } else {
