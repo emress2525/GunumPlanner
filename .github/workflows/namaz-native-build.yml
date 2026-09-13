@@ -1,4 +1,4 @@
-name: Build Namaz Native APK
+name: Build Namaz V5 APK
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
               line=lines[i]
               if line.startswith('      - name:'):
                   break
-              if line.strip()=='' :
+              if line.strip()=='':
                   out.append('')
               else:
                   if not line.startswith('          '):
@@ -57,16 +57,17 @@ jobs:
           Path('/tmp/generate_namaz.sh').write_text('\n'.join(out)+'\n',encoding='utf-8')
           PY
           bash /tmp/generate_namaz.sh
-          # New package id prevents older experimental debug signatures from blocking install.
-          sed -i "s/applicationId 'app.namaz.tr.clean'/applicationId 'app.namaz.tr.prayer3'/" namazapp/app/build.gradle
-          sed -i "s/versionCode 1/versionCode 3/" namazapp/app/build.gradle
-          sed -i "s/versionName '1.0.0'/versionName '3.0.0'/" namazapp/app/build.gradle
-          grep -q "applicationId 'app.namaz.tr.prayer3'" namazapp/app/build.gradle
+          sed -i "s/applicationId 'app.namaz.tr.clean'/applicationId 'app.namaz.tr.v5'/" namazapp/app/build.gradle
+          sed -i "s/versionCode 1/versionCode 5/" namazapp/app/build.gradle
+          sed -i "s/versionName '1.0.0'/versionName '5.0.0'/" namazapp/app/build.gradle
+          sed -i 's#<string name="app_name">Namaz</string>#<string name="app_name">Namaz V5</string>#' namazapp/app/src/main/res/values/strings.xml
+          grep -q "applicationId 'app.namaz.tr.v5'" namazapp/app/build.gradle
+          grep -q '<string name="app_name">Namaz V5</string>' namazapp/app/src/main/res/values/strings.xml
 
       - name: Python patch regression tests
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
 
-      - name: Prepare native overlay
+      - name: Prepare native overlay and rich V5 UI
         shell: bash
         run: |
           set -euo pipefail
@@ -81,16 +82,22 @@ jobs:
           python3 namaz-native/market_upgrade.py --self-test namazapp
           python3 namaz-native/book_expansion.py --apply namazapp
           python3 namaz-native/book_expansion.py --self-test namazapp
+          python3 namaz-native/v5_upgrade.py --apply namazapp
+          python3 namaz-native/v5_upgrade.py --self-test namazapp
+          sed -i 's/android:text="Namaz"/android:text="Namaz V5"/' namazapp/app/src/main/res/layout/prayer_widget.xml
           grep -q 'AndroidBridge.updateAyah' namazapp/app/src/main/assets/app.js
           grep -q 'id="namazHocasi"' namazapp/app/src/main/assets/index.html
+          grep -q 'id="learn"' namazapp/app/src/main/assets/index.html
+          grep -q 'NAMAZ V5' namazapp/app/src/main/assets/index.html
+          grep -q 'Sıfırdan Namaz Öğren' namazapp/app/src/main/assets/index.html
+          grep -q 'Aile ve anne-baba' namazapp/app/src/main/assets/index.html
           grep -q '32 Farz Öğretim Şeması' namazapp/app/src/main/assets/index.html
           grep -q 'widgetTracker' namazapp/app/src/main/res/layout/prayer_widget.xml
+          grep -q 'android:text="Namaz V5"' namazapp/app/src/main/res/layout/prayer_widget.xml
           mkdir -p namazapp/app/src/main/res/raw
           python3 - <<'PY'
           import base64, json, urllib.request
           from pathlib import Path
-          # Kiwifu/adhan-mp3 explicitly permits use in Islamic apps.
-          # Small Ajman/UAE adhan recording chosen to keep APK size modest.
           url='https://api.github.com/repos/Kiwifu/adhan-mp3/git/blobs/646ec7dc2732831abd899a52d785b10516769faa'
           req=urllib.request.Request(url,headers={'User-Agent':'Namaz-App-Build'})
           with urllib.request.urlopen(req,timeout=30) as r:
@@ -108,23 +115,28 @@ jobs:
       - name: Assemble APK
         run: gradle -p namazapp assembleDebug --stacktrace
 
-      - name: Verify APK signature and archive integrity
+      - name: Verify APK signature, package and rich content
         shell: bash
         run: |
           set -euo pipefail
           APK=namazapp/app/build/outputs/apk/debug/app-debug.apk
           ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose "$APK"
           unzip -t "$APK" >/dev/null
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "package: name='app.namaz.tr.prayer3'"
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging "$APK" | tee /tmp/badging.txt
+          grep -q "package: name='app.namaz.tr.v5' versionCode='5' versionName='5.0.0'" /tmp/badging.txt
+          grep -q "application-label:'Namaz V5'" /tmp/badging.txt
           unzip -l "$APK" | grep -q 'res/raw/adhan.mp3'
           unzip -p "$APK" assets/index.html > /tmp/namaz-index.html
-          grep -q 'Namaz Hocası' /tmp/namaz-index.html
-          grep -q '32 Farz Öğretim Şeması' /tmp/namaz-index.html
-          cp "$APK" Namaz.apk
-          sha256sum Namaz.apk
+          grep -q 'NAMAZ V5' /tmp/namaz-index.html
+          grep -q 'Sıfırdan Namaz Öğren' /tmp/namaz-index.html
+          grep -q 'Abdest: adım adım' /tmp/namaz-index.html
+          grep -q 'Gıybet' /tmp/namaz-index.html
+          grep -q 'data-s="learn"' /tmp/namaz-index.html
+          cp "$APK" Namaz-V5.apk
+          sha256sum Namaz-V5.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Namaz-APK
-          path: Namaz.apk
+          name: Namaz-V5-APK
+          path: Namaz-V5.apk
           if-no-files-found: error
