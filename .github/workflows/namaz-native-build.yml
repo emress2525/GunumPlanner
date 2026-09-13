@@ -1,4 +1,4 @@
-name: Build Namaz V5 APK
+name: Build Namaz V6 APK
 
 on:
   push:
@@ -57,51 +57,96 @@ jobs:
           Path('/tmp/generate_namaz.sh').write_text('\n'.join(out)+'\n',encoding='utf-8')
           PY
           bash /tmp/generate_namaz.sh
-          sed -i "s/applicationId 'app.namaz.tr.clean'/applicationId 'app.namaz.tr.v5'/" namazapp/app/build.gradle
-          sed -i "s/versionCode 1/versionCode 5/" namazapp/app/build.gradle
-          sed -i "s/versionName '1.0.0'/versionName '5.0.0'/" namazapp/app/build.gradle
-          sed -i 's#<string name="app_name">Namaz</string>#<string name="app_name">Namaz V5</string>#' namazapp/app/src/main/res/values/strings.xml
-          grep -q "applicationId 'app.namaz.tr.v5'" namazapp/app/build.gradle
-          grep -q '<string name="app_name">Namaz V5</string>' namazapp/app/src/main/res/values/strings.xml
+          sed -i "s/applicationId 'app.namaz.tr.clean'/applicationId 'app.namaz.tr.v6'/" namazapp/app/build.gradle
+          sed -i "s/versionCode 1/versionCode 6/" namazapp/app/build.gradle
+          sed -i "s/versionName '1.0.0'/versionName '6.0.0'/" namazapp/app/build.gradle
+          sed -i 's#<string name="app_name">Namaz</string>#<string name="app_name">Namaz V6</string>#' namazapp/app/src/main/res/values/strings.xml
+          grep -q "applicationId 'app.namaz.tr.v6'" namazapp/app/build.gradle
+          grep -q 'versionCode 6' namazapp/app/build.gradle
+          grep -q "versionName '6.0.0'" namazapp/app/build.gradle
+          grep -q '<string name="app_name">Namaz V6</string>' namazapp/app/src/main/res/values/strings.xml
 
       - name: Python patch regression tests
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
 
-      - name: Prepare native overlay and rich V5 UI
+      - name: Prepare native overlay and rich V6 academy UI
         shell: bash
         run: |
           set -euo pipefail
           cat >> namazapp/app/build.gradle <<'GRADLE'
           dependencies { testImplementation 'junit:junit:4.13.2' }
           GRADLE
+
           cp -R namaz-native/overlay/app/src/. namazapp/app/src/
+
           python3 namaz-native/patch_assets.py --apply namazapp
           python3 namaz-native/widget_ayah_patch.py namazapp
           python3 namaz-native/patch_assets.py --self-test namazapp
+
           python3 namaz-native/market_upgrade.py --apply namazapp
           python3 namaz-native/market_upgrade.py --self-test namazapp
+
           python3 namaz-native/book_expansion.py --apply namazapp
           python3 namaz-native/book_expansion.py --self-test namazapp
+
           python3 namaz-native/v5_upgrade.py --apply namazapp
           python3 namaz-native/v5_upgrade.py --self-test namazapp
+
+          python3 namaz-native/v6_academy.py --apply namazapp
+          python3 namaz-native/v6_academy.py --self-test namazapp
+
+          # Overlay and previous patchers must never be allowed to restore an older app identity.
+          cat > namazapp/app/src/main/res/values/strings.xml <<'XML'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">Namaz V6</string>
+              <string name="widget_description">Namaz vakitlerini, sıradaki namaza kalan süreyi, Hicrî tarihi, günlük ayeti, ibadet takibini ve Namaz Akademisi'ni gösterir.</string>
+          </resources>
+          XML
+
           python3 - <<'PY'
           from pathlib import Path
           p=Path('namazapp/app/src/main/res/layout/prayer_widget.xml')
           text=p.read_text(encoding='utf-8')
-          text=text.replace('☾  Namaz','☾  Namaz V5',1)
+          text=text.replace('☾  Namaz V5','☾  Namaz V6')
+          text=text.replace('☾  Namaz</', '☾  Namaz V6</')
           p.write_text(text,encoding='utf-8')
-          if '☾  Namaz V5' not in text:
-              raise SystemExit('widget V5 brand marker missing')
+          if '☾  Namaz V6' not in text:
+              raise SystemExit('widget V6 brand marker missing')
           PY
+
+          node --check namazapp/app/src/main/assets/app.js
+          node --check namazapp/app/src/main/assets/core.js
+          node --check namazapp/app/src/main/assets/academy/academy-data.js
+          node --check namazapp/app/src/main/assets/academy/lessons-hanafi.js
+          node --check namazapp/app/src/main/assets/academy/lessons-shafii-notes.js
+          node --check namazapp/app/src/main/assets/academy/academy.js
+
           grep -q 'AndroidBridge.updateAyah' namazapp/app/src/main/assets/app.js
-          grep -q 'id="namazHocasi"' namazapp/app/src/main/assets/index.html
-          grep -q 'id="learn"' namazapp/app/src/main/assets/index.html
-          grep -q 'NAMAZ V5' namazapp/app/src/main/assets/index.html
-          grep -q 'Sıfırdan Namaz Öğren' namazapp/app/src/main/assets/index.html
-          grep -q 'Aile ve anne-baba' namazapp/app/src/main/assets/index.html
-          grep -q '32 Farz Öğretim Şeması' namazapp/app/src/main/assets/index.html
-          grep -q 'widgetTracker' namazapp/app/src/main/res/layout/prayer_widget.xml
-          grep -q '☾  Namaz V5' namazapp/app/src/main/res/layout/prayer_widget.xml
+          grep -q 'id="academyRoot"' namazapp/app/src/main/assets/index.html
+          grep -q 'NAMAZ V6' namazapp/app/src/main/assets/index.html
+          grep -q 'Namaz Akademisi' namazapp/app/src/main/assets/index.html
+          grep -q 'data-s="learn"' namazapp/app/src/main/assets/index.html
+          grep -q 'academyHandleAndroidBack' namazapp/app/src/main/assets/academy/academy.js
+          grep -q 'sabah-namazi' namazapp/app/src/main/assets/academy/academy-data.js
+          grep -q 'ogle-namazi' namazapp/app/src/main/assets/academy/academy-data.js
+          grep -q 'ikindi-namazi' namazapp/app/src/main/assets/academy/academy-data.js
+          grep -q 'aksam-namazi' namazapp/app/src/main/assets/academy/academy-data.js
+          grep -q 'yatsi-namazi' namazapp/app/src/main/assets/academy/academy-data.js
+          grep -q 'Şafiî' namazapp/app/src/main/assets/academy/lessons-shafii-notes.js
+          grep -q 'sources:' namazapp/app/src/main/assets/academy/lessons-hanafi.js
+          grep -q '<string name="app_name">Namaz V6</string>' namazapp/app/src/main/res/values/strings.xml
+          grep -q '☾  Namaz V6' namazapp/app/src/main/res/layout/prayer_widget.xml
+
+          for f in \
+            namazapp/app/src/main/assets/academy/academy-data.js \
+            namazapp/app/src/main/assets/academy/lessons-hanafi.js \
+            namazapp/app/src/main/assets/academy/lessons-shafii-notes.js \
+            namazapp/app/src/main/assets/academy/academy.js \
+            namazapp/app/src/main/assets/academy/academy.css; do
+              test -s "$f"
+          done
+
           mkdir -p namazapp/app/src/main/res/raw
           python3 - <<'PY'
           import base64, json, urllib.request
@@ -123,28 +168,53 @@ jobs:
       - name: Assemble APK
         run: gradle -p namazapp assembleDebug --stacktrace
 
-      - name: Verify APK signature, package and rich content
+      - name: Verify APK signature, package and V6 academy content
         shell: bash
         run: |
           set -euo pipefail
           APK=namazapp/app/build/outputs/apk/debug/app-debug.apk
-          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose "$APK"
-          unzip -t "$APK" >/dev/null
-          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging "$APK" | tee /tmp/badging.txt
-          grep -q "package: name='app.namaz.tr.v5' versionCode='5' versionName='5.0.0'" /tmp/badging.txt
-          grep -q "application-label:'Namaz V5'" /tmp/badging.txt
-          unzip -l "$APK" | grep -q 'res/raw/adhan.mp3'
-          unzip -p "$APK" assets/index.html > /tmp/namaz-index.html
-          grep -q 'NAMAZ V5' /tmp/namaz-index.html
-          grep -q 'Sıfırdan Namaz Öğren' /tmp/namaz-index.html
-          grep -q 'Abdest: adım adım' /tmp/namaz-index.html
-          grep -q 'Gıybet' /tmp/namaz-index.html
-          grep -q 'data-s="learn"' /tmp/namaz-index.html
-          cp "$APK" Namaz-V5.apk
-          sha256sum Namaz-V5.apk
+          cp "$APK" Namaz-V6.apk
+
+          ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose Namaz-V6.apk
+          unzip -t Namaz-V6.apk >/dev/null
+          ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging Namaz-V6.apk | tee /tmp/badging.txt
+          grep -q "package: name='app.namaz.tr.v6' versionCode='6' versionName='6.0.0'" /tmp/badging.txt
+          grep -q "application-label:'Namaz V6'" /tmp/badging.txt
+
+          unzip -l Namaz-V6.apk | grep -q 'res/raw/adhan.mp3'
+          unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy-data.js'
+          unzip -l Namaz-V6.apk | grep -q 'assets/academy/lessons-hanafi.js'
+          unzip -l Namaz-V6.apk | grep -q 'assets/academy/lessons-shafii-notes.js'
+          unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy.js'
+          unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy.css'
+
+          unzip -p Namaz-V6.apk assets/index.html > /tmp/namaz-index.html
+          unzip -p Namaz-V6.apk assets/academy/academy-data.js > /tmp/academy-data.js
+          unzip -p Namaz-V6.apk assets/academy/lessons-hanafi.js > /tmp/lessons-hanafi.js
+          unzip -p Namaz-V6.apk assets/academy/lessons-shafii-notes.js > /tmp/lessons-shafii.js
+          unzip -p Namaz-V6.apk assets/academy/academy.js > /tmp/academy.js
+
+          grep -q 'id="academyRoot"' /tmp/namaz-index.html
+          grep -q 'Namaz Akademisi' /tmp/namaz-index.html
+          grep -q 'sabah-namazi' /tmp/academy-data.js
+          grep -q 'ogle-namazi' /tmp/academy-data.js
+          grep -q 'ikindi-namazi' /tmp/academy-data.js
+          grep -q 'aksam-namazi' /tmp/academy-data.js
+          grep -q 'yatsi-namazi' /tmp/academy-data.js
+          grep -q '32-farz' /tmp/academy-data.js
+          grep -q 'abdest' /tmp/academy-data.js
+          grep -q 'mahremiyet-sosyal-medya' /tmp/academy-data.js
+          grep -q 'Şafiî' /tmp/lessons-shafii.js
+          grep -q 'sources:' /tmp/lessons-hanafi.js
+          grep -q 'academyHandleAndroidBack' /tmp/academy.js
+          ! grep -q "show('knowledge')" /tmp/academy.js
+          ! grep -q "show('duas')" /tmp/academy.js
+          ! grep -q "show('namazHocasi')" /tmp/academy.js
+
+          sha256sum Namaz-V6.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Namaz-V5-APK
-          path: Namaz-V5.apk
+          name: Namaz-V6-APK
+          path: Namaz-V6.apk
           if-no-files-found: error
