@@ -1,4 +1,4 @@
-name: CepScan Startup Diagnostic
+name: CepScan Android 16 PDF Diagnostic
 
 on:
   push:
@@ -6,6 +6,10 @@ on:
       - cepscan-apk-build
     paths:
       - '.github/workflows/cepscan-startup-diagnostic.yml'
+      - 'tools/cepscan_emulator_pdf_test.sh'
+      - 'tools/apply_cepscan_v42.py'
+      - 'tools/test_no_recycled_bitmap.py'
+  workflow_dispatch:
 
 jobs:
   diagnose:
@@ -13,20 +17,25 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - uses: android-actions/setup-android@v3
+
       - name: Install SDK
         shell: bash
         run: |
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0' 'emulator' 'system-images;android-36;google_apis;x86_64'
+          sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0' 'emulator' 'system-images;android-36;default;x86_64'
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Restore V3 base and apply V4 + V4.1
+
+      - name: Restore source and apply V4.2 fix
         shell: bash
         run: |
           mkdir -p cepscan-src
@@ -39,67 +48,35 @@ jobs:
           echo '3ff13c67f690f4b778d6ca79d820d64eeb99908e9b10ff7e92ce4a8440822bdd  cepscan-v41.patch.gz' | sha256sum -c -
           gzip -dc cepscan-v41.patch.gz > cepscan-v41.patch
           git apply --directory=cepscan-src cepscan-v41.patch
-          grep 'versionName = "4.1.0"' cepscan-src/app/build.gradle.kts
+          python tools/apply_cepscan_v42.py cepscan-src
+          python tools/test_no_recycled_bitmap.py cepscan-src
+          grep 'versionName = "4.2.0"' cepscan-src/app/build.gradle.kts
+
       - name: Build debug APK
         working-directory: cepscan-src
-        run: gradle --no-daemon :app:assembleDebug
+        run: gradle --no-daemon --stacktrace :app:assembleDebug
+
       - name: Enable KVM
         shell: bash
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm || true
-      - name: Launch clean and corrupt-state cases on Android 16
+
+      - name: Open a real PDF on Android 16 and assert no recycled-bitmap crash
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: |
-            set -e
-            adb install -r cepscan-src/app/build/outputs/apk/debug/app-debug.apk
-            : > cepscan-startup-logcat.txt
-            launch_and_assert() {
-              LABEL="$1"
-              echo "=== $LABEL ===" | tee -a cepscan-startup-logcat.txt
-              adb shell am force-stop com.cepscan.app
-              adb logcat -c
-              adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1 >/dev/null
-              sleep 5
-              adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
-              PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-              echo "pid=$PID" | tee -a cepscan-startup-logcat.txt
-              test -n "$PID"
-              if adb logcat -d -v brief | grep -q 'Process: com.cepscan.app'; then
-                adb logcat -d -v threadtime | grep -n -A100 -B25 -E 'FATAL EXCEPTION|Process: com\.cepscan\.app' || true
-                exit 1
-              fi
-            }
-            launch_and_assert 'CLEAN LAUNCH'
-            cat > /tmp/cepscan_docs_bad_type.xml <<'XML'
-            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-            <map><int name="items" value="123" /></map>
-            XML
-            adb push /tmp/cepscan_docs_bad_type.xml /data/local/tmp/cepscan_docs_bad_type.xml >/dev/null
-            adb shell am force-stop com.cepscan.app
-            adb shell run-as com.cepscan.app mkdir -p shared_prefs
-            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs_bad_type.xml shared_prefs/cepscan_docs.xml
-            launch_and_assert 'LEGACY WRONG-TYPE PREF'
-            cat > /tmp/cepscan_docs_missing_page.xml <<'XML'
-            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-            <map><string name="items">[{&quot;id&quot;:&quot;broken&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Eski_Belge.pdf&quot;,&quot;pageCount&quot;:1,&quot;createdAt&quot;:1,&quot;updatedAt&quot;:1,&quot;ocrText&quot;:&quot;test&quot;,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;searchablePdf&quot;:true,&quot;isDraft&quot;:false,&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/missing/page.jpg&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;}]}]</string></map>
-            XML
-            adb push /tmp/cepscan_docs_missing_page.xml /data/local/tmp/cepscan_docs_missing_page.xml >/dev/null
-            adb shell am force-stop com.cepscan.app
-            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs_missing_page.xml shared_prefs/cepscan_docs.xml
-            launch_and_assert 'MISSING PREVIEW PAGE'
-            launch_and_assert 'RELAUNCH'
-      - name: Upload logcat
+          script: bash tools/cepscan_emulator_pdf_test.sh cepscan-src/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload PDF viewer logcat
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CepScan-V4.1-api36-startup-logcat
-          path: cepscan-startup-logcat.txt
+          name: CepScan-V4.2-api36-pdf-viewer-logcat
+          path: cepscan-pdf-viewer-logcat.txt
           if-no-files-found: warn
           retention-days: 2
