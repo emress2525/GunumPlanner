@@ -87,7 +87,8 @@ def apply(root: Path) -> None:
 def self_test(root: Path | None = None) -> None:
     sample_manifest = '<manifest><application><activity android:name=".MainActivity"/><service android:name=".AdhanService"/><receiver android:name=".PrayerAlarmReceiver"/><receiver android:name=".BootReceiver"/><receiver android:name=".PrayerWidgetProvider"><meta-data /></receiver></application></manifest>'
     patched = patch_manifest(sample_manifest)
-    assert 'PrayerWidgetProvider' not in patched
+    assert 'android:name=".PrayerWidgetProvider"' not in patched
+    assert 'android:name="app.namaz.tr.PrayerWidgetProvider"' not in patched
     for component in ['MainActivity', 'AdhanService', 'PrayerAlarmReceiver', 'BootReceiver']:
         assert f'app.namaz.tr.{component}' in patched
     for cls, meta, label in WIDGET_RECEIVERS:
@@ -106,6 +107,7 @@ def self_test(root: Path | None = None) -> None:
             assert f'app.namaz.tr.{component}' in actual_manifest
         for cls, meta, _ in WIDGET_RECEIVERS:
             assert f'app.namaz.tr.{cls}' in actual_manifest and meta in actual_manifest
+        assert 'android:name="app.namaz.tr.PrayerWidgetProvider"' not in actual_manifest
         assert 'id="prayerStatus"' in actual_html
         assert 'AndroidBridge.setPrayerStatusEnabled' in actual_js
         assert 'resume:' in actual_js
