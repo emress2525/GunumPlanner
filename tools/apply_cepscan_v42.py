@@ -13,7 +13,8 @@ if bad not in text:
 text = text.replace(bad, "\n", 1)
 viewer.write_text(text, encoding="utf-8")
 
-build = gradle.read_text(encoding="utf-8")nbuild = re.sub(r'versionCode\s*=\s*\d+', 'versionCode = 42', build, count=1)
+build = gradle.read_text(encoding="utf-8")
+build = re.sub(r'versionCode\s*=\s*\d+', 'versionCode = 42', build, count=1)
 build, count = re.subn(r'versionName\s*=\s*"4\.1\.0"', 'versionName = "4.2.0"', build, count=1)
 if count != 1:
     raise SystemExit("Expected V4.1 versionName was not found.")
