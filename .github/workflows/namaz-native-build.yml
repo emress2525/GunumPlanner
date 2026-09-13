@@ -155,17 +155,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p namazapp/app/src/main/res/raw
+          ADHAN_URL='https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Turkey_1_(%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7).mp3'
+          curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 "$ADHAN_URL" -o namazapp/app/src/main/res/raw/adhan.mp3
           python3 - <<'PY'
-          import base64, json, urllib.request
           from pathlib import Path
-          url='https://api.github.com/repos/Kiwifu/adhan-mp3/git/blobs/646ec7dc2732831abd899a52d785b10516769faa'
-          req=urllib.request.Request(url,headers={'User-Agent':'Namaz-App-Build'})
-          with urllib.request.urlopen(req,timeout=30) as r:
-              data=json.load(r)
-          audio=base64.b64decode(data['content'])
-          out=Path('namazapp/app/src/main/res/raw/adhan.mp3')
-          out.write_bytes(audio)
-          if len(audio) < 100000:
+          p=Path('namazapp/app/src/main/res/raw/adhan.mp3')
+          if p.stat().st_size < 100000:
               raise SystemExit('adhan audio unexpectedly small')
           PY
 
