@@ -141,14 +141,14 @@ jobs:
           from pathlib import Path
           p=Path('namazapp/app/src/main/res/layout/prayer_widget.xml')
           text=p.read_text(encoding='utf-8')
-          text=text.replace('☾  Namaz V5','☾  Namaz V6')
-          text=text.replace('☾  Namaz</', '☾  Namaz V6</')
+          text=text.replace('android:text="☾  Namaz V5"', 'android:text="☾  Namaz V6"')
+          text=text.replace('android:text="☾  Namaz"', 'android:text="☾  Namaz V6"')
           p.write_text(text,encoding='utf-8')
-          if '☾  Namaz V6' not in text:
+          if 'android:text="☾  Namaz V6"' not in text:
               raise SystemExit('widget V6 brand marker missing')
           PY
           grep -q '<string name="app_name">Namaz V6</string>' namazapp/app/src/main/res/values/strings.xml
-          grep -q '☾  Namaz V6' namazapp/app/src/main/res/layout/prayer_widget.xml
+          grep -Fq 'android:text="☾  Namaz V6"' namazapp/app/src/main/res/layout/prayer_widget.xml
 
       - name: Fetch verified adhan audio
         shell: bash
