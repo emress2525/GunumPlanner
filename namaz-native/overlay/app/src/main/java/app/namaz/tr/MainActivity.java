@@ -61,8 +61,22 @@ public class MainActivity extends Activity {
     }
 
     @Override public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        if (webView == null) {
+            super.onBackPressed();
+            return;
+        }
+
+        webView.evaluateJavascript(
+            "(function(){try{return !!(window.academyHandleAndroidBack&&window.academyHandleAndroidBack());}catch(e){return false;}})();",
+            new android.webkit.ValueCallback<String>() {
+                @Override public void onReceiveValue(String value) {
+                    boolean handled = "true".equals(value) || "\"true\"".equals(value) || "1".equals(value) || "\"1\"".equals(value);
+                    if (handled) return;
+                    if (webView != null && webView.canGoBack()) webView.goBack();
+                    else MainActivity.super.onBackPressed();
+                }
+            }
+        );
     }
 
     @Override protected void onDestroy() {
