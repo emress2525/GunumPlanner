@@ -33,6 +33,16 @@ class V6PackagingTests(unittest.TestCase):
         ).read_text(encoding='utf-8')
         self.assertIn('<string name="app_name">Namaz V6</string>', strings)
 
+    def test_widget_description_avoids_raw_apostrophe_that_breaks_aapt(self):
+        strings = Path(
+            'namaz-native/overlay/app/src/main/res/values/strings.xml'
+        ).read_text(encoding='utf-8')
+        self.assertIn('Namaz Akademisi içeriklerini gösterir.', strings)
+        self.assertNotIn("Namaz Akademisi'ni", strings)
+        workflow = Path('.github/workflows/namaz-native-build.yml').read_text(encoding='utf-8')
+        self.assertIn('Namaz Akademisi içeriklerini gösterir.', workflow)
+        self.assertNotIn("Namaz Akademisi'ni", workflow)
+
     def test_widget_header_is_v6(self):
         widget = Path(
             'namaz-native/overlay/app/src/main/res/layout/prayer_widget.xml'
