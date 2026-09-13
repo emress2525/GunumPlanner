@@ -26,19 +26,21 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Restore V3 base
+      - name: Restore V3 base and apply V4 + V4.1
         shell: bash
         run: |
           mkdir -p cepscan-src
           cat cepscan_parts/part_* > cepscan_build.tar.gz.b64
           base64 --decode cepscan_build.tar.gz.b64 > cepscan_build.tar.gz
           tar -xzf cepscan_build.tar.gz -C cepscan-src
-      - name: Apply V4 patch
-        shell: bash
-        run: |
           cat cepscan_v4_parts/part_* > cepscan_v4_patch.gz.b64
           base64 --decode cepscan_v4_patch.gz.b64 | gzip -d > cepscan-v4.patch
           git apply --directory=cepscan-src cepscan-v4.patch
+          cat cepscan_v41_parts/part_* > cepscan_v41_patch.gz.b64
+          echo '8dfddfe852d9344708d9896bcb6da5c759e396a9291bee636ae7cfc123629243  cepscan_v41_patch.gz.b64' | sha256sum -c -
+          base64 --decode cepscan_v41_patch.gz.b64 | gzip -d > cepscan-v41.patch
+          git apply --directory=cepscan-src cepscan-v41.patch
+          grep 'versionName = "4.1.0"' cepscan-src/app/build.gradle.kts
       - name: Build debug APK
         working-directory: cepscan-src
         run: gradle --no-daemon :app:assembleDebug
@@ -48,7 +50,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm || true
-      - name: Launch with persisted document on Android 16
+      - name: Launch clean and corrupt-state cases on Android 16
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -60,50 +62,50 @@ jobs:
             adb install -r cepscan-src/app/build/outputs/apk/debug/app-debug.apk
             : > cepscan-startup-logcat.txt
 
-            echo '=== CLEAN LAUNCH ===' | tee -a cepscan-startup-logcat.txt
-            adb shell am force-stop com.cepscan.app
-            adb logcat -c
-            adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
-            sleep 5
-            adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
-            CLEAN_PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-            echo "clean_pid=$CLEAN_PID" | tee -a cepscan-startup-logcat.txt
-            test -n "$CLEAN_PID"
-
-            echo 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZQmcAAAAASUVORK5CYII=' | base64 -d > /tmp/page.png
-            adb push /tmp/page.png /data/local/tmp/page.png >/dev/null
-            adb shell run-as com.cepscan.app mkdir -p files/scans/testdoc shared_prefs
-            adb shell run-as com.cepscan.app cp /data/local/tmp/page.png files/scans/testdoc/page_001.png
-            cat > /tmp/cepscan_docs.xml <<'XML'
-            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-            <map>
-              <string name="items">[{&quot;id&quot;:&quot;testdoc&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Tarama_test.pdf&quot;,&quot;pageCount&quot;:1,&quot;createdAt&quot;:1,&quot;updatedAt&quot;:1,&quot;ocrText&quot;:&quot;test&quot;,&quot;correctedOcrText&quot;:&quot;&quot;,&quot;ocrUpdatedAt&quot;:1,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;exportDpi&quot;:300,&quot;folder&quot;:&quot;&quot;,&quot;tags&quot;:[],&quot;isFavorite&quot;:false,&quot;isPinned&quot;:false,&quot;isPrivate&quot;:false,&quot;isTrashed&quot;:false,&quot;searchablePdf&quot;:true,&quot;passwordProtected&quot;:false,&quot;isDraft&quot;:false,&quot;smartFields&quot;:{},&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/testdoc/page_001.png&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;,&quot;enhancementStrength&quot;:50,&quot;dewarpStrength&quot;:0,&quot;annotations&quot;:[],&quot;qualityFindings&quot;:[]}]}]</string>
-            </map>
-            XML
-            adb push /tmp/cepscan_docs.xml /data/local/tmp/cepscan_docs.xml >/dev/null
-            adb shell am force-stop com.cepscan.app
-            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs.xml shared_prefs/cepscan_docs.xml
-
-            for N in 1 2 3; do
-              echo "=== PERSISTED LAUNCH $N ===" | tee -a cepscan-startup-logcat.txt
+            launch_and_assert() {
+              LABEL="$1"
+              echo "=== $LABEL ===" | tee -a cepscan-startup-logcat.txt
               adb shell am force-stop com.cepscan.app
               adb logcat -c
-              adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1
+              adb shell monkey -p com.cepscan.app -c android.intent.category.LAUNCHER 1 >/dev/null
               sleep 5
               adb logcat -d -v threadtime >> cepscan-startup-logcat.txt
               PID=$(adb shell pidof com.cepscan.app | tr -d '\r')
-              echo "persisted_pid_$N=$PID" | tee -a cepscan-startup-logcat.txt
+              echo "pid=$PID" | tee -a cepscan-startup-logcat.txt
               test -n "$PID"
-            done
-            if grep -q 'Process: com.cepscan.app' cepscan-startup-logcat.txt; then
-              grep -n -A100 -B25 -E 'FATAL EXCEPTION|Process: com\.cepscan\.app' cepscan-startup-logcat.txt
-              exit 1
-            fi
+              if adb logcat -d -v brief | grep -q 'Process: com.cepscan.app'; then
+                adb logcat -d -v threadtime | grep -n -A100 -B25 -E 'FATAL EXCEPTION|Process: com\.cepscan\.app' || true
+                exit 1
+              fi
+            }
+
+            launch_and_assert 'CLEAN LAUNCH'
+
+            cat > /tmp/cepscan_docs_bad_type.xml <<'XML'
+            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+            <map><int name="items" value="123" /></map>
+            XML
+            adb push /tmp/cepscan_docs_bad_type.xml /data/local/tmp/cepscan_docs_bad_type.xml >/dev/null
+            adb shell am force-stop com.cepscan.app
+            adb shell run-as com.cepscan.app mkdir -p shared_prefs
+            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs_bad_type.xml shared_prefs/cepscan_docs.xml
+            launch_and_assert 'LEGACY WRONG-TYPE PREF'
+
+            cat > /tmp/cepscan_docs_missing_page.xml <<'XML'
+            <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+            <map><string name="items">[{&quot;id&quot;:&quot;broken&quot;,&quot;uri&quot;:&quot;&quot;,&quot;name&quot;:&quot;Eski_Belge.pdf&quot;,&quot;pageCount&quot;:1,&quot;createdAt&quot;:1,&quot;updatedAt&quot;:1,&quot;ocrText&quot;:&quot;test&quot;,&quot;quality&quot;:&quot;STANDARD&quot;,&quot;mode&quot;:&quot;DOCUMENT&quot;,&quot;paperSize&quot;:&quot;AUTO&quot;,&quot;searchablePdf&quot;:true,&quot;isDraft&quot;:false,&quot;pages&quot;:[{&quot;id&quot;:&quot;p1&quot;,&quot;filePath&quot;:&quot;/data/user/0/com.cepscan.app/files/scans/missing/page.jpg&quot;,&quot;rotation&quot;:0,&quot;filter&quot;:&quot;ORIGINAL&quot;}]}]</string></map>
+            XML
+            adb push /tmp/cepscan_docs_missing_page.xml /data/local/tmp/cepscan_docs_missing_page.xml >/dev/null
+            adb shell am force-stop com.cepscan.app
+            adb shell run-as com.cepscan.app cp /data/local/tmp/cepscan_docs_missing_page.xml shared_prefs/cepscan_docs.xml
+            launch_and_assert 'MISSING PREVIEW PAGE'
+
+            launch_and_assert 'RELAUNCH'
       - name: Upload logcat
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CepScan-api36-startup-logcat
+          name: CepScan-V4.1-api36-startup-logcat
           path: cepscan-startup-logcat.txt
           if-no-files-found: warn
           retention-days: 2
