@@ -44,9 +44,14 @@ import app.namaz.tr.v8.health.NotificationHealthInspector
 import app.namaz.tr.v8.health.NotificationHealthScreen
 import app.namaz.tr.v8.health.NotificationHealthViewModel
 import app.namaz.tr.v8.model.AppDestination
+import app.namaz.tr.v8.model.AppMode
+import app.namaz.tr.v8.model.UserProfile
+import app.namaz.tr.v8.model.UserSettings
 import app.namaz.tr.v8.prayerui.PrayerScreen
+import app.namaz.tr.v8.settings.DataStoreUserSettingsRepository
 import app.namaz.tr.v8.today.TodayScreen
 import app.namaz.tr.v8.today.TodayViewModel
+import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
 import kotlinx.coroutines.launch
 
 private const val PRAYER_DETAILS_ROUTE = "prayer-details"
@@ -54,11 +59,31 @@ private const val HEALTH_ROUTE = "notification-health"
 
 @Composable
 fun NamazApp(graph: AppGraph) {
-    RootNavigation(graph)
+    val context = LocalContext.current
+    val userSettingsRepository = remember(context) { DataStoreUserSettingsRepository(context.applicationContext) }
+    val userSettings by userSettingsRepository.settings.collectAsState(initial = UserSettings())
+    val scope = rememberCoroutineScope()
+
+    if (!userSettings.onboardingDone || userSettings.profile == null) {
+        OnboardingScreen { profile: UserProfile ->
+            scope.launch { userSettingsRepository.setProfile(profile) }
+        }
+        return
+    }
+
+    RootNavigation(
+        graph = graph,
+        appMode = userSettings.mode,
+        onModeChange = { mode -> scope.launch { userSettingsRepository.setMode(mode) } },
+    )
 }
 
 @Composable
-private fun RootNavigation(graph: AppGraph) {
+private fun RootNavigation(
+    graph: AppGraph,
+    appMode: AppMode,
+    onModeChange: (AppMode) -> Unit,
+) {
     val navController = rememberNavController()
     val backStack by navController.currentBackStackEntryAsState()
     val currentRoute = backStack?.destination?.route
@@ -112,7 +137,11 @@ private fun RootNavigation(graph: AppGraph) {
             composable(AppDestination.LEARN.route) { PlaceholderScreen("Öğren", "Akademi sonraki fazda native olarak taşınacak") }
             composable(AppDestination.WORSHIP.route) { PlaceholderScreen("İbadet", "Dua, zikir ve diğer araçlar burada olacak") }
             composable(AppDestination.MORE.route) {
-                MoreScreen(onHealth = { navController.navigate(HEALTH_ROUTE) })
+                MoreScreen(
+                    appMode = appMode,
+                    onModeChange = onModeChange,
+                    onHealth = { navController.navigate(HEALTH_ROUTE) },
+                )
             }
             composable(HEALTH_ROUTE) {
                 val healthViewModel = remember(context) { NotificationHealthViewModel(NotificationHealthInspector(context.applicationContext)) }
@@ -132,11 +161,32 @@ private fun RootNavigation(graph: AppGraph) {
 }
 
 @Composable
-private fun MoreScreen(onHealth: () -> Unit) {
+private fun MoreScreen(
+    appMode: AppMode,
+    onModeChange: (AppMode) -> Unit,
+    onHealth: () -> Unit,
+) {
     Column(Modifier.fillMaxSize().padding(20.dp)) {
         Text("Daha Fazla", style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)
-        Text("Kıble, widget, seyahat ve diğer araçlar sonraki fazlarda burada büyüyecek.", modifier = Modifier.padding(vertical = 14.dp))
-        Button(onClick = onHealth, modifier = Modifier.fillMaxWidth()) { Text("Bildirim Sağlık Merkezi") }
+        Text(
+            "Görünüm: ${if (appMode == AppMode.SIMPLE) "Basit Mod" else "Tam Mod"}",
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        Text(
+            "Mod değiştirmek hiçbir özelliği kilitlemez; sadece öncelik ve görünüm düzenini değiştirir.",
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
+        Button(
+            onClick = { onModeChange(if (appMode == AppMode.SIMPLE) AppMode.FULL else AppMode.SIMPLE) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(if (appMode == AppMode.SIMPLE) "Tam Mod'a geç" else "Basit Mod'a geç")
+        }
+        Button(
+            onClick = onHealth,
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+        ) { Text("Bildirim Sağlık Merkezi") }
+        Text("Kıble, widget, seyahat ve diğer araçlar sonraki fazlarda burada büyüyecek.", modifier = Modifier.padding(top = 16.dp))
     }
 }
 
