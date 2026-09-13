@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Namaz V6</string>
+    <string name="app_name">Namaz V7</string>
     <string name="widget_description">Namaz vakitlerini, sıradaki namaza kalan süreyi, Hicrî tarihi, günlük ayeti, ibadet takibini ve Namaz Akademisi içeriklerini gösterir.</string>
+    <string name="widget_next_prayer_label">Namaz — Sıradaki Vakit</string>
+    <string name="widget_countdown_label">Namaz — Büyük Geri Sayım</string>
+    <string name="widget_prayer_times_label">Namaz — Tüm Vakitler</string>
+    <string name="widget_tracker_label">Namaz — Namaz Takibi</string>
+    <string name="widget_daily_ayah_label">Namaz — Günün Ayeti</string>
+    <string name="widget_hijri_label">Namaz — Hicrî Tarih</string>
+    <string name="widget_quran_resume_label">Namaz — Kur’an’a Devam</string>
 </resources>
