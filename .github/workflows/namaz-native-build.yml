@@ -84,7 +84,15 @@ jobs:
           python3 namaz-native/book_expansion.py --self-test namazapp
           python3 namaz-native/v5_upgrade.py --apply namazapp
           python3 namaz-native/v5_upgrade.py --self-test namazapp
-          sed -i 's/android:text="Namaz"/android:text="Namaz V5"/' namazapp/app/src/main/res/layout/prayer_widget.xml
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('namazapp/app/src/main/res/layout/prayer_widget.xml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('☾  Namaz','☾  Namaz V5',1)
+          p.write_text(text,encoding='utf-8')
+          if '☾  Namaz V5' not in text:
+              raise SystemExit('widget V5 brand marker missing')
+          PY
           grep -q 'AndroidBridge.updateAyah' namazapp/app/src/main/assets/app.js
           grep -q 'id="namazHocasi"' namazapp/app/src/main/assets/index.html
           grep -q 'id="learn"' namazapp/app/src/main/assets/index.html
@@ -93,7 +101,7 @@ jobs:
           grep -q 'Aile ve anne-baba' namazapp/app/src/main/assets/index.html
           grep -q '32 Farz Öğretim Şeması' namazapp/app/src/main/assets/index.html
           grep -q 'widgetTracker' namazapp/app/src/main/res/layout/prayer_widget.xml
-          grep -q 'android:text="Namaz V5"' namazapp/app/src/main/res/layout/prayer_widget.xml
+          grep -q '☾  Namaz V5' namazapp/app/src/main/res/layout/prayer_widget.xml
           mkdir -p namazapp/app/src/main/res/raw
           python3 - <<'PY'
           import base64, json, urllib.request
