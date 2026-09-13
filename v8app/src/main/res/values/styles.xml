@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.NamazV8" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#F6F1E6</item>
+        <item name="android:statusBarColor">#F6F1E6</item>
+    </style>
+</resources>
