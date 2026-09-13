@@ -69,59 +69,46 @@ jobs:
       - name: Python patch regression tests
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
 
-      - name: Prepare native overlay and rich V6 academy UI
+      - name: Apply native overlay and legacy feature patches
         shell: bash
         run: |
           set -euo pipefail
           cat >> namazapp/app/build.gradle <<'GRADLE'
           dependencies { testImplementation 'junit:junit:4.13.2' }
           GRADLE
-
           cp -R namaz-native/overlay/app/src/. namazapp/app/src/
-
           python3 namaz-native/patch_assets.py --apply namazapp
           python3 namaz-native/widget_ayah_patch.py namazapp
           python3 namaz-native/patch_assets.py --self-test namazapp
-
           python3 namaz-native/market_upgrade.py --apply namazapp
           python3 namaz-native/market_upgrade.py --self-test namazapp
-
           python3 namaz-native/book_expansion.py --apply namazapp
           python3 namaz-native/book_expansion.py --self-test namazapp
-
           python3 namaz-native/v5_upgrade.py --apply namazapp
           python3 namaz-native/v5_upgrade.py --self-test namazapp
 
+      - name: Apply and self-test V6 academy
+        shell: bash
+        run: |
+          set -euo pipefail
           python3 namaz-native/v6_academy.py --apply namazapp
           python3 namaz-native/v6_academy.py --self-test namazapp
+          test -s namazapp/app/src/main/assets/academy/academy-data.js
+          test -s namazapp/app/src/main/assets/academy/lessons-hanafi.js
+          test -s namazapp/app/src/main/assets/academy/lessons-shafii-notes.js
+          test -s namazapp/app/src/main/assets/academy/academy.js
+          test -s namazapp/app/src/main/assets/academy/academy.css
 
-          # Overlay and previous patchers must never be allowed to restore an older app identity.
-          cat > namazapp/app/src/main/res/values/strings.xml <<'XML'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <string name="app_name">Namaz V6</string>
-              <string name="widget_description">Namaz vakitlerini, sıradaki namaza kalan süreyi, Hicrî tarihi, günlük ayeti, ibadet takibini ve Namaz Akademisi'ni gösterir.</string>
-          </resources>
-          XML
-
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('namazapp/app/src/main/res/layout/prayer_widget.xml')
-          text=p.read_text(encoding='utf-8')
-          text=text.replace('☾  Namaz V5','☾  Namaz V6')
-          text=text.replace('☾  Namaz</', '☾  Namaz V6</')
-          p.write_text(text,encoding='utf-8')
-          if '☾  Namaz V6' not in text:
-              raise SystemExit('widget V6 brand marker missing')
-          PY
-
+      - name: Verify V6 Javascript syntax and academy routing
+        shell: bash
+        run: |
+          set -euo pipefail
           node --check namazapp/app/src/main/assets/app.js
           node --check namazapp/app/src/main/assets/core.js
           node --check namazapp/app/src/main/assets/academy/academy-data.js
           node --check namazapp/app/src/main/assets/academy/lessons-hanafi.js
           node --check namazapp/app/src/main/assets/academy/lessons-shafii-notes.js
           node --check namazapp/app/src/main/assets/academy/academy.js
-
           grep -q 'AndroidBridge.updateAyah' namazapp/app/src/main/assets/app.js
           grep -q 'id="academyRoot"' namazapp/app/src/main/assets/index.html
           grep -q 'NAMAZ V6' namazapp/app/src/main/assets/index.html
@@ -135,18 +122,38 @@ jobs:
           grep -q 'yatsi-namazi' namazapp/app/src/main/assets/academy/academy-data.js
           grep -q 'Şafiî' namazapp/app/src/main/assets/academy/lessons-shafii-notes.js
           grep -q 'sources:' namazapp/app/src/main/assets/academy/lessons-hanafi.js
+          ! grep -q "show('knowledge')" namazapp/app/src/main/assets/academy/academy.js
+          ! grep -q "show('duas')" namazapp/app/src/main/assets/academy/academy.js
+          ! grep -q "show('namazHocasi')" namazapp/app/src/main/assets/academy/academy.js
+
+      - name: Lock V6 app and widget identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > namazapp/app/src/main/res/values/strings.xml <<'XML'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">Namaz V6</string>
+              <string name="widget_description">Namaz vakitlerini, sıradaki namaza kalan süreyi, Hicrî tarihi, günlük ayeti, ibadet takibini ve Namaz Akademisi'ni gösterir.</string>
+          </resources>
+          XML
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('namazapp/app/src/main/res/layout/prayer_widget.xml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('☾  Namaz V5','☾  Namaz V6')
+          text=text.replace('☾  Namaz</', '☾  Namaz V6</')
+          p.write_text(text,encoding='utf-8')
+          if '☾  Namaz V6' not in text:
+              raise SystemExit('widget V6 brand marker missing')
+          PY
           grep -q '<string name="app_name">Namaz V6</string>' namazapp/app/src/main/res/values/strings.xml
           grep -q '☾  Namaz V6' namazapp/app/src/main/res/layout/prayer_widget.xml
 
-          for f in \
-            namazapp/app/src/main/assets/academy/academy-data.js \
-            namazapp/app/src/main/assets/academy/lessons-hanafi.js \
-            namazapp/app/src/main/assets/academy/lessons-shafii-notes.js \
-            namazapp/app/src/main/assets/academy/academy.js \
-            namazapp/app/src/main/assets/academy/academy.css; do
-              test -s "$f"
-          done
-
+      - name: Fetch verified adhan audio
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p namazapp/app/src/main/res/raw
           python3 - <<'PY'
           import base64, json, urllib.request
@@ -174,26 +181,22 @@ jobs:
           set -euo pipefail
           APK=namazapp/app/build/outputs/apk/debug/app-debug.apk
           cp "$APK" Namaz-V6.apk
-
           ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose Namaz-V6.apk
           unzip -t Namaz-V6.apk >/dev/null
           ${ANDROID_HOME}/build-tools/35.0.0/aapt dump badging Namaz-V6.apk | tee /tmp/badging.txt
           grep -q "package: name='app.namaz.tr.v6' versionCode='6' versionName='6.0.0'" /tmp/badging.txt
           grep -q "application-label:'Namaz V6'" /tmp/badging.txt
-
           unzip -l Namaz-V6.apk | grep -q 'res/raw/adhan.mp3'
           unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy-data.js'
           unzip -l Namaz-V6.apk | grep -q 'assets/academy/lessons-hanafi.js'
           unzip -l Namaz-V6.apk | grep -q 'assets/academy/lessons-shafii-notes.js'
           unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy.js'
           unzip -l Namaz-V6.apk | grep -q 'assets/academy/academy.css'
-
           unzip -p Namaz-V6.apk assets/index.html > /tmp/namaz-index.html
           unzip -p Namaz-V6.apk assets/academy/academy-data.js > /tmp/academy-data.js
           unzip -p Namaz-V6.apk assets/academy/lessons-hanafi.js > /tmp/lessons-hanafi.js
           unzip -p Namaz-V6.apk assets/academy/lessons-shafii-notes.js > /tmp/lessons-shafii.js
           unzip -p Namaz-V6.apk assets/academy/academy.js > /tmp/academy.js
-
           grep -q 'id="academyRoot"' /tmp/namaz-index.html
           grep -q 'Namaz Akademisi' /tmp/namaz-index.html
           grep -q 'sabah-namazi' /tmp/academy-data.js
@@ -210,7 +213,6 @@ jobs:
           ! grep -q "show('knowledge')" /tmp/academy.js
           ! grep -q "show('duas')" /tmp/academy.js
           ! grep -q "show('namazHocasi')" /tmp/academy.js
-
           sha256sum Namaz-V6.apk
 
       - uses: actions/upload-artifact@v4
