@@ -6,7 +6,9 @@ import app.namaz.tr.v8.prayer.PrayerScheduleEngine
 import app.namaz.tr.v8.prayer.PrayerTime
 import app.namaz.tr.v8.tracking.PrayerTrackState
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 data class PrayerRowUi(
@@ -16,6 +18,8 @@ data class PrayerRowUi(
 )
 
 data class TodayUiState(
+    val date: LocalDate,
+    val zoneId: ZoneId,
     val city: String,
     val calculationLabel: String,
     val nextPrayer: PrayerTime,
@@ -45,6 +49,8 @@ class TodayStateFactory(
             }
 
         return TodayUiState(
+            date = today.date,
+            zoneId = today.zoneId,
             city = today.city,
             calculationLabel = today.calculationLabel,
             nextPrayer = next,
