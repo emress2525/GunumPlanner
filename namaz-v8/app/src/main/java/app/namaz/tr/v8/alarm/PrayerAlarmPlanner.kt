@@ -29,23 +29,32 @@ data class PlannedAlarm(
 )
 
 class PrayerAlarmPlanner {
-    fun plan(schedule: PrayerSchedule, preferences: AlarmPreferences): List<PlannedAlarm> = buildList {
+    fun plan(
+        schedule: PrayerSchedule,
+        preferences: AlarmPreferences,
+        nowMillis: Long = System.currentTimeMillis(),
+    ): List<PlannedAlarm> = buildList {
         schedule.trackablePrayers.forEach { prayer ->
             val preference = preferences.forPrayer(prayer.name)
             if (preference.mode == AdhanMode.OFF) return@forEach
             val at = prayer.instant.toEpochMilli()
             if (preference.preReminderMinutes > 0) {
-                add(
-                    PlannedAlarm(
-                        schedule.date,
-                        prayer.name,
-                        AlarmKind.PRE_REMINDER,
-                        at - preference.preReminderMinutes * 60_000L,
-                        AdhanMode.NOTIFICATION,
-                    ),
-                )
+                val reminderAt = at - preference.preReminderMinutes * 60_000L
+                if (reminderAt > nowMillis) {
+                    add(
+                        PlannedAlarm(
+                            schedule.date,
+                            prayer.name,
+                            AlarmKind.PRE_REMINDER,
+                            reminderAt,
+                            AdhanMode.NOTIFICATION,
+                        ),
+                    )
+                }
             }
-            add(PlannedAlarm(schedule.date, prayer.name, AlarmKind.ADHAN, at, preference.mode))
+            if (at > nowMillis) {
+                add(PlannedAlarm(schedule.date, prayer.name, AlarmKind.ADHAN, at, preference.mode))
+            }
         }
     }
 }
