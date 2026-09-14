@@ -19,11 +19,28 @@ class PrayerAlarmPlannerTest {
                 else PrayerAlarmPreference(AdhanMode.FULL, 10)
             },
         )
-        val alarms = PrayerAlarmPlanner().plan(sampleSchedule(), preferences)
+        val alarms = PrayerAlarmPlanner().plan(sampleSchedule(), preferences, Long.MIN_VALUE)
         assertTrue(alarms.any { it.prayer == PrayerName.MAGHRIB && it.kind == AlarmKind.ADHAN })
         assertTrue(alarms.any { it.prayer == PrayerName.MAGHRIB && it.kind == AlarmKind.PRE_REMINDER })
         assertFalse(alarms.any { it.prayer == PrayerName.ISHA })
         assertFalse(alarms.any { it.prayer == PrayerName.SUNRISE })
+    }
+
+    @Test
+    fun plannerNeverSchedulesEventsThatAreAlreadyInThePast() {
+        val now = Instant.parse("2026-09-13T09:00:00Z").toEpochMilli()
+        val preferences = AlarmPreferences(
+            PrayerName.entries.filter { it.isTrackable }.associateWith {
+                PrayerAlarmPreference(AdhanMode.FULL, 10)
+            },
+        )
+
+        val alarms = PrayerAlarmPlanner().plan(sampleSchedule(), preferences, now)
+
+        assertTrue(alarms.isNotEmpty())
+        assertTrue(alarms.all { it.atMillis > now })
+        assertFalse(alarms.any { it.prayer == PrayerName.FAJR })
+        assertFalse(alarms.any { it.prayer == PrayerName.DHUHR && it.kind == AlarmKind.PRE_REMINDER && it.atMillis <= now })
     }
 
     private fun sampleSchedule(): PrayerSchedule {
