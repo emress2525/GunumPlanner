@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -35,10 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import app.namaz.tr.v8.AppGraph
 import app.namaz.tr.v8.adhan.AdhanNotificationFactory
 import app.namaz.tr.v8.alarm.PrayerAlarmScheduler
@@ -60,8 +58,19 @@ import app.namaz.tr.v8.ui.onboarding.OnboardingScreen
 import app.namaz.tr.v8.worship.WorshipScreen
 import kotlinx.coroutines.launch
 
-private const val PRAYER_DETAILS_ROUTE = "prayer-details"
-private const val HEALTH_ROUTE = "notification-health"
+internal enum class RootDetail {
+    PRAYER_DETAILS,
+    HEALTH,
+}
+
+internal data class RootTabState(
+    val selected: AppDestination = AppDestination.TODAY,
+    val detail: RootDetail? = null,
+) {
+    fun select(destination: AppDestination): RootTabState = copy(selected = destination, detail = null)
+    fun open(next: RootDetail): RootTabState = copy(detail = next)
+    fun closeDetail(): RootTabState = copy(detail = null)
+}
 
 @Composable
 fun NamazApp(graph: AppGraph) {
@@ -90,9 +99,6 @@ private fun RootNavigation(
     appMode: AppMode,
     onModeChange: (AppMode) -> Unit,
 ) {
-    val navController = rememberNavController()
-    val backStack by navController.currentBackStackEntryAsState()
-    val currentRoute = backStack?.destination?.route
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val baseDensity = LocalDensity.current
@@ -100,6 +106,17 @@ private fun RootNavigation(
     var fontScale by rememberSaveable {
         mutableFloatStateOf(uiPrefs.getFloat("font_scale", 1f).coerceIn(1f, 1.3f))
     }
+    var selectedRootName by rememberSaveable { mutableStateOf(AppDestination.TODAY.name) }
+    var detailName by rememberSaveable { mutableStateOf<String?>(null) }
+    val navigation = RootTabState(
+        selected = runCatching { AppDestination.valueOf(selectedRootName) }.getOrDefault(AppDestination.TODAY),
+        detail = detailName?.let { name -> runCatching { RootDetail.valueOf(name) }.getOrNull() },
+    )
+    val applyNavigation: (RootTabState) -> Unit = { next ->
+        selectedRootName = next.selected.name
+        detailName = next.detail?.name
+    }
+
     val prayerSettings by graph.prayerSettings.settings.collectAsState(initial = null)
     val qazaTotal by graph.qazaStore.total.collectAsState(initial = 0)
     val todayViewModel: TodayViewModel = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
@@ -107,6 +124,10 @@ private fun RootNavigation(
         override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = TodayViewModel(graph.prayerRepository) as T
     })
     val todayState by todayViewModel.state.collectAsState()
+
+    BackHandler(enabled = navigation.detail != null) {
+        applyNavigation(navigation.closeDetail())
+    }
 
     CompositionLocalProvider(
         LocalDensity provides Density(baseDensity.density, baseDensity.fontScale * fontScale),
@@ -116,14 +137,8 @@ private fun RootNavigation(
                 NavigationBar {
                     AppDestination.entries.forEach { destination ->
                         NavigationBarItem(
-                            selected = currentRoute == destination.route,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo(AppDestination.TODAY.route) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
+                            selected = navigation.selected == destination,
+                            onClick = { applyNavigation(navigation.select(destination)) },
                             icon = { Icon(iconFor(destination), contentDescription = destination.title) },
                             label = { Text(destination.title) },
                         )
@@ -131,51 +146,72 @@ private fun RootNavigation(
                 }
             },
         ) { padding ->
-            NavHost(navController, AppDestination.TODAY.route, Modifier.padding(padding)) {
-                composable(AppDestination.TODAY.route) {
-                    TodayScreen(todayState, todayViewModel::setCompleted) { navController.navigate(PRAYER_DETAILS_ROUTE) }
-                }
-                composable(PRAYER_DETAILS_ROUTE) {
-                    prayerSettings?.let { runtime ->
-                        PrayerScreen(
-                            settings = runtime,
-                            qazaTotal = qazaTotal,
-                            onMadhabChange = { scope.launch { graph.prayerSettings.setMadhab(it); todayViewModel.refresh() } },
-                            onAdjustmentChange = { prayer, minutes -> scope.launch { graph.prayerSettings.setAdjustment(prayer, minutes); todayViewModel.refresh() } },
-                            onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
-                            onBack = { navController.popBackStack() },
+            Box(Modifier.fillMaxSize().padding(padding)) {
+                when (navigation.detail) {
+                    RootDetail.PRAYER_DETAILS -> {
+                        prayerSettings?.let { runtime ->
+                            PrayerScreen(
+                                settings = runtime,
+                                qazaTotal = qazaTotal,
+                                onMadhabChange = {
+                                    scope.launch {
+                                        graph.prayerSettings.setMadhab(it)
+                                        todayViewModel.refresh()
+                                    }
+                                },
+                                onAdjustmentChange = { prayer, minutes ->
+                                    scope.launch {
+                                        graph.prayerSettings.setAdjustment(prayer, minutes)
+                                        todayViewModel.refresh()
+                                    }
+                                },
+                                onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
+                                onBack = { applyNavigation(navigation.closeDetail()) },
+                            )
+                        } ?: PlaceholderScreen("Namaz", "Ayarlar yükleniyor")
+                    }
+
+                    RootDetail.HEALTH -> {
+                        val healthViewModel = remember(context) {
+                            NotificationHealthViewModel(NotificationHealthInspector(context.applicationContext))
+                        }
+                        val healthItems by healthViewModel.items.collectAsState()
+                        LaunchedEffect(Unit) { healthViewModel.refresh() }
+                        NotificationHealthScreen(
+                            items = healthItems,
+                            onAction = { action ->
+                                performHealthAction(context, action)
+                                healthViewModel.refresh()
+                            },
+                            onBack = { applyNavigation(navigation.closeDetail()) },
                         )
-                    } ?: PlaceholderScreen("Namaz", "Ayarlar yükleniyor")
-                }
-                composable(AppDestination.QURAN.route) { QuranScreen() }
-                composable(AppDestination.LEARN.route) { LearnScreen() }
-                composable(AppDestination.WORSHIP.route) { WorshipScreen() }
-                composable(AppDestination.MORE.route) {
-                    MoreHubScreen(
-                        appMode = appMode,
-                        onModeChange = onModeChange,
-                        runtime = prayerSettings,
-                        fontScale = fontScale,
-                        onFontScale = { requested ->
-                            val safeScale = requested.coerceIn(1f, 1.3f)
-                            fontScale = safeScale
-                            uiPrefs.edit().putFloat("font_scale", safeScale).apply()
-                        },
-                        onHealth = { navController.navigate(HEALTH_ROUTE) },
-                    )
-                }
-                composable(HEALTH_ROUTE) {
-                    val healthViewModel = remember(context) { NotificationHealthViewModel(NotificationHealthInspector(context.applicationContext)) }
-                    val healthItems by healthViewModel.items.collectAsState()
-                    LaunchedEffect(Unit) { healthViewModel.refresh() }
-                    NotificationHealthScreen(
-                        items = healthItems,
-                        onAction = { action ->
-                            performHealthAction(context, action)
-                            healthViewModel.refresh()
-                        },
-                        onBack = { navController.popBackStack() },
-                    )
+                    }
+
+                    null -> when (navigation.selected) {
+                        AppDestination.TODAY -> {
+                            TodayScreen(todayState, todayViewModel::setCompleted) {
+                                applyNavigation(navigation.open(RootDetail.PRAYER_DETAILS))
+                            }
+                        }
+
+                        AppDestination.QURAN -> QuranScreen()
+                        AppDestination.LEARN -> LearnScreen()
+                        AppDestination.WORSHIP -> WorshipScreen()
+                        AppDestination.MORE -> {
+                            MoreHubScreen(
+                                appMode = appMode,
+                                onModeChange = onModeChange,
+                                runtime = prayerSettings,
+                                fontScale = fontScale,
+                                onFontScale = { requested ->
+                                    val safeScale = requested.coerceIn(1f, 1.3f)
+                                    fontScale = safeScale
+                                    uiPrefs.edit().putFloat("font_scale", safeScale).apply()
+                                },
+                                onHealth = { applyNavigation(navigation.open(RootDetail.HEALTH)) },
+                            )
+                        }
+                    }
                 }
             }
         }
