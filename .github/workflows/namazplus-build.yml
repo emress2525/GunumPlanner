@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - namazplus-build-20260914
-    paths:
-      - 'namazplus-build/BUILD_READY'
+    paths-ignore:
+      - 'NamazPlus.apk'
   workflow_dispatch:
 
 permissions:
