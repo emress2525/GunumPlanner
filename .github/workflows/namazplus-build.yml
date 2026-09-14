@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: namazplus-build-20260914
+          fetch-depth: 0
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -31,20 +32,51 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Reconstruct source archive
+      - name: Reconstruct verified base source
         shell: bash
         run: |
-          cat namazplus-build/source.part1 namazplus-build/source.part2 namazplus-build/source.part3 namazplus-build/source.part4 | base64 -d > /tmp/NamazPlus-build-input.zip
-          echo 'a3dd69fbc0b6c0a3743c3807b286fb977f99cfded183658b7f9cc11c8b4db642  /tmp/NamazPlus-build-input.zip' | sha256sum -c -
+          git show c505f5067aadce029ecf86751a22050f501ea8e2:namazplus-build/source.part1 > /tmp/source.part1
+          git show c505f5067aadce029ecf86751a22050f501ea8e2:namazplus-build/source.part2 > /tmp/source.part2
+          git show c505f5067aadce029ecf86751a22050f501ea8e2:namazplus-build/source.part3 > /tmp/source.part3
+          git show c505f5067aadce029ecf86751a22050f501ea8e2:namazplus-build/source.part4 > /tmp/source.part4
+          cat /tmp/source.part1 /tmp/source.part2 /tmp/source.part3 /tmp/source.part4 | base64 -d > /tmp/NamazPlus-build-input.zip
+          echo '1cf96260d7877106690bb59431903e45cc6635bb087651a7c5105ea4e3cc1aca  /tmp/NamazPlus-build-input.zip' | sha256sum -c -
           rm -rf /tmp/namazplus-build
           mkdir -p /tmp/namazplus-build
           unzip -q /tmp/NamazPlus-build-input.zip -d /tmp/namazplus-build
-          test -f /tmp/namazplus-build/NamazPlus/app/build.gradle
+          test -f /tmp/namazplus-build/NamazPlus-build-input/app/build.gradle
+
+      - name: Apply Android 15 safe-area fix
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('/tmp/namazplus-build/NamazPlus-build-input')
+          p = root / 'app/src/main/java/com/namazplus/MainActivity.java'
+          s = p.read_text()
+          s = s.replace('import android.view.Window;\n', 'import android.view.Window;\nimport android.view.WindowInsets;\n')
+          s = s.replace('import com.namazplus.core.AppNavigator;\n', 'import com.namazplus.core.AppNavigator;\nimport com.namazplus.core.SafeAreaPolicy;\n')
+          old = '''        root.setOrientation(LinearLayout.VERTICAL);\n        root.setBackgroundColor(bg);\n        content = new FrameLayout(this);'''
+          new = '''        root.setOrientation(LinearLayout.VERTICAL);\n        root.setBackgroundColor(bg);\n        root.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {\n            @Override public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {\n                int left;\n                int top;\n                int right;\n                int bottom;\n                if (android.os.Build.VERSION.SDK_INT >= 30) {\n                    android.graphics.Insets bars = insets.getInsets(\n                        WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());\n                    android.graphics.Insets gestures = insets.getInsets(WindowInsets.Type.mandatorySystemGestures());\n                    android.graphics.Insets tappable = insets.getInsets(WindowInsets.Type.tappableElement());\n                    left = Math.max(bars.left, gestures.left);\n                    top = bars.top;\n                    right = Math.max(bars.right, gestures.right);\n                    bottom = SafeAreaPolicy.safeBottom(bars.bottom, gestures.bottom, tappable.bottom);\n                } else {\n                    left = insets.getSystemWindowInsetLeft();\n                    top = insets.getSystemWindowInsetTop();\n                    right = insets.getSystemWindowInsetRight();\n                    bottom = SafeAreaPolicy.safeBottom(insets.getSystemWindowInsetBottom(), 0, 0);\n                }\n                v.setPadding(left, top, right, bottom);\n                return insets;\n            }\n        });\n        content = new FrameLayout(this);'''
+          if old not in s:
+              raise SystemExit('safe-area insertion point missing')
+          s = s.replace(old, new)
+          s = s.replace('        setContentView(root);\n        rebuildBottomBar();', '        setContentView(root);\n        root.requestApplyInsets();\n        rebuildBottomBar();')
+          p.write_text(s)
+
+          policy = root / 'app/src/main/java/com/namazplus/core/SafeAreaPolicy.java'
+          policy.write_text('''package com.namazplus.core;\n\npublic final class SafeAreaPolicy {\n    private SafeAreaPolicy() {}\n\n    public static int safeBottom(int systemBarsBottom, int mandatoryGestureBottom, int tappableBottom) {\n        return Math.max(systemBarsBottom, Math.max(mandatoryGestureBottom, tappableBottom));\n    }\n}\n''')
+
+          gradle = root / 'app/build.gradle'
+          g = gradle.read_text().replace('versionCode 1', 'versionCode 2').replace("versionName '1.0.0'", "versionName '1.0.1'")
+          gradle.write_text(g)
+          PY
 
       - name: Build debug APK
         shell: bash
         run: |
-          cd /tmp/namazplus-build/NamazPlus
+          cd /tmp/namazplus-build/NamazPlus-build-input
           gradle :app:assembleDebug --stacktrace
           test -s app/build/outputs/apk/debug/app-debug.apk
           unzip -t app/build/outputs/apk/debug/app-debug.apk >/dev/null
@@ -67,6 +99,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'APK unchanged.'
           else
-            git commit -m 'build: publish NamazPlus APK [skip ci]'
+            git commit -m 'build: publish NamazPlus safe-area APK [skip ci]'
             git push origin HEAD:namazplus-build-20260914
           fi
