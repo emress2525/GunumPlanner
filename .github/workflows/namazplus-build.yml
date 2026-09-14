@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - namazplus-build-20260914
-    paths-ignore:
-      - 'NamazPlus.apk'
+    paths:
+      - 'namazplus-build/BUILD_READY'
   workflow_dispatch:
 
 permissions:
@@ -35,16 +35,16 @@ jobs:
         shell: bash
         run: |
           cat namazplus-build/source.part1 namazplus-build/source.part2 namazplus-build/source.part3 namazplus-build/source.part4 | base64 -d > /tmp/NamazPlus-build-input.zip
-          echo '1cf96260d7877106690bb59431903e45cc6635bb087651a7c5105ea4e3cc1aca  /tmp/NamazPlus-build-input.zip' | sha256sum -c -
+          echo 'a3dd69fbc0b6c0a3743c3807b286fb977f99cfded183658b7f9cc11c8b4db642  /tmp/NamazPlus-build-input.zip' | sha256sum -c -
           rm -rf /tmp/namazplus-build
           mkdir -p /tmp/namazplus-build
           unzip -q /tmp/NamazPlus-build-input.zip -d /tmp/namazplus-build
-          test -f /tmp/namazplus-build/NamazPlus-build-input/app/build.gradle
+          test -f /tmp/namazplus-build/NamazPlus/app/build.gradle
 
       - name: Build debug APK
         shell: bash
         run: |
-          cd /tmp/namazplus-build/NamazPlus-build-input
+          cd /tmp/namazplus-build/NamazPlus
           gradle :app:assembleDebug --stacktrace
           test -s app/build/outputs/apk/debug/app-debug.apk
           unzip -t app/build/outputs/apk/debug/app-debug.apk >/dev/null
