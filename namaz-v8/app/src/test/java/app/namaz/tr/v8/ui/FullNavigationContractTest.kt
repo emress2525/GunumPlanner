@@ -1,7 +1,10 @@
 package app.namaz.tr.v8.ui
 
+import app.namaz.tr.v8.model.AppDestination
 import java.io.File
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -23,5 +26,25 @@ class FullNavigationContractTest {
         assertTrue(source.contains("LearnScreen()"))
         assertTrue(source.contains("WorshipScreen()"))
         assertFalse(source.contains("sonraki fazda"))
+    }
+
+    @Test
+    fun rootTabsKeepExactlyTheDestinationTheUserSelected() {
+        var state = RootTabState()
+
+        AppDestination.entries.forEach { destination ->
+            state = state.select(destination)
+            assertEquals(destination, state.selected)
+            assertNull(state.detail)
+        }
+    }
+
+    @Test
+    fun closingADetailScreenDoesNotResetTheRootTabToToday() {
+        val quran = RootTabState().select(AppDestination.QURAN)
+        val afterBack = quran.open(RootDetail.HEALTH).closeDetail()
+
+        assertEquals(AppDestination.QURAN, afterBack.selected)
+        assertNull(afterBack.detail)
     }
 }
