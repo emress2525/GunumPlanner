@@ -1,1 +1,11 @@
-rights-gate progress commit 82396f4f61786d035606341381104e72e0127e3e
+Namaz V8 content-rights audit progress
+
+Finding: repository-level licensing alone is not sufficient evidence that every named third-party text layer may be redistributed.
+Required release gate:
+- Every bundled text layer must record source id, license name, attribution, and explicit redistribution allowance.
+- Translation and commentary layers remain excluded until layer-specific evidence is recorded.
+- CI must fail if a restricted layer appears in the APK without matching evidence.
+- UI must not claim a translation/commentary layer is available while its rights gate is closed.
+
+Prepared implementation commit (not yet attached by the connector): 82396f4f61786d035606341381104e72e0127e3e
+That commit contains a typed rights gate, unit tests, and hardened source metadata.
