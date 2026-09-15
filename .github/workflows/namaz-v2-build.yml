@@ -24,7 +24,9 @@ jobs:
           rm -rf app build.gradle settings.gradle gradle.properties
           tar -xzf source-full.tar.gz -C .
           sed -i 's/android.useAndroidX=false/android.useAndroidX=true/' gradle.properties
+          sed -i 's/\.setMinHeight(/.setMinimumHeight(/g' app/src/main/java/com/namazv2/app/MainActivity.java
           grep -q '^android.useAndroidX=true$' gradle.properties
+          ! grep -q '\.setMinHeight(' app/src/main/java/com/namazv2/app/MainActivity.java
           test -f app/src/main/java/com/namazv2/app/MainActivity.java
           test -f app/src/main/java/com/namazv2/billing/BillingManager.java
           test -f app/src/main/java/com/namazv2/data/HadithRepository.java
