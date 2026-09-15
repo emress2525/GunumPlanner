@@ -124,10 +124,7 @@ jobs:
             sleep 3
             test -n "$(adb shell pidof com.namazv2.app | tr -d '\r')"
             adb logcat -d > /tmp/namaz-logcat.txt
-            if grep -E "FATAL EXCEPTION|ANR in com\.namazv2\.app" /tmp/namaz-logcat.txt; then
-              cat /tmp/namaz-logcat.txt
-              exit 1
-            fi
+            if grep -E "FATAL EXCEPTION|ANR in com\.namazv2\.app" /tmp/namaz-logcat.txt; then cat /tmp/namaz-logcat.txt; exit 1; fi
 
       - name: Upload verified installable APK
         uses: actions/upload-artifact@v4
