@@ -7,6 +7,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.icu.util.IslamicCalendar
+import android.util.TypedValue
+import android.view.View
 import android.widget.RemoteViews
 import app.namaz.tr.v8.MainActivity
 import app.namaz.tr.v8.R
@@ -23,6 +25,29 @@ data class WidgetPrayerSnapshot(
     val hijri: String,
     val quranResume: String,
 )
+
+data class WidgetAppearance(
+    val textScale: Float = 1f,
+    val showFooter: Boolean = true,
+)
+
+object WidgetAppearanceStore {
+    private const val PREFS = "widget_appearance_v8"
+    fun load(context: Context): WidgetAppearance {
+        val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return WidgetAppearance(
+            textScale = p.getFloat("text_scale", 1f).coerceIn(0.85f, 1.4f),
+            showFooter = p.getBoolean("show_footer", true),
+        )
+    }
+    fun save(context: Context, appearance: WidgetAppearance) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putFloat("text_scale", appearance.textScale.coerceIn(0.85f, 1.4f))
+            .putBoolean("show_footer", appearance.showFooter)
+            .apply()
+        WidgetPrayerSnapshotStore.updateAll(context)
+    }
+}
 
 object WidgetPrayerSnapshotStore {
     private const val PREFS = "widget_snapshot_v8"
@@ -100,6 +125,7 @@ abstract class NamazWidgetProvider(private val kind: WidgetKind) : AppWidgetProv
 
     private fun views(context: Context): RemoteViews {
         val s = WidgetPrayerSnapshotStore.load(context)
+        val appearance = WidgetAppearanceStore.load(context)
         val v = RemoteViews(context.packageName, R.layout.widget_card)
         val text = when (kind) {
             WidgetKind.NEXT -> arrayOf("Sıradaki Namaz", "${s.nextName}  ${s.nextTime}", "${s.remaining} kaldı", s.city)
@@ -114,6 +140,11 @@ abstract class NamazWidgetProvider(private val kind: WidgetKind) : AppWidgetProv
         v.setTextViewText(R.id.widget_primary, text[1])
         v.setTextViewText(R.id.widget_secondary, text[2])
         v.setTextViewText(R.id.widget_footer, text[3])
+        v.setTextViewTextSize(R.id.widget_title, TypedValue.COMPLEX_UNIT_SP, 13f * appearance.textScale)
+        v.setTextViewTextSize(R.id.widget_primary, TypedValue.COMPLEX_UNIT_SP, 20f * appearance.textScale)
+        v.setTextViewTextSize(R.id.widget_secondary, TypedValue.COMPLEX_UNIT_SP, 12f * appearance.textScale)
+        v.setTextViewTextSize(R.id.widget_footer, TypedValue.COMPLEX_UNIT_SP, 10f * appearance.textScale)
+        v.setViewVisibility(R.id.widget_footer, if (appearance.showFooter) View.VISIBLE else View.GONE)
         val intent = Intent(context, MainActivity::class.java)
         val pending = PendingIntent.getActivity(context, kind.ordinal + 700, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         v.setOnClickPendingIntent(R.id.widget_root, pending)
