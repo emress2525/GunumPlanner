@@ -1,4 +1,4 @@
-name: Build Namaz V8 Tam APK
+name: Build Namaz V8 Final APK
 
 on:
   push:
@@ -33,8 +33,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Verify V7 regression suite
+
+      - name: Verify V7 and V8 regression contracts
         run: PYTHONPATH=namaz-native python3 -m unittest discover -s namaz-native -p 'test_*.py' -v
+
       - name: Fetch verified adhan audio
         shell: bash
         run: |
@@ -43,24 +45,56 @@ jobs:
           ADHAN_URL='https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Turkey_1_(%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7).mp3'
           curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 "$ADHAN_URL" -o namaz-v8/app/src/main/res/raw/adhan.mp3
           test "$(stat -c%s namaz-v8/app/src/main/res/raw/adhan.mp3)" -gt 100000
-      - name: Fetch pinned offline Quran pack
+
+      - name: Fetch licensed offline Quran, Turkish meal and tafsir packs
         shell: bash
         run: |
           set -euo pipefail
-          REF=34b43b044fb36528be7b2380733bb965b7c5b385
-          BASE="https://raw.githubusercontent.com/kurancilar/json/$REF"
-          mkdir -p namaz-v8/app/src/main/assets/quran namaz-v8/app/src/main/assets/tafseer/elmalili
-          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 "'"$BASE"'/sure/{}.json" -o "namaz-v8/app/src/main/assets/quran/{}.json"'
-          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 "'"$BASE"'/tafseer/elmalili/{}.md" -o "namaz-v8/app/src/main/assets/tafseer/elmalili/{}.md"'
+          TANZIL_MIRROR_REF=c23f5cec2e95e253dc450bd0f34d09e37ba40fac
+          TAFSIR_REF=34b43b044fb36528be7b2380733bb965b7c5b385
+          mkdir -p namaz-v8/app/src/main/assets/quran namaz-v8/app/src/main/assets/meal namaz-v8/app/src/main/assets/tafseer/elmalili
+
+          curl -fsSL --retry 3 \
+            "https://raw.githubusercontent.com/dotquran/corpus/${TANZIL_MIRROR_REF}/processed/uthmani/quran-uthmani.json" \
+            -o /tmp/quran-uthmani.json
+          curl -fsSL --retry 3 \
+            "https://raw.githubusercontent.com/acfatah/tanzil/main/LICENSE" \
+            -o namaz-v8/app/src/main/assets/tanzil-license.txt
+
+          python3 - <<'PY'
+          import json, pathlib
+          root = json.load(open('/tmp/quran-uthmani.json', encoding='utf-8'))
+          assert root['metadata']['source'] == 'Tanzil Project'
+          out = pathlib.Path('namaz-v8/app/src/main/assets/quran')
+          for surah in root['surahs']:
+              n = int(surah['number'])
+              payload = {'metadata': root['metadata'], 'surahs': [surah]}
+              (out / f'{n}.json').write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
+          assert len(list(out.glob('*.json'))) == 114
+          PY
+
+          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 --retry-delay 1 "https://quranenc.com/api/v1/translation/sura/turkish_rwwad/{}" -o "namaz-v8/app/src/main/assets/meal/{}.json"'
+          curl -fsSL --retry 3 "https://quranenc.com/api/v1/translations/list/tr?localization=tr" -o namaz-v8/app/src/main/assets/quranenc-turkish-meta.json
+
+          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 --retry-delay 1 "https://raw.githubusercontent.com/kurancilar/json/'"$TAFSIR_REF"'/tafseer/elmalili/{}.md" -o "namaz-v8/app/src/main/assets/tafseer/elmalili/{}.md"'
+
           test "$(find namaz-v8/app/src/main/assets/quran -name '*.json' | wc -l)" -eq 114
+          test "$(find namaz-v8/app/src/main/assets/meal -name '*.json' | wc -l)" -eq 114
           test "$(find namaz-v8/app/src/main/assets/tafseer/elmalili -name '*.md' | wc -l)" -eq 114
+          grep -q 'Tanzil Project' namaz-v8/app/src/main/assets/quran/1.json
+          grep -q 'Creative Commons Attribution 3.0' namaz-v8/app/src/main/assets/quran/1.json
+          grep -q 'turkish_rwwad' namaz-v8/app/src/main/assets/quranenc-turkish-meta.json
+          grep -q 'QuranEnc.com' namaz-v8/app/src/main/assets/content-sources.json
           test "$(stat -c%s namaz-v8/app/src/main/assets/quran/2.json)" -gt 100000
+          test "$(stat -c%s namaz-v8/app/src/main/assets/meal/2.json)" -gt 10000
+
       - name: Unit tests
         run: gradle -p namaz-v8 testDebugUnitTest --stacktrace
       - name: Lint
         run: gradle -p namaz-v8 lintDebug --stacktrace
       - name: Assemble APK
         run: gradle -p namaz-v8 :app:assembleDebug --stacktrace
+
       - name: Verify complete native source contract
         shell: bash
         run: |
@@ -74,19 +108,23 @@ jobs:
           grep -Fq 'LearnScreen()' "$APP"
           grep -Fq 'WorshipScreen()' "$APP"
           grep -Fq 'MoreHubScreen(' "$APP"
-          if grep -R --line-number -E 'sonraki fazda|sonraki fazlarda' namaz-v8/app/src/main namaz-v8/feature; then
-            echo 'Incomplete phase placeholder found in V8 user interface' >&2
+          grep -Fq 'QuranLicensedAssetParser.parseSurah' namaz-v8/feature/quran/src/main/java/app/namaz/tr/v8/quran/QuranFeature.kt
+          grep -Fq 'PrayerCityCatalog' namaz-v8/feature/prayer/src/main/java/app/namaz/tr/v8/prayerui/PrayerScreen.kt
+          grep -Fq 'onAlarmModeChange' namaz-v8/feature/prayer/src/main/java/app/namaz/tr/v8/prayerui/PrayerScreen.kt
+          if grep -R --line-number -E 'sonraki fazda|sonraki fazlarda|TODO|TBD' namaz-v8/app/src/main namaz-v8/feature namaz-v8/core; then
+            echo 'Incomplete placeholder/TODO found in V8 production source' >&2
             exit 1
           fi
           test -f namaz-v8/feature/quran/src/main/java/app/namaz/tr/v8/quran/QuranFeature.kt
           test -f namaz-v8/feature/learn/src/main/java/app/namaz/tr/v8/learn/LearningFeature.kt
           test -f namaz-v8/feature/worship/src/main/java/app/namaz/tr/v8/worship/WorshipFeature.kt
+
       - name: Verify APK signature package manifest and offline assets
         shell: bash
         run: |
           set -euo pipefail
           APK=namaz-v8/app/build/outputs/apk/debug/app-debug.apk
-          FINAL=Namaz-V8-Tam.apk
+          FINAL=Namaz-V8.apk
           cp "$APK" "$FINAL"
           ${ANDROID_HOME}/build-tools/35.0.0/apksigner verify --verbose "$FINAL"
           unzip -t "$FINAL" >/dev/null
@@ -106,11 +144,15 @@ jobs:
           grep -q 'QuranResumeWidgetProvider' /tmp/v8-manifest.txt
           unzip -l "$FINAL" | grep -q 'res/raw/adhan.mp3'
           unzip -l "$FINAL" | grep -q 'assets/quran/114.json'
+          unzip -l "$FINAL" | grep -q 'assets/meal/114.json'
           unzip -l "$FINAL" | grep -q 'assets/tafseer/elmalili/114.md'
           unzip -l "$FINAL" | grep -q 'assets/content-sources.json'
+          unzip -l "$FINAL" | grep -q 'assets/tanzil-license.txt'
+          unzip -l "$FINAL" | grep -q 'assets/quranenc-turkish-meta.json'
           sha256sum "$FINAL"
+
       - uses: actions/upload-artifact@v4
         with:
-          name: Namaz-V8-Tam-APK
-          path: Namaz-V8-Tam.apk
+          name: Namaz-V8-APK
+          path: Namaz-V8.apk
           if-no-files-found: error
