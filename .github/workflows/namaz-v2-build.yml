@@ -23,6 +23,8 @@ jobs:
           echo "710b80a4db2a7a65287c4e3721b75df2a02708dd6318b54293ea631aab7cfaae  source-full.tar.gz" | sha256sum -c -
           rm -rf app build.gradle settings.gradle gradle.properties
           tar -xzf source-full.tar.gz -C .
+          sed -i 's/android.useAndroidX=false/android.useAndroidX=true/' gradle.properties
+          grep -q '^android.useAndroidX=true$' gradle.properties
           test -f app/src/main/java/com/namazv2/app/MainActivity.java
           test -f app/src/main/java/com/namazv2/billing/BillingManager.java
           test -f app/src/main/java/com/namazv2/data/HadithRepository.java
