@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -25,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +39,8 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import java.io.File
+import java.net.URL
 import kotlin.math.ceil
 
 data class QuranVerse(
@@ -75,8 +76,11 @@ class AssetQuranRepository(private val context: Context) {
     private val cache = LinkedHashMap<Int, QuranSurah>()
 
     suspend fun surah(number: Int): QuranSurah = withContext(Dispatchers.IO) {
-        cache[number] ?: parse(number, context.assets.open("quran/$number.json").bufferedReader().use { it.readText() })
-            .also { cache[number] = it }
+        cache[number] ?: run {
+            val arabic = context.assets.open("quran/$number.json").bufferedReader().use { it.readText() }
+            val meal = context.assets.open("meal/$number.json").bufferedReader().use { it.readText() }
+            QuranLicensedAssetParser.parseSurah(arabic, meal, number)
+        }.also { cache[number] = it }
     }
 
     suspend fun tafsir(number: Int): String = withContext(Dispatchers.IO) {
@@ -90,39 +94,17 @@ class AssetQuranRepository(private val context: Context) {
         val out = mutableListOf<QuranSearchHit>()
         for (s in 1..114) {
             val surah = surah(s)
-            if (surah.name.lowercase().contains(q)) {
-                surah.verses.firstOrNull()?.let { out += QuranSearchHit(s, surah.name, it) }
+            if (SurahNames.name(s).lowercase().contains(q)) {
+                surah.verses.firstOrNull()?.let { out += QuranSearchHit(s, SurahNames.name(s), it) }
             }
             for (v in surah.verses) {
                 if (v.turkish.lowercase().contains(q) || v.arabic.contains(query.trim())) {
-                    out += QuranSearchHit(s, surah.name, v)
+                    out += QuranSearchHit(s, SurahNames.name(s), v)
                     if (out.size >= limit) return@withContext out
                 }
             }
         }
         out
-    }
-
-    fun parse(number: Int, text: String): QuranSurah {
-        val root = JSONObject(text)
-        val array = root.getJSONArray("verses")
-        val verses = ArrayList<QuranVerse>(array.length())
-        for (i in 0 until array.length()) {
-            val item = array.getJSONObject(i)
-            val tr = item.optJSONObject("turkish")
-            val audio = item.optJSONObject("audio")
-            verses += QuranVerse(
-                id = item.optInt("id", i + 1),
-                number = item.optInt("verseNumber", i + 1),
-                key = item.optString("verseKey", "$number:${i + 1}"),
-                arabic = item.optString("arabic"),
-                turkish = tr?.optString("diyanet_vakfi")?.takeIf { it.isNotBlank() }
-                    ?: tr?.optString("omer_nasuhi_bilmen").orEmpty(),
-                audioGhamadi = audio?.optString("ghamadi")?.takeIf { it.isNotBlank() },
-                audioMaher = audio?.optString("maher")?.takeIf { it.isNotBlank() },
-            )
-        }
-        return QuranSurah(number, SurahNames.name(number), verses)
     }
 }
 
@@ -136,20 +118,33 @@ class QuranProgressStore(context: Context) {
         prefs.edit().putString("history", current.take(10).joinToString("|")).apply()
     }
     fun history(): List<String> = prefs.getString("history", "").orEmpty().split('|').filter { it.isNotBlank() }
-    fun toggleBookmark(key: String): Boolean {
-        val set = prefs.getStringSet("bookmarks", emptySet()).orEmpty().toMutableSet()
-        val added = if (key in set) { set.remove(key); false } else { set.add(key); true }
-        prefs.edit().putStringSet("bookmarks", set).apply()
-        return added
-    }
+
+    fun toggleBookmark(key: String): Boolean = toggleSet("bookmarks", key)
     fun isBookmarked(key: String): Boolean = key in prefs.getStringSet("bookmarks", emptySet()).orEmpty()
-    fun setKhatmDays(days: Int) = prefs.edit().putInt("khatm_days", days.coerceAtLeast(1)).apply()
-    fun khatmDays(): Int = prefs.getInt("khatm_days", 30)
+    fun toggleMemorization(key: String): Boolean = toggleSet("memorization", key)
+    fun isMemorizing(key: String): Boolean = key in prefs.getStringSet("memorization", emptySet()).orEmpty()
+
+    fun setNote(key: String, note: String) {
+        val clean = note.trim()
+        if (clean.isBlank()) prefs.edit().remove("note_$key").apply() else prefs.edit().putString("note_$key", clean).apply()
+    }
+    fun note(key: String): String = prefs.getString("note_$key", "").orEmpty()
+
+    fun setKhatmDays(days: Int) = prefs.edit().putInt("khatm_days", days.coerceIn(1, 365)).apply()
+    fun khatmDays(): Int = prefs.getInt("khatm_days", 30).coerceIn(1, 365)
     fun markRead(globalId: Int) {
-        val set = prefs.getStringSet("read", emptySet()).orEmpty().toMutableSet(); set += globalId.toString()
+        val set = prefs.getStringSet("read", emptySet()).orEmpty().toMutableSet()
+        set += globalId.toString()
         prefs.edit().putStringSet("read", set).apply()
     }
     fun readCount(): Int = prefs.getStringSet("read", emptySet()).orEmpty().size
+
+    private fun toggleSet(name: String, key: String): Boolean {
+        val set = prefs.getStringSet(name, emptySet()).orEmpty().toMutableSet()
+        val added = if (key in set) { set.remove(key); false } else { set.add(key); true }
+        prefs.edit().putStringSet(name, set).apply()
+        return added
+    }
 }
 
 object KhatmPlanner {
@@ -161,17 +156,57 @@ object KhatmPlanner {
 
 class QuranAudioController(private val context: Context) {
     private var player: MediaPlayer? = null
-    fun play(url: String) {
+    private val audioDir = File(context.filesDir, "quran_audio").apply { mkdirs() }
+
+    fun localFile(key: String): File = File(audioDir, key.replace(':', '_') + ".mp3")
+    fun isDownloaded(key: String): Boolean = localFile(key).length() > 1024
+
+    suspend fun download(url: String, key: String): Result<File> = withContext(Dispatchers.IO) {
+        runCatching {
+            val target = localFile(key)
+            val partial = File(target.absolutePath + ".part")
+            URL(url).openStream().use { input -> partial.outputStream().use { output -> input.copyTo(output) } }
+            require(partial.length() > 1024) { "Ses dosyası boş veya eksik" }
+            if (target.exists()) target.delete()
+            require(partial.renameTo(target)) { "Ses dosyası kaydedilemedi" }
+            target
+        }
+    }
+
+    fun play(url: String, key: String, speed: Float = 1f, repeatCount: Int = 1) {
         stop()
+        var remaining = repeatCount.coerceIn(1, 10)
+        val source = localFile(key).takeIf { it.exists() && it.length() > 1024 }?.absolutePath ?: url
         player = MediaPlayer().apply {
-            setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).setUsage(AudioAttributes.USAGE_MEDIA).build())
-            setDataSource(url)
-            setOnPreparedListener { it.start() }
-            setOnCompletionListener { stop() }
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build(),
+            )
+            setDataSource(source)
+            setOnPreparedListener {
+                runCatching { it.playbackParams = it.playbackParams.setSpeed(speed.coerceIn(0.75f, 1.5f)) }
+                it.start()
+            }
+            setOnCompletionListener {
+                remaining--
+                if (remaining > 0) {
+                    it.seekTo(0)
+                    it.start()
+                } else {
+                    stop()
+                }
+            }
             prepareAsync()
         }
     }
-    fun stop() { player?.runCatching { stop() }; player?.release(); player = null }
+
+    fun stop() {
+        player?.runCatching { stop() }
+        player?.release()
+        player = null
+    }
     fun release() = stop()
 }
 
@@ -194,24 +229,39 @@ private fun QuranLibraryScreen(repository: AssetQuranRepository, progress: Quran
     var query by rememberSaveable { mutableStateOf("") }
     var results by remember { mutableStateOf<List<QuranSearchHit>>(emptyList()) }
     var searching by remember { mutableStateOf(false) }
+    var planDays by rememberSaveable { mutableIntStateOf(progress.khatmDays()) }
+    val history = progress.history()
+
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text("Kur’an Pro", style = MaterialTheme.typography.headlineMedium)
-        Text("114 sure çevrimdışı • Arapça metin • Türkçe meal • Elmalılı tefsir • iki okuyucu", style = MaterialTheme.typography.bodySmall)
+        Text("114 sure çevrimdışı • Tanzil Uthmani metni • QuranEnc Türkçe meal • Elmalılı tefsir", style = MaterialTheme.typography.bodySmall)
         OutlinedTextField(query, { query = it }, label = { Text("Ayet, meal veya sure ara") }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
         Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { scope.launch { searching = true; results = repository.search(query); searching = false } }) { Text(if (searching) "Aranıyor…" else "Ara") }
             OutlinedButton(onClick = { query = ""; results = emptyList() }) { Text("Temizle") }
         }
+
         val read = progress.readCount()
         Card(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
             Column(Modifier.padding(12.dp)) {
                 Text("Hatim planı", style = MaterialTheme.typography.titleMedium)
-                Text("Okundu: $read / 6236 • Bugünkü öneri: ${KhatmPlanner.dailyTarget(completed = read, daysRemaining = progress.khatmDays())} ayet")
+                Text("Okundu: $read / 6236 • $planDays günlük planda bugünkü öneri: ${KhatmPlanner.dailyTarget(completed = read, daysRemaining = planDays)} ayet")
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    listOf(30,60,90).forEach { d -> FilterChip(selected = progress.khatmDays() == d, onClick = { progress.setKhatmDays(d) }, label = { Text("$d gün") }) }
+                    listOf(30, 60, 90).forEach { d ->
+                        FilterChip(selected = planDays == d, onClick = { planDays = d; progress.setKhatmDays(d) }, label = { Text("$d gün") })
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 6.dp)) {
+                    OutlinedButton(onClick = { planDays = (planDays - 1).coerceAtLeast(1); progress.setKhatmDays(planDays) }) { Text("− gün") }
+                    OutlinedButton(onClick = { planDays = (planDays + 1).coerceAtMost(365); progress.setKhatmDays(planDays) }) { Text("+ gün") }
                 }
             }
         }
+
+        if (history.isNotEmpty() && results.isEmpty()) {
+            Text("Son okudukların: ${history.take(4).joinToString(" • ")}", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(bottom = 6.dp))
+        }
+
         if (results.isNotEmpty()) {
             LazyColumn {
                 item { Text("Arama sonuçları", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(vertical = 8.dp)) }
@@ -245,14 +295,20 @@ private fun QuranReaderScreen(number: Int, repository: AssetQuranRepository, pro
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val audio = remember(context) { QuranAudioController(context.applicationContext) }
+    val uiPrefs = remember(context) { context.getSharedPreferences("ui_prefs_v8", Context.MODE_PRIVATE) }
+    var arabicScale by rememberSaveable { mutableFloatStateOf(uiPrefs.getFloat("arabic_scale", 1f).coerceIn(0.8f, 1.6f)) }
     var surah by remember { mutableStateOf<QuranSurah?>(null) }
     var tafsir by remember { mutableStateOf<String?>(null) }
     var showTafsir by rememberSaveable { mutableStateOf(false) }
     var showMeal by rememberSaveable { mutableStateOf(true) }
     var memorization by rememberSaveable { mutableStateOf(false) }
     var reciterMaher by rememberSaveable { mutableStateOf(false) }
+    var speed by rememberSaveable { mutableFloatStateOf(1f) }
+    var repeatCount by rememberSaveable { mutableIntStateOf(1) }
+
     DisposableEffect(Unit) { onDispose { audio.release() } }
     LaunchedEffect(number) { surah = repository.surah(number); progress.addHistory("$number:1") }
+
     Column(Modifier.fillMaxSize().padding(12.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = onBack) { Text("← Sureler") }
@@ -260,43 +316,87 @@ private fun QuranReaderScreen(number: Int, repository: AssetQuranRepository, pro
             FilterChip(memorization, { memorization = !memorization }, label = { Text("Ezber") })
         }
         Text("$number. ${SurahNames.name(number)}", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(top = 8.dp))
-        Text("Meal: Diyanet Vakfı • Tefsir: Elmalılı • veri paketi kaynağı uygulamadaki Kaynaklar ekranında", style = MaterialTheme.typography.bodySmall)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(vertical = 6.dp)) {
+        Text("Arapça: Tanzil Project (CC BY 3.0) • Meal: Rowad Tercüme Merkezi / QuranEnc.com • Tefsir: Elmalılı", style = MaterialTheme.typography.bodySmall)
+
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(vertical = 6.dp)) {
             FilterChip(reciterMaher, { reciterMaher = !reciterMaher }, label = { Text(if (reciterMaher) "Mahir" else "Ghamadi") })
             OutlinedButton(onClick = { showTafsir = !showTafsir; if (showTafsir && tafsir == null) scope.launch { tafsir = repository.tafsir(number) } }) { Text(if (showTafsir) "Tefsiri kapat" else "Tefsir") }
         }
-        if (showTafsir) {
-            Card(Modifier.fillMaxWidth().padding(bottom = 8.dp)) { Text(tafsir ?: "Tefsir yükleniyor…", modifier = Modifier.padding(12.dp)) }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            OutlinedButton(onClick = { speed = if (speed >= 1.5f) 0.75f else speed + 0.25f }) { Text("Hız ${"%.2f".format(speed)}×") }
+            OutlinedButton(onClick = { repeatCount = when (repeatCount) { 1 -> 3; 3 -> 5; else -> 1 } }) { Text("Tekrar ×$repeatCount") }
+            OutlinedButton(onClick = {
+                arabicScale = if (arabicScale >= 1.6f) 0.8f else (arabicScale + 0.2f).coerceAtMost(1.6f)
+                uiPrefs.edit().putFloat("arabic_scale", arabicScale).apply()
+            }) { Text("Arapça ${"%.1f".format(arabicScale)}×") }
         }
+
+        if (showTafsir) {
+            Card(Modifier.fillMaxWidth().padding(vertical = 8.dp)) { Text(tafsir ?: "Tefsir yükleniyor…", modifier = Modifier.padding(12.dp)) }
+        }
+
         val data = surah
         if (data == null) {
             Text("Sure yükleniyor…", modifier = Modifier.padding(24.dp))
         } else {
             LazyColumn {
                 items(data.verses, key = { it.key }) { verse ->
+                    var revealed by rememberSaveable(verse.key) { mutableStateOf(false) }
+                    var noteOpen by rememberSaveable("note_${verse.key}") { mutableStateOf(false) }
+                    var note by rememberSaveable("note_text_${verse.key}") { mutableStateOf(progress.note(verse.key)) }
+                    var downloaded by remember(verse.key) { mutableStateOf(audio.isDownloaded(verse.key)) }
+                    var downloadMessage by remember(verse.key) { mutableStateOf("") }
+
                     Card(Modifier.fillMaxWidth().padding(vertical = 5.dp)) {
                         Column(Modifier.padding(14.dp)) {
                             Text("${verse.number}", style = MaterialTheme.typography.labelMedium)
-                            if (!memorization) {
-                                Text(verse.arabic, fontSize = 30.sp, lineHeight = 46.sp, textAlign = TextAlign.End, modifier = Modifier.fillMaxWidth())
+                            if (!memorization || revealed) {
+                                Text(
+                                    verse.arabic,
+                                    fontSize = (30 * arabicScale).sp,
+                                    lineHeight = (46 * arabicScale).sp,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
                             } else {
-                                Text("Ayet gizli — önce ezberinden oku, sonra ‘Göster’ ile kontrol et.", style = MaterialTheme.typography.bodyMedium)
-                                var revealed by remember(verse.key) { mutableStateOf(false) }
-                                if (revealed) Text(verse.arabic, fontSize = 30.sp, lineHeight = 46.sp, textAlign = TextAlign.End, modifier = Modifier.fillMaxWidth())
-                                OutlinedButton(onClick = { revealed = !revealed }) { Text(if (revealed) "Gizle" else "Göster") }
+                                Text("Ayet gizli — önce ezberinden oku, sonra göstererek kontrol et.")
                             }
+                            if (memorization) OutlinedButton(onClick = { revealed = !revealed }) { Text(if (revealed) "Gizle" else "Göster") }
                             if (showMeal) Text(verse.turkish, modifier = Modifier.padding(top = 8.dp))
+
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 8.dp)) {
-                                OutlinedButton(onClick = { val url = if (reciterMaher) verse.audioMaher else verse.audioGhamadi; if (url != null) audio.play(url) }) { Text("▶ Dinle") }
+                                OutlinedButton(onClick = {
+                                    val url = if (reciterMaher) verse.audioMaher else verse.audioGhamadi
+                                    if (url != null) audio.play(url, verse.key, speed, repeatCount)
+                                }) { Text("▶ Dinle") }
+                                OutlinedButton(onClick = {
+                                    val url = if (reciterMaher) verse.audioMaher else verse.audioGhamadi
+                                    if (url != null) scope.launch {
+                                        downloadMessage = "İndiriliyor…"
+                                        val result = audio.download(url, verse.key)
+                                        downloaded = result.isSuccess
+                                        downloadMessage = if (result.isSuccess) "Çevrimdışı hazır" else "İndirme başarısız"
+                                    }
+                                }, enabled = !downloaded) { Text(if (downloaded) "✓ Offline" else "İndir") }
+                            }
+                            if (downloadMessage.isNotBlank()) Text(downloadMessage, style = MaterialTheme.typography.bodySmall)
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 6.dp)) {
                                 OutlinedButton(onClick = { progress.toggleBookmark(verse.key) }) { Text(if (progress.isBookmarked(verse.key)) "★ Kayıtlı" else "☆ Kaydet") }
                                 OutlinedButton(onClick = { progress.markRead(verse.id) }) { Text("Hatime ekle") }
+                                OutlinedButton(onClick = { progress.toggleMemorization(verse.key) }) { Text(if (progress.isMemorizing(verse.key)) "✓ Ezberde" else "Ezbere ekle") }
+                            }
+                            OutlinedButton(onClick = { noteOpen = !noteOpen }, modifier = Modifier.padding(top = 6.dp)) { Text(if (noteOpen) "Notu kapat" else "Not") }
+                            if (noteOpen) {
+                                OutlinedTextField(note, { note = it }, label = { Text("Kişisel not") }, modifier = Modifier.fillMaxWidth())
+                                Button(onClick = { progress.setNote(verse.key, note) }, modifier = Modifier.padding(top = 4.dp)) { Text("Notu kaydet") }
                             }
                         }
                     }
                 }
                 item {
                     Spacer(Modifier.height(24.dp))
-                    Text("Not: Sesli ezber yardımı, mahreç veya tajvid için kesin doğru/yanlış hükmü vermez. Şüpheli okuma yalnız ‘kontrol et’ olarak değerlendirilmelidir.", style = MaterialTheme.typography.bodySmall)
+                    Text("Ezber yardımcısı, mahreç veya tajvid için kesin doğru/yanlış hükmü vermez. Şüpheli okuma yalnız kontrol edilmesi gereken yer olarak değerlendirilir.", style = MaterialTheme.typography.bodySmall)
                     Spacer(Modifier.height(32.dp))
                 }
             }
