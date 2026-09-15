@@ -25,8 +25,10 @@ jobs:
           tar -xzf source-full.tar.gz -C .
           sed -i 's/android.useAndroidX=false/android.useAndroidX=true/' gradle.properties
           sed -i 's/\.setMinHeight(/.setMinimumHeight(/g' app/src/main/java/com/namazv2/app/MainActivity.java
+          sed -i "/dependencies {/a\\    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')" app/build.gradle
           grep -q '^android.useAndroidX=true$' gradle.properties
           ! grep -q '\.setMinHeight(' app/src/main/java/com/namazv2/app/MainActivity.java
+          grep -q "kotlin-bom:1.8.22" app/build.gradle
           test -f app/src/main/java/com/namazv2/app/MainActivity.java
           test -f app/src/main/java/com/namazv2/billing/BillingManager.java
           test -f app/src/main/java/com/namazv2/data/HadithRepository.java
