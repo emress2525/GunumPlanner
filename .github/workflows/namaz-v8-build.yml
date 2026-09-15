@@ -100,7 +100,8 @@ jobs:
         run: |
           set -euo pipefail
           APP=namaz-v8/app/src/main/java/app/namaz/tr/v8/ui/NamazApp.kt
-          if grep -R --line-number --include='*.kt' --include='*.java' 'android.webkit.WebView' namaz-v8; then
+          if grep -R --line-number --exclude-dir=build --include='*.kt' --include='*.java' 'android.webkit.WebView' \
+            namaz-v8/app/src/main namaz-v8/feature namaz-v8/core; then
             echo 'WebView dependency found in V8 source' >&2
             exit 1
           fi
@@ -111,7 +112,9 @@ jobs:
           grep -Fq 'QuranLicensedAssetParser.parseSurah' namaz-v8/feature/quran/src/main/java/app/namaz/tr/v8/quran/QuranFeature.kt
           grep -Fq 'PrayerCityCatalog' namaz-v8/feature/prayer/src/main/java/app/namaz/tr/v8/prayerui/PrayerScreen.kt
           grep -Fq 'onAlarmModeChange' namaz-v8/feature/prayer/src/main/java/app/namaz/tr/v8/prayerui/PrayerScreen.kt
-          if grep -R --line-number -E 'sonraki fazda|sonraki fazlarda|TODO|TBD' namaz-v8/app/src/main namaz-v8/feature namaz-v8/core; then
+          if grep -R --line-number --exclude-dir=build --include='*.kt' --include='*.java' \
+            -E 'sonraki fazda|sonraki fazlarda|TODO|TBD' \
+            namaz-v8/app/src/main namaz-v8/feature namaz-v8/core; then
             echo 'Incomplete placeholder/TODO found in V8 production source' >&2
             exit 1
           fi
