@@ -1,0 +1,111 @@
+package app.namaz.tr.v8.learn
+
+data class Lesson(
+    val id: String,
+    val title: String,
+    val category: String,
+    val summary: String,
+    val hanafi: String,
+    val shafiiNote: String? = null,
+    val source: String,
+    val question: String,
+    val answer: String,
+)
+
+object LearningCatalog {
+    val lessons = listOf(
+        Lesson(
+            "iman-temelleri", "İmanın Temelleri", "İman",
+            "İman; Allah’a, meleklerine, kitaplarına, peygamberlerine, âhiret gününe ve kaderin Allah’ın ilmi ve takdiri içinde olduğuna inanmayı kapsar.",
+            "İnanç esasları mezhep farkı üzerinden değil, Ehl-i sünnetin temel iman çerçevesi üzerinden öğretilir.",
+            source = "Kur’an: Bakara 2:285; Diyanet İlmihal I, İman",
+            question = "İmanın esasları yalnız namazla mı sınırlıdır?", answer = "Hayır. Namaz ibadettir; iman daha geniş inanç esaslarını kapsar.",
+        ),
+        Lesson(
+            "temizlik", "İbadette Temizlik", "Temizlik",
+            "Namaza hazırlıkta beden, elbise ve namaz kılınan yerin temizliği önemlidir. Abdest ve gerektiğinde gusül ayrıca hükmî temizlik sağlar.",
+            "Hanefî uygulamasında necasetin miktarı ve giderilmesi ilmihalde ayrıntılı ele alınır.",
+            "Şafiî mezhebinde necaset ve temizlik ayrıntılarında farklı ölçüler bulunabilir.",
+            "Diyanet İlmihal I, Temizlik",
+            "Abdest tek başına elbisedeki maddi kiri temizler mi?", "Hayır. Maddi necaset ayrıca giderilir.",
+        ),
+        Lesson(
+            "abdest", "Abdest Adım Adım", "Temizlik",
+            "Niyet ve besmele ile başlanır; eller, ağız, burun ve yüz temizlenir; kollar dirseklerle yıkanır, baş mesh edilir ve ayaklar topuklarla yıkanır.",
+            "Hanefî mezhebinde yüzü, kolları, başın en az dörtte birini mesh etmeyi ve ayakları yıkamayı içeren dört farz öne çıkar.",
+            "Şafiî mezhebinde niyet ve tertip de abdestin farzları arasında sayılır; başın bir kısmını mesh etmek yeterlidir.",
+            "Kur’an: Mâide 5:6; Diyanet İlmihal I, Abdest",
+            "Abdest ayetinde temel uzuvlar hangi surede geçer?", "Mâide suresi 6. ayet.",
+        ),
+        Lesson(
+            "gusul", "Gusül", "Temizlik",
+            "Gusül, gerekli hâllerde bütün bedeni suyla yıkayarak yapılan hükmî temizliktir.",
+            "Hanefî mezhebinde ağız, burun ve bütün bedenin kuru yer kalmadan yıkanması farzdır.",
+            "Şafiî mezhebinde niyet ve bütün bedene su ulaştırmak farzdır; ağız ve burun yıkamak sünnet kabul edilir.",
+            "Diyanet İlmihal I, Gusül",
+            "Gusülde bedenin bir kısmını kuru bırakmak yeterli midir?", "Hayır; bütün bedene su ulaştırılması gerekir.",
+        ),
+        Lesson(
+            "namaz-vakit", "Beş Vakit Namaz", "Namaz",
+            "Günlük farz namazlar sabah, öğle, ikindi, akşam ve yatsıdır. Her namaz kendi vakti içinde kılınır.",
+            "Hanefî mezhebinde ikindi vaktinin başlangıcı için yaygın uygulama ikinci gölge ölçüsüdür.",
+            "Şafiî mezhebinde ikindi başlangıcında birinci gölge ölçüsü esas alınır. Uygulama içindeki ikindi tercihi bu farkı açıkça gösterir.",
+            "Kur’an: Nisâ 4:103; Diyanet İlmihal I, Namaz Vakitleri",
+            "Güneş doğuşu ayrı bir farz namaz vakti midir?", "Hayır. Uygulamada bilgi olarak gösterilir; beş farz vakitten biri değildir.",
+        ),
+        Lesson(
+            "namaz-rekat", "Namazın Rekât Yapısı", "Namaz",
+            "Namaz; kıyam, kıraat, rükû ve secde gibi bölümlerden oluşur. Yeni başlayan kişi önce hareketleri, sonra okunanları, ardından bütün akışı birlikte öğrenebilir.",
+            "Hanefî anlatım ana akışta rekât rekât sunulur; vacip ve sünnet ayrımları ayrıca etiketlenir.",
+            "Şafiî mezhebinde bazı el bağlama, besmele, kunut ve oturuş ayrıntıları farklıdır; derslerde fark etiketi gösterilir.",
+            "Diyanet İlmihal I, Namazın Kılınışı",
+            "Rükû ile secde aynı hareket midir?", "Hayır. Rükû eğilme, secde ise alın ve burnun yere konduğu ayrı bir rükündür.",
+        ),
+        Lesson(
+            "namaz-okunanlar", "Namazda Okunanlar", "Namaz",
+            "Sübhaneke, Fâtiha, kısa sureler, Ettehiyyatü, Salli-Barik ve Rabbena duaları namaz öğrenme akışında Arapça, okunuş ve anlam katmanlarıyla çalışılır.",
+            "Hanefî uygulamasında kıraat ve oturuş duaları namazın yerine göre öğretilir.",
+            "Şafiî uygulamasında besmele, sabah kunutu gibi ayrıntılarda farklar bulunur; uygulama bunları ayrı notta gösterir.",
+            "Diyanet Namaz Rehberi; Kur’an: Fâtiha 1:1-7",
+            "Fâtiha bir dua kitabı metni mi, Kur’an suresi mi?", "Kur’an’ın ilk suresidir.",
+        ),
+        Lesson(
+            "elifba", "Elif-Bâ: Harflerden Okumaya", "Elif-Bâ",
+            "Öğrenme sırası harfler, harflerin kelime içindeki şekilleri, harekeler, cezm, şedde, tenvin, med ve birleşik okumaya doğru ilerler.",
+            "Okuma öğretimi mezhep farklılığından ziyade doğru harf ve ses farkındalığına dayanır.",
+            source = "Diyanet Elif-Bâ öğretim materyalleri; Kur’an Öğreniyorum yaklaşımı",
+            question = "Şedde ne işe yarar?", answer = "Harf üzerinde çift okunma/pekiştirme değerini gösterir.",
+        ),
+        Lesson(
+            "oruc", "Oruç Temelleri", "Oruç",
+            "Ramazan orucu imsak vaktinden güneş batıncaya kadar yeme, içme ve orucu bozan davranışlardan uzak durma niyetiyle tutulur.",
+            "Hanefî ilmihalinde niyet zamanı, kaza ve kefaret ayrıntıları ayrı başlıklarda açıklanır.",
+            "Şafiî mezhebinde özellikle farz oruçta niyetin geceden yapılması gibi ayrıntılar farklı olabilir.",
+            "Kur’an: Bakara 2:183-187; Diyanet İlmihal I, Oruç",
+            "Ramazan orucunun vakti ne zaman biter?", "Güneşin batmasıyla, yani iftar vaktinde.",
+        ),
+        Lesson(
+            "zekat", "Zekât Temelleri", "Zekât",
+            "Zekât, belirli şartları taşıyan malın belirli kısmının hak sahiplerine verilmesidir. Uygulamadaki hesaplayıcı yalnız matematik yardımcısıdır.",
+            "Hanefî ilmihalinde nisap, üzerinden yıl geçmesi ve mal türleri ayrıntılı değerlendirilir.",
+            "Şafiî mezhebinde bazı mal türleri ve yıl/nisap ayrıntılarında farklı hükümler bulunabilir.",
+            "Kur’an: Tevbe 9:60; Diyanet İlmihal I, Zekât",
+            "Uygulamanın hesapladığı sayı tek başına kesin fetva mıdır?", "Hayır. Mal türü ve şartlar kaynaklı olarak ayrıca değerlendirilmelidir.",
+        ),
+        Lesson(
+            "hac", "Hac ve Umreye Giriş", "Hac",
+            "İhram, tavaf, sa‘y ve hac için Arafat vakfesi gibi ibadetler belirli sıra ve zamanlarla yerine getirilir. Rehber adım adım kontrol listesi sunar.",
+            "Hanefî anlatımda farz, vacip ve sünnet ayrımları kaynaklı olarak gösterilir.",
+            "Şafiî mezhebinde rükün/vacip sınıflandırması ve bazı uygulama ayrıntıları farklıdır.",
+            "Kur’an: Âl-i İmrân 3:97; Diyanet Hac ve Umre Rehberi",
+            "Hac ile umre tamamen aynı ibadet midir?", "Hayır. Ortak uygulamalar olsa da hacın zamanı ve Arafat gibi kendine özgü rükünleri vardır.",
+        ),
+        Lesson(
+            "ahlak", "Günlük Hayatta Güzel Ahlak", "Ahlak",
+            "Doğruluk, emanete riayet, adalet, merhamet, komşuluk ve kul hakkından sakınmak ibadetin günlük hayata yansıyan temel ahlak başlıklarıdır.",
+            "Ahlak öğretimi mezhep ayrımından çok Kur’an ve sahih sünnetin ortak ilkelerine dayanır.",
+            source = "Kur’an: Nahl 16:90; Hucurât 49:10-12; Riyâzü’s-Sâlihîn, Ahlak bölümleri",
+            question = "İbadet yalnız bireysel ritüellerden mi ibarettir?", answer = "Hayır. Ahlak, haklar ve insan ilişkileri de dini hayatın önemli parçasıdır.",
+        ),
+    )
+}
