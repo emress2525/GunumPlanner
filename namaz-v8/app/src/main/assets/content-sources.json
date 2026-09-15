@@ -1,12 +1,36 @@
 {
-  "quranPack": {
-    "repository": "kurancilar/json",
-    "commit": "34b43b044fb36528be7b2380733bb965b7c5b385",
-    "license": "MIT repository license; individual text/translation attribution remains visible in app",
-    "arabic": "Qur'an Arabic text as distributed by the source repository",
-    "meal": "Diyanet Vakfı Turkish translation field from the source repository",
-    "tafsir": "Elmalılı Hamdi Yazır tafsir files from the source repository"
+  "quranArabic": {
+    "source": "Tanzil Project",
+    "edition": "Uthmani Version 1.1",
+    "license": "Creative Commons Attribution 3.0",
+    "rights": "Verbatim redistribution is permitted with attribution; the Quran text is not modified.",
+    "sourceUrl": "https://tanzil.net",
+    "licenseUrl": "https://tanzil.net/docs/Text_License",
+    "buildMirror": "dotquran/corpus",
+    "buildMirrorCommit": "c23f5cec2e95e253dc450bd0f34d09e37ba40fac"
   },
-  "prayerCalculation": "Adhan algorithm. Turkey approximation: Fajr 18°, Isha 17°, explicit Turkey method adjustments. It is not presented as an official Diyanet API feed.",
-  "policy": "Religious learning entries show sources and madhhab differences. Personal fatwa cases are directed to a qualified authority."
+  "quranMeal": {
+    "source": "QuranEnc.com",
+    "translationKey": "turkish_rwwad",
+    "publisher": "Rowad Translation Center",
+    "rights": "QuranEnc permits translations to be downloaded and republished unchanged when publisher/source, version and transcript information are retained. Build metadata stores the current version response.",
+    "termsUrl": "https://quranenc.com/tr/home/about/terms-and-conditions",
+    "apiUrl": "https://quranenc.com/api/v1/translation/sura/turkish_rwwad/{sura}"
+  },
+  "tafsir": {
+    "work": "Hak Dini Kur'an Dili — Elmalılı Muhammed Hamdi Yazır",
+    "digitalSource": "kurancilar/json",
+    "digitalSourceCommit": "34b43b044fb36528be7b2380733bb965b7c5b385",
+    "repositoryLicense": "MIT",
+    "repositoryLicenseUrl": "https://github.com/kurancilar/json/blob/34b43b044fb36528be7b2380733bb965b7c5b385/LICENSE",
+    "note": "Original author died in 1942; this build keeps the digital transcription unchanged and records its repository provenance."
+  },
+  "quranAudio": {
+    "source": "kurancilar/json",
+    "commit": "34b43b044fb36528be7b2380733bb965b7c5b385",
+    "repositoryLicense": "MIT",
+    "delivery": "Verse audio is streamed on demand and can be saved by the user for offline listening."
+  },
+  "prayerCalculation": "Adhan calculation algorithm. Turkey approximation uses the app's documented Turkey parameters and is never presented as an official Diyanet API feed.",
+  "policy": "Religious learning entries show sources and madhhab differences. Personal fatwa cases are directed to a qualified authority. Unknown claims are not authenticated merely because they resemble a religious quote."
 }
