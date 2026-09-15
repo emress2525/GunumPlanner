@@ -47,7 +47,7 @@ object QuranLicensedAssetParser {
             )
         }
         require(verses.isNotEmpty()) { "Sure ayetleri boş: $surahNumber" }
-        return QuranSurah(surahNumber, SurahNames.name(surahNumber), verses)
+        return QuranSurah(surahNumber, surah.getString("name"), verses)
     }
 
     private fun mealArray(json: String): JSONArray {
