@@ -21,12 +21,13 @@ jobs:
           set -euo pipefail
           cat source.part00 source.part01 source.part02 source.part03 source.part04 source.part05 source.part06 source.part07 source.part08 source.part09 source.part10 source.part11 > source-full.tar.gz
           echo "710b80a4db2a7a65287c4e3721b75df2a02708dd6318b54293ea631aab7cfaae  source-full.tar.gz" | sha256sum -c -
-          rm -rf app build.gradle settings.gradle gradle.properties devtests
+          rm -rf app build.gradle settings.gradle gradle.properties
           tar -xzf source-full.tar.gz -C .
           test -f app/src/main/java/com/namazv2/app/MainActivity.java
           test -f app/src/main/java/com/namazv2/billing/BillingManager.java
           test -f app/src/main/java/com/namazv2/data/HadithRepository.java
           test -f app/src/main/java/com/namazv2/widget/PrayerWidgetProvider.java
+          test -f app/src/test/java/com/namazv2/core/AdvancedCoreLogicTest.java
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -58,22 +59,9 @@ jobs:
           test "$(grep -v '^#' app/src/main/assets/quran-uthmani.txt | grep -c '[^[:space:]]')" -ge 6200
           grep -q "Tanzil" app/src/main/assets/TANZIL_LICENSE.txt
 
-      - name: Pure Java core contract
+      - name: Core contract tests
         working-directory: NamazV2
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/namaz-core
-          javac -d /tmp/namaz-core \
-            app/src/main/java/com/namazv2/core/PrayerMethod.java \
-            app/src/main/java/com/namazv2/core/PrayerSchedule.java \
-            app/src/main/java/com/namazv2/core/SearchNormalizer.java \
-            app/src/main/java/com/namazv2/core/HijriFormatter.java \
-            app/src/main/java/com/namazv2/core/LearningCatalog.java \
-            app/src/main/java/com/namazv2/core/EsmaCatalog.java \
-            app/src/main/java/com/namazv2/core/WorshipGuideCatalog.java \
-            app/src/main/java/com/namazv2/core/IslamicCalendarEngine.java \
-            devtests/AdvancedCoreContract.java
-          java -cp /tmp/namaz-core AdvancedCoreContract
+        run: gradle --no-daemon testDebugUnitTest --tests com.namazv2.core.AdvancedCoreLogicTest
 
       - name: Android unit tests
         working-directory: NamazV2
@@ -163,6 +151,5 @@ jobs:
             NamazV2/build.gradle
             NamazV2/settings.gradle
             NamazV2/gradle.properties
-            NamazV2/devtests
           if-no-files-found: warn
           retention-days: 7
