@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           mkdir -p namaz-v8/app/src/main/res/raw
           ADHAN_URL='https://raw.githubusercontent.com/Kiwifu/adhan-mp3/main/Adhan_Turkey_1_(%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7).mp3'
-          curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 "$ADHAN_URL" -o namaz-v8/app/src/main/res/raw/adhan.mp3
+          curl -fL --retry 8 --retry-all-errors --retry-delay 2 --connect-timeout 30 "$ADHAN_URL" -o namaz-v8/app/src/main/res/raw/adhan.mp3
           test "$(stat -c%s namaz-v8/app/src/main/res/raw/adhan.mp3)" -gt 100000
 
       - name: Fetch licensed offline Quran, Turkish meal and tafsir packs
@@ -54,12 +54,38 @@ jobs:
           TAFSIR_REF=34b43b044fb36528be7b2380733bb965b7c5b385
           mkdir -p namaz-v8/app/src/main/assets/quran namaz-v8/app/src/main/assets/meal namaz-v8/app/src/main/assets/tafseer/elmalili
 
-          curl -fsSL --retry 3 \
+          fetch_asset() {
+            local url="$1"
+            local output="$2"
+            local tmp="${output}.part"
+            local attempt
+            rm -f "$tmp"
+            for attempt in 1 2 3 4 5 6; do
+              if curl -fsSL \
+                --connect-timeout 30 \
+                --max-time 180 \
+                --retry 5 \
+                --retry-all-errors \
+                --retry-delay 2 \
+                "$url" -o "$tmp"; then
+                test -s "$tmp"
+                mv "$tmp" "$output"
+                return 0
+              fi
+              rm -f "$tmp"
+              echo "Download retry ${attempt}/6: ${url}" >&2
+              sleep $((attempt * 2))
+            done
+            echo "Download failed after retries: ${url}" >&2
+            return 1
+          }
+
+          fetch_asset \
             "https://raw.githubusercontent.com/dotquran/corpus/${TANZIL_MIRROR_REF}/processed/uthmani/quran-uthmani.json" \
-            -o /tmp/quran-uthmani.json
-          curl -fsSL --retry 3 \
+            /tmp/quran-uthmani.json
+          fetch_asset \
             "https://raw.githubusercontent.com/acfatah/tanzil/main/LICENSE" \
-            -o namaz-v8/app/src/main/assets/tanzil-license.txt
+            namaz-v8/app/src/main/assets/tanzil-license.txt
 
           python3 - <<'PY'
           import json, pathlib
@@ -73,10 +99,20 @@ jobs:
           assert len(list(out.glob('*.json'))) == 114
           PY
 
-          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 --retry-delay 1 "https://quranenc.com/api/v1/translation/sura/turkish_rwwad/{}" -o "namaz-v8/app/src/main/assets/meal/{}.json"'
-          curl -fsSL --retry 3 "https://quranenc.com/api/v1/translations/list/tr?localization=tr" -o namaz-v8/app/src/main/assets/quranenc-turkish-meta.json
+          for i in $(seq 1 114); do
+            fetch_asset \
+              "https://quranenc.com/api/v1/translation/sura/turkish_rwwad/${i}" \
+              "namaz-v8/app/src/main/assets/meal/${i}.json"
+          done
+          fetch_asset \
+            "https://quranenc.com/api/v1/translations/list/tr?localization=tr" \
+            namaz-v8/app/src/main/assets/quranenc-turkish-meta.json
 
-          seq 1 114 | xargs -P 8 -I{} bash -c 'curl -fsSL --retry 3 --retry-delay 1 "https://raw.githubusercontent.com/kurancilar/json/'"$TAFSIR_REF"'/tafseer/elmalili/{}.md" -o "namaz-v8/app/src/main/assets/tafseer/elmalili/{}.md"'
+          for i in $(seq 1 114); do
+            fetch_asset \
+              "https://raw.githubusercontent.com/kurancilar/json/${TAFSIR_REF}/tafseer/elmalili/${i}.md" \
+              "namaz-v8/app/src/main/assets/tafseer/elmalili/${i}.md"
+          done
 
           test "$(find namaz-v8/app/src/main/assets/quran -name '*.json' | wc -l)" -eq 114
           test "$(find namaz-v8/app/src/main/assets/meal -name '*.json' | wc -l)" -eq 114
