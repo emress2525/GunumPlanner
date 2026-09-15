@@ -18,10 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unpack Namaz V2 source
+      - name: Reassemble and unpack Namaz V2 source
         run: |
-          test -s source.tar.gz
-          tar -xzf source.tar.gz -C .
+          cat source.part00 source.part01 source.part02 source.part03 > source-good.tar.gz
+          echo "45476a9dbf0b9361d672d6c7de8f599df92964d00a4d2246be298203bb1b5e62  source-good.tar.gz" | sha256sum -c -
+          tar -xzf source-good.tar.gz -C .
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
