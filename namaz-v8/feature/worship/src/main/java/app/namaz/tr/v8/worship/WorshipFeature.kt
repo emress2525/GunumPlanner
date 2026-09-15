@@ -2,6 +2,7 @@ package app.namaz.tr.v8.worship
 
 import android.content.Context
 import android.icu.util.IslamicCalendar
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import java.time.LocalDate
 import java.util.Locale
 
 data class SourcedItem(
@@ -45,18 +47,36 @@ data class SourcedItem(
     val personalFatwaMayBeNeeded: Boolean = false,
 )
 
+data class ClaimCheckResult(
+    val matched: List<SourcedItem>,
+    val explanation: String,
+)
+
 object WorshipCatalog {
     val divineName = "Allah" to "Bütün kemal sıfatlarını kendinde toplayan özel isim"
 
     val duas = listOf(
-        SourcedItem("rabbena", "Dünya ve ahiret iyiliği", "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr. Rabbimiz! Bize dünyada ve ahirette iyilik ver, bizi ateş azabından koru.", "Kur’an 2:201", listOf("dua", "iyilik")),
+        SourcedItem("rabbena", "Dünya ve ahiret iyiliği", "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr. Rabbimiz! Bize dünyada ve ahirette iyilik ver, bizi ateş azabından koru.", "Kur’an 2:201", listOf("dua", "iyilik", "namaz sonrası")),
         SourcedItem("ilim", "İlim duası", "Rabbi zidnî ilmâ. Rabbim! İlmimi artır.", "Kur’an 20:114", listOf("ilim", "öğrenme")),
-        SourcedItem("sabir", "Sabır ve sebat", "Rabbenâ efriğ aleynâ sabran ve sebbit akdâmenâ... Rabbimiz! Üzerimize sabır yağdır, ayaklarımızı sabit kıl.", "Kur’an 2:250", listOf("sabır")),
-        SourcedItem("af", "Bağışlanma", "Rabbenâ lâ tuâhiznâ in nesînâ ev ahta'nâ...", "Kur’an 2:286", listOf("bağışlanma")),
-        SourcedItem("aile", "Aile huzuru", "Rabbenâ heb lenâ min ezvâcinâ ve zürriyyâtinâ kurrete a'yun...", "Kur’an 25:74", listOf("aile")),
-        SourcedItem("yol", "Yolculuk duası", "Sübhânellezî sehhara lenâ hâzâ ve mâ kunnâ lehû mukrinîn...", "Kur’an 43:13-14; Müslim, Hac", listOf("yolculuk")),
-        SourcedItem("sikinti", "Sıkıntıda teslimiyet", "Hasbunallâhu ve ni'mel vekîl. Allah bize yeter, O ne güzel vekildir.", "Kur’an 3:173", listOf("sıkıntı")),
+        SourcedItem("sabir", "Sabır ve sebat", "Rabbenâ efriğ aleynâ sabran ve sebbit akdâmenâ... Rabbimiz! Üzerimize sabır yağdır, ayaklarımızı sabit kıl.", "Kur’an 2:250", listOf("sabır", "sıkıntı")),
+        SourcedItem("af", "Bağışlanma", "Rabbenâ lâ tuâhiznâ in nesînâ ev ahta'nâ...", "Kur’an 2:286", listOf("bağışlanma", "akşam")),
+        SourcedItem("aile", "Aile huzuru", "Rabbenâ heb lenâ min ezvâcinâ ve zürriyyâtinâ kurrete a'yun...", "Kur’an 25:74", listOf("aile", "çocuk")),
+        SourcedItem("yol", "Yolculuk duası", "Sübhânellezî sehhara lenâ hâzâ ve mâ kunnâ lehû mukrinîn...", "Kur’an 43:13-14; Müslim, Hac", listOf("yolculuk", "seyahat")),
+        SourcedItem("sikinti", "Sıkıntıda teslimiyet", "Hasbunallâhu ve ni'mel vekîl. Allah bize yeter, O ne güzel vekildir.", "Kur’an 3:173", listOf("sıkıntı", "korku")),
         SourcedItem("annebaba", "Anne-baba için", "Rabbirhamhumâ kemâ rabbeyânî sağîrâ. Rabbim! Küçüklüğümde beni yetiştirdikleri gibi onlara merhamet et.", "Kur’an 17:24", listOf("aile", "anne baba")),
+        SourcedItem("sukur", "Şükür duası", "Rabbim, bana ve anne-babama verdiğin nimete şükretmeyi ve razı olacağın işler yapmayı nasip et.", "Kur’an 27:19 — anlam özeti", listOf("şükür", "sabah")),
+        SourcedItem("uyku", "Uyku öncesi", "Allahım, senin adınla ölür ve dirilirim anlamındaki kısa uyku duası sünnette aktarılmıştır.", "Buhârî, Daavât — anlam özeti", listOf("uyku", "gece")),
+    )
+
+    val hadiths = listOf(
+        SourcedItem("niyet", "Ameller niyetlere göredir", "Hadisin kısa anlamı: amellerin değeri niyetlerle ilişkilidir; kişi niyet ettiği şeye göre karşılık görür.", "Buhârî, Bed’ü'l-vahy 1; Müslim, İmâre 155", listOf("niyet", "amel", "hadis")),
+        SourcedItem("merhamet", "Merhamet", "Kısa anlam özeti: merhamet etmeyene merhamet olunmayacağı uyarısı yapılır.", "Buhârî, Edeb 18; Müslim, Fezâil 66", listOf("merhamet", "ahlak", "hadis")),
+        SourcedItem("komsu", "Komşuluk", "Kısa anlam özeti: Cebrâil'in komşu hakkını sürekli hatırlatması, komşuluk hakkının önemini gösterir.", "Buhârî, Edeb 28; Müslim, Birr 140", listOf("komşu", "hak", "hadis")),
+        SourcedItem("kolaylik", "Kolaylaştırmak", "Kısa anlam özeti: insanlara zorluk çıkarmamak, kolaylaştırmak ve müjdeleyici olmak öğütlenir.", "Buhârî, İlim 11; Müslim, Cihâd 6", listOf("kolaylık", "davet", "hadis")),
+        SourcedItem("temizlik", "Temizlik", "Kısa anlam özeti: temizlik ve arınmanın imandaki yüksek değeri vurgulanır.", "Müslim, Tahâret 1", listOf("temizlik", "abdest", "hadis")),
+        SourcedItem("guven", "Elinden ve dilinden emin olunan kişi", "Kısa anlam özeti: Müslümanın başkalarına diliyle ve eliyle zarar vermemesi öne çıkarılır.", "Buhârî, Îmân 4; Müslim, Îmân 64", listOf("ahlak", "zarar", "hadis")),
+        SourcedItem("kardeslik", "Kardeşi için istemek", "Kısa anlam özeti: kişinin kendisi için sevdiği hayrı kardeşi için de sevmesi imanın olgunluğuyla ilişkilendirilir.", "Buhârî, Îmân 7; Müslim, Îmân 71", listOf("kardeşlik", "iyilik", "hadis")),
+        SourcedItem("sadaka", "Güzel söz", "Kısa anlam özeti: güzel sözün de sadaka niteliğinde olduğu bildirilir.", "Buhârî, Edeb 34; Müslim, Zekât 56", listOf("sadaka", "söz", "hadis")),
     )
 
     val knowledge = listOf(
@@ -68,6 +88,7 @@ object WorshipCatalog {
         SourcedItem("cuma", "Cuma namazı", "Cuma çağrısı geldiğinde Allah'ın zikrine yönelmek Kur’an 62:9'da vurgulanır; şartlar ilmihalde ayrıntılıdır.", "Kur’an 62:9; Diyanet İlmihal I", listOf("cuma", "namaz")),
         SourcedItem("kulhakki", "Kul hakkı", "Emaneti sahibine vermek, haksızlıktan ve gıybetten sakınmak Kur’an'ın temel ahlak emirlerindendir.", "Kur’an 4:58; 49:11-12", listOf("kul hakkı", "ahlak")),
         SourcedItem("kible", "Kıble", "Namazda kıbleye yönelmek temel şartlardandır; uygulamadaki pusula yalnız sensör yardımcısıdır, düşük doğrulukta kalibrasyon gerekir.", "Kur’an 2:144; Diyanet İlmihal I", listOf("kıble", "namaz")),
+        SourcedItem("kanabdest", "Kan ve abdest", "Abdesti bozan durumların ayrıntıları mezhepler arasında farklı değerlendirilir; kanama konusunda Hanefî ve Şafiî uygulaması aynı değildir.", "Diyanet İlmihal I — Abdest", listOf("kan", "abdest"), "Hanefî ve Şafiî görüşleri farklıdır.", personalFatwaMayBeNeeded = true),
     )
 
     private val esmaRaw = """
@@ -177,7 +198,7 @@ Es-Sabûr|Cezada acele etmeyen
         parts[0] to parts[1]
     }
 
-    fun validate(): List<String> = (duas + knowledge)
+    fun validate(): List<String> = (duas + hadiths + knowledge)
         .filter { it.id.isBlank() || it.title.isBlank() || it.source.isBlank() }
         .map { it.id }
 }
@@ -186,10 +207,34 @@ object KnowledgeAssistant {
     fun search(query: String): List<SourcedItem> {
         val q = query.trim().lowercase(Locale("tr"))
         if (q.length < 2) return emptyList()
-        return (WorshipCatalog.knowledge + WorshipCatalog.duas).filter { item ->
+        return (WorshipCatalog.knowledge + WorshipCatalog.duas + WorshipCatalog.hadiths).filter { item ->
             item.title.lowercase(Locale("tr")).contains(q) ||
                 item.body.lowercase(Locale("tr")).contains(q) ||
                 item.tags.any { it.lowercase(Locale("tr")).contains(q) }
+        }
+    }
+}
+
+object ClaimVerifier {
+    fun check(text: String): ClaimCheckResult {
+        val query = text.trim().lowercase(Locale("tr"))
+        if (query.length < 4) return ClaimCheckResult(emptyList(), "Kontrol için daha uzun bir metin yaz.")
+        val words = query.split(Regex("[^a-zçğıöşüâîû0-9]+"))
+            .filter { it.length >= 4 }
+            .toSet()
+        val candidates = (WorshipCatalog.hadiths + WorshipCatalog.duas + WorshipCatalog.knowledge)
+            .map { item ->
+                val haystack = (item.title + " " + item.body + " " + item.tags.joinToString(" ")).lowercase(Locale("tr"))
+                item to words.count { haystack.contains(it) }
+            }
+            .filter { it.second >= 2 }
+            .sortedByDescending { it.second }
+            .take(5)
+            .map { it.first }
+        return if (candidates.isEmpty()) {
+            ClaimCheckResult(emptyList(), "Doğrulanmış yerel kaynakta yeterli eşleşme bulamadım. Bu, sözün kesin yanlış olduğu anlamına gelmez; yalnızca uygulamanın onu doğrulayamadığı anlamına gelir.")
+        } else {
+            ClaimCheckResult(candidates, "Benzer kaynaklı kayıtlar bulundu. Bu eşleşme tek başına bir sözün hadis isnadını kesin doğrulamaz; kaynak kartlarını karşılaştır.")
         }
     }
 }
@@ -199,6 +244,9 @@ object ZakatCalculator {
         val net = (assets - debts).coerceAtLeast(0.0)
         return if (nisab > 0 && net >= nisab) net * 0.025 else 0.0
     }
+
+    fun calculate(cash: Double, goldValue: Double, tradeGoods: Double, receivables: Double, debts: Double, nisab: Double): Double =
+        calculate(cash + goldValue + tradeGoods + receivables, debts, nisab)
 }
 
 @Composable
@@ -207,6 +255,8 @@ fun WorshipScreen() {
     when (tool) {
         "dhikr" -> return DhikrScreen { tool = null }
         "duas" -> return SourcedListScreen("Dualar", WorshipCatalog.duas) { tool = null }
+        "hadith" -> return SourcedListScreen("Hadis Merkezi", WorshipCatalog.hadiths) { tool = null }
+        "verify" -> return ClaimCheckScreen { tool = null }
         "esma" -> return EsmaScreen { tool = null }
         "knowledge" -> return KnowledgeScreen { tool = null }
         "ramadan" -> return RamadanScreen { tool = null }
@@ -217,10 +267,18 @@ fun WorshipScreen() {
         "zakat" -> return ZakatScreen { tool = null }
     }
     val tools = listOf(
-        "dhikr" to "Zikir Sayacı", "duas" to "Dua Kütüphanesi", "esma" to "Esmaül Hüsna",
-        "knowledge" to "Güvenilir Bilgi", "ramadan" to "Ramazan", "hajj" to "Hac ve Umre",
-        "women" to "Kadınlara Özel Kayıt", "travel" to "Seyahat Rehberi",
-        "calendar" to "İslami Takvim", "zakat" to "Zekât Hesap Yardımcısı",
+        "dhikr" to "Zikir Sayacı ve Geçmiş",
+        "duas" to "Dua Kütüphanesi",
+        "hadith" to "Kaynaklı Hadis Merkezi",
+        "verify" to "Doğrusunu Kontrol Et",
+        "esma" to "Esmaül Hüsna",
+        "knowledge" to "Güvenilir Bilgi",
+        "ramadan" to "Ramazan",
+        "hajj" to "Hac ve Umre",
+        "women" to "Kadınlara Özel Kayıt",
+        "travel" to "Seyahat Rehberi",
+        "calendar" to "İslami Takvim",
+        "zakat" to "Zekât Hesap Yardımcısı",
     )
     LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
         item {
@@ -230,7 +288,7 @@ fun WorshipScreen() {
         items(tools) { (id, title) ->
             Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                 Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(title, style = MaterialTheme.typography.titleMedium)
+                    Text(title, modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
                     OutlinedButton(onClick = { tool = id }) { Text("Aç") }
                 }
             }
@@ -251,21 +309,44 @@ private fun Header(title: String, onBack: () -> Unit) {
 private fun DhikrScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("dhikr_v8", Context.MODE_PRIVATE) }
+    var title by rememberSaveable { mutableStateOf(prefs.getString("title", "Sübhanallah").orEmpty()) }
     var count by rememberSaveable { mutableIntStateOf(prefs.getInt("count", 0)) }
     var target by rememberSaveable { mutableIntStateOf(prefs.getInt("target", 33)) }
+    var vibration by rememberSaveable { mutableStateOf(prefs.getBoolean("vibration", true)) }
+    val todayKey = "daily_${LocalDate.now()}"
+    var dailyTotal by rememberSaveable { mutableIntStateOf(prefs.getInt(todayKey, 0)) }
+    val sevenDayTotal = remember(dailyTotal) {
+        (0L..6L).sumOf { offset -> prefs.getInt("daily_${LocalDate.now().minusDays(offset)}", 0) }
+    }
+
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("Zikir Sayacı", onBack)
-        Text("$count / $target", style = MaterialTheme.typography.displayMedium, modifier = Modifier.padding(vertical = 24.dp))
+        OutlinedTextField(title, {
+            title = it
+            prefs.edit().putString("title", it).apply()
+        }, label = { Text("Zikir adı") }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
+        Text("$count / $target", style = MaterialTheme.typography.displayMedium, modifier = Modifier.padding(vertical = 20.dp))
         Button(onClick = {
             count++
-            prefs.edit().putInt("count", count).apply()
-            (context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator)
-                ?.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE))
+            dailyTotal++
+            prefs.edit().putInt("count", count).putInt(todayKey, dailyTotal).apply()
+            if (vibration) {
+                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                if (Build.VERSION.SDK_INT >= 26) vibrator?.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE))
+                else @Suppress("DEPRECATION") vibrator?.vibrate(20)
+            }
         }, modifier = Modifier.fillMaxWidth()) { Text("+1") }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
-            listOf(33, 99, 100).forEach { n -> OutlinedButton(onClick = { target = n; prefs.edit().putInt("target", n).apply() }) { Text("$n") } }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 8.dp)) {
+            listOf(33, 99, 100, 1000).forEach { n ->
+                OutlinedButton(onClick = { target = n; prefs.edit().putInt("target", n).apply() }) { Text("$n") }
+            }
         }
-        OutlinedButton(onClick = { count = 0; prefs.edit().putInt("count", 0).apply() }, modifier = Modifier.padding(top = 8.dp)) { Text("Sıfırla") }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("Titreşim", modifier = Modifier.padding(top = 14.dp))
+            Switch(vibration, { vibration = it; prefs.edit().putBoolean("vibration", it).apply() })
+        }
+        Text("Bugün toplam: $dailyTotal • Son 7 gün: $sevenDayTotal", modifier = Modifier.padding(top = 8.dp))
+        OutlinedButton(onClick = { count = 0; prefs.edit().putInt("count", 0).apply() }, modifier = Modifier.padding(top = 8.dp)) { Text("Aktif sayacı sıfırla") }
         Text("Sayaç kişisel takip aracıdır; tek başına dini hüküm üretmez.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 12.dp))
     }
 }
@@ -279,11 +360,36 @@ private fun SourcedListScreen(title: String, data: List<SourcedItem>, onBack: ()
                 Column(Modifier.padding(12.dp)) {
                     Text(item.title, fontWeight = FontWeight.Bold)
                     Text(item.body)
+                    item.madhabNote?.let { Text("Mezhep notu: $it", style = MaterialTheme.typography.bodySmall) }
                     Text("Kaynak: ${item.source}", style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
         item { Spacer(Modifier.height(32.dp)) }
+    }
+}
+
+@Composable
+private fun ClaimCheckScreen(onBack: () -> Unit) {
+    var text by rememberSaveable { mutableStateOf("") }
+    var result by remember { mutableStateOf<ClaimCheckResult?>(null) }
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Header("Doğrusunu Kontrol Et", onBack)
+        Text("İnternette gördüğün dini sözü yapıştır. Uygulama yalnız kendi kaynaklı yerel kataloğunda arar; eşleşme bulamadığında hadis/ayet uydurmaz.", modifier = Modifier.padding(top = 8.dp))
+        OutlinedTextField(text, { text = it }, label = { Text("Kontrol edilecek söz") }, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), minLines = 4)
+        Button(onClick = { result = ClaimVerifier.check(text) }) { Text("Kaynaklarda kontrol et") }
+        result?.let { checked ->
+            Text(checked.explanation, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 14.dp))
+            checked.matched.forEach { item ->
+                Card(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                    Column(Modifier.padding(12.dp)) {
+                        Text(item.title, fontWeight = FontWeight.Bold)
+                        Text(item.body)
+                        Text("Kaynak: ${item.source}", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -303,7 +409,10 @@ private fun EsmaScreen(onBack: () -> Unit) {
         }
         items(WorshipCatalog.esma) { (name, meaning) ->
             Card(Modifier.fillMaxWidth().padding(vertical = 3.dp)) {
-                Column(Modifier.padding(10.dp)) { Text(name, fontWeight = FontWeight.Bold); Text(meaning) }
+                Column(Modifier.padding(10.dp)) {
+                    Text(name, fontWeight = FontWeight.Bold)
+                    Text(meaning)
+                }
             }
         }
         item { Text("Kaynak çerçevesi: Diyanet Din İşleri Yüksek Kurulu — Allah’ın 99 ismi; anlamlar uygulama için kısa özetlenmiştir.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 12.dp)) }
@@ -318,7 +427,7 @@ private fun KnowledgeScreen(onBack: () -> Unit) {
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("Güvenilir Bilgi", onBack)
         Text("Yalnız yerel ve kaynaklı maddeleri getirir; kaynak bulamazsa cevap uydurmaz.")
-        OutlinedTextField(query, { query = it }, label = { Text("Örn. abdest, sefer, zekât") }, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp))
+        OutlinedTextField(query, { query = it }, label = { Text("Örn. abdest, sefer, zekât, kan") }, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp))
         Button(onClick = { results = KnowledgeAssistant.search(query); searched = true }) { Text("Kaynaklarda ara") }
         if (searched && results.isEmpty()) Text("Doğrulanmış yerel kaynak bulamadım. Kişisel fetva gerekiyorsa ehil bir din görevlisine danış.", modifier = Modifier.padding(top = 16.dp))
         LazyColumn {
@@ -342,31 +451,55 @@ private fun RamadanScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("ramadan_v8", Context.MODE_PRIVATE) }
     var fasted by rememberSaveable { mutableIntStateOf(prefs.getInt("fasted", 0)) }
+    var qada by rememberSaveable { mutableIntStateOf(prefs.getInt("qada", 0)) }
     var pages by rememberSaveable { mutableIntStateOf(prefs.getInt("pages", 0)) }
+    var sahurNote by rememberSaveable { mutableStateOf(prefs.getString("sahur_note", "").orEmpty()) }
+    var iftarNote by rememberSaveable { mutableStateOf(prefs.getString("iftar_note", "").orEmpty()) }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("Ramazan", onBack)
-        Text("Oruç kaydı: $fasted gün", style = MaterialTheme.typography.titleMedium)
+        Text("Oruç kaydı: $fasted gün • Kaza kaydı: $qada", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { fasted++; prefs.edit().putInt("fasted", fasted).apply() }) { Text("Bugün tuttum") }
-            OutlinedButton(onClick = { if (fasted > 0) fasted--; prefs.edit().putInt("fasted", fasted).apply() }) { Text("-1") }
+            OutlinedButton(onClick = { qada++; prefs.edit().putInt("qada", qada).apply() }) { Text("Kaza +1") }
         }
         Text("Mukabele: $pages sayfa", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp))
-        Button(onClick = { pages++; prefs.edit().putInt("pages", pages).apply() }) { Text("+1 sayfa") }
-        Text("İmsak/iftar saatini Bugün ekranındaki namaz motorundan takip et. Fitre/fidye parasal tutarı yıla göre değiştiği için uygulama sabit rakam uydurmaz.", modifier = Modifier.padding(top = 16.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { pages++; prefs.edit().putInt("pages", pages).apply() }) { Text("+1 sayfa") }
+            OutlinedButton(onClick = { pages = (pages - 1).coerceAtLeast(0); prefs.edit().putInt("pages", pages).apply() }) { Text("−1") }
+        }
+        OutlinedTextField(sahurNote, { sahurNote = it; prefs.edit().putString("sahur_note", it).apply() }, label = { Text("Sahur notu / hedefi") }, modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
+        OutlinedTextField(iftarNote, { iftarNote = it; prefs.edit().putString("iftar_note", it).apply() }, label = { Text("İftar notu / hedefi") }, modifier = Modifier.fillMaxWidth())
+        Text("İmsak/iftar saatini Bugün ekranındaki namaz motorundan takip et. Fitre/fidye parasal tutarı yıla göre değiştiği için uygulama sabit rakam uydurmaz.", modifier = Modifier.padding(top = 14.dp))
         Text("Kaynak: Kur’an 2:183-185; Diyanet Ramazan rehberleri", style = MaterialTheme.typography.bodySmall)
     }
 }
 
 @Composable
 private fun HajjScreen(onBack: () -> Unit) {
-    val steps = listOf("İhram ve niyet", "Telbiye", "Tavaf", "Sa'y", "Arafat vakfesi", "Müzdelife", "Mina ve cemreler", "Kurban/saç tıraşı ilgili hac türüne göre", "Veda tavafı")
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("hajj_v8", Context.MODE_PRIVATE) }
+    val steps = listOf("İhram ve niyet", "Telbiye", "Tavaf", "Tavaf namazı", "Sa'y", "Arafat vakfesi", "Müzdelife", "Mina ve cemreler", "Kurban/saç tıraşı ilgili hac türüne göre", "Veda tavafı")
+    val duas = listOf(
+        "Telbiye" to "Lebbeyk Allâhümme lebbeyk... — hac/umre sırasında telbiye zikri.",
+        "Tavaf arasında" to "Kur’an 2:201’deki dünya ve ahiret iyiliği duası okunabilir; tavafın her turu için zorunlu özel dua yoktur.",
+        "Arafat" to "Arafat’ta dua, zikir, istiğfar ve salavatla meşgul olunur; kişisel dualar da yapılabilir.",
+    )
     LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
-        item { Header("Hac ve Umre", onBack); Text("Genel öğrenme sırasıdır; hac türü ve kişisel durum ayrıntılarını resmî rehberle kontrol et.") }
+        item { Header("Hac ve Umre", onBack); Text("Genel öğrenme sırasıdır; hac türü ve kişisel durum ayrıntılarını resmî rehberle kontrol et.", modifier = Modifier.padding(vertical = 8.dp)) }
         items(steps) { step ->
-            var checked by rememberSaveable(step) { mutableStateOf(false) }
-            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp)) { Checkbox(checked, { checked = it }); Text(step, modifier = Modifier.padding(top = 12.dp)) }
+            var checked by rememberSaveable(step) { mutableStateOf(prefs.getBoolean("step_$step", false)) }
+            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                Checkbox(checked, { checked = it; prefs.edit().putBoolean("step_$step", it).apply() })
+                Text(step, modifier = Modifier.padding(top = 12.dp))
+            }
         }
-        item { Text("Kaynak: Kur’an 2:196-203; Diyanet Hac ve Umre Rehberi", style = MaterialTheme.typography.bodySmall) }
+        item {
+            Text("Offline dua kartları", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 12.dp))
+            duas.forEach { (title, body) ->
+                Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) { Column(Modifier.padding(12.dp)) { Text(title, fontWeight = FontWeight.Bold); Text(body) } }
+            }
+            Text("Kaynak: Kur’an 2:196-203; Diyanet Hac ve Umre Rehberi", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
+        }
     }
 }
 
@@ -388,7 +521,7 @@ private fun WomenScreen(onBack: () -> Unit) {
             Button(onClick = { qadaFast++; prefs.edit().putInt("qada_fast", qadaFast).apply() }) { Text("+1") }
             OutlinedButton(onClick = { if (qadaFast > 0) qadaFast--; prefs.edit().putInt("qada_fast", qadaFast).apply() }) { Text("-1") }
         }
-        Text("Özel durumlarda sağlık ve fıkhî ayrıntı için güvenilir uzmanlara danış.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 16.dp))
+        Text("Hayız, nifas, istihaza ve gusül hükümleri kişisel ayrıntı içerebilir; Öğren/İlmihal kaynaklarını kullan ve gerekirse ehil bir din görevlisine danış.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 16.dp))
     }
 }
 
@@ -396,7 +529,7 @@ private fun WomenScreen(onBack: () -> Unit) {
 private fun TravelScreen(onBack: () -> Unit) {
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("Seyahat Rehberi", onBack)
-        Text("Şehir değişikliğinde vakitleri güncelle. Şehir değişmesi seni otomatik olarak seferî yapmaz.", modifier = Modifier.padding(top = 12.dp))
+        Text("Şehir değişikliğinde vakitleri Namaz ayarlarından güncelle. Şehir değişmesi seni otomatik olarak seferî yapmaz.", modifier = Modifier.padding(top = 12.dp))
         Text("Kontrol et:", fontWeight = FontWeight.Bold)
         listOf("Yolculuğun mesafesi", "Yolculuk niyeti", "Gidilen yerde kalış süresi", "Mezhep uygulaman", "Kasr/cem ayrıntıları").forEach { Text("• $it") }
         Text("Kaynak: Diyanet İlmihal I — Yolculukta Namaz. Kişisel durum için ehil din görevlisine danış.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 16.dp))
@@ -408,28 +541,49 @@ private fun CalendarScreen(onBack: () -> Unit) {
     val cal = remember { IslamicCalendar() }
     val months = listOf("Muharrem", "Safer", "Rebiülevvel", "Rebiülahir", "Cemaziyelevvel", "Cemaziyelahir", "Recep", "Şaban", "Ramazan", "Şevval", "Zilkade", "Zilhicce")
     val hijri = "${cal.get(IslamicCalendar.DAY_OF_MONTH)} ${months.getOrElse(cal.get(IslamicCalendar.MONTH)) { "" }} ${cal.get(IslamicCalendar.YEAR)}"
+    val gregorian = LocalDate.now().toString()
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("İslami Takvim", onBack)
         Text("Bugün", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
         Text(hijri, style = MaterialTheme.typography.headlineMedium)
-        Text("Hicrî hesap gözlem/resmî ilana göre bir gün farklılık gösterebilir. Ramazan ve bayram başlangıcında yerel resmî duyuruyu esas al.", modifier = Modifier.padding(top = 16.dp))
+        Text("Miladî: $gregorian")
+        Text("Önemli dönemler", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 14.dp))
+        Text("• Muharrem ve Âşûrâ\n• Üç aylar: Recep, Şaban, Ramazan\n• Ramazan ve Kadir gecesi\n• Ramazan ve Kurban bayramları\n• Zilhicce'nin ilk günleri ve Arefe")
+        Text("Hicrî hesap gözlem/resmî ilana göre bir gün farklılık gösterebilir. Kandil, Ramazan ve bayram başlangıcında yerel resmî duyuruyu esas al.", modifier = Modifier.padding(top = 16.dp))
     }
 }
 
 @Composable
 private fun ZakatScreen(onBack: () -> Unit) {
-    var assets by rememberSaveable { mutableStateOf("") }
+    var cash by rememberSaveable { mutableStateOf("") }
+    var gold by rememberSaveable { mutableStateOf("") }
+    var trade by rememberSaveable { mutableStateOf("") }
+    var receivable by rememberSaveable { mutableStateOf("") }
     var debts by rememberSaveable { mutableStateOf("") }
     var nisab by rememberSaveable { mutableStateOf("") }
     var result by remember { mutableStateOf<Double?>(null) }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Header("Zekât Hesap Yardımcısı", onBack)
-        Text("Fetva değil, yaklaşık matematik yardımcısıdır. Mal türü ve borç hükümlerini ayrıca kontrol et.")
-        OutlinedTextField(assets, { assets = it }, label = { Text("Zekâta tabi varlık toplamı") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+        Text("Fetva değil, yaklaşık matematik yardımcısıdır. Mal türünün zekâta tabi olup olmadığını ve borç hükümlerini ayrıca kontrol et.")
+        OutlinedTextField(cash, { cash = it }, label = { Text("Nakit / banka") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+        OutlinedTextField(gold, { gold = it }, label = { Text("Altın/gümüş parasal değeri") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(trade, { trade = it }, label = { Text("Ticari mal değeri") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(receivable, { receivable = it }, label = { Text("Tahsil edilebilir alacak") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(debts, { debts = it }, label = { Text("Düşülebilecek borçlar") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(nisab, { nisab = it }, label = { Text("Güncel nisap parasal karşılığı") }, modifier = Modifier.fillMaxWidth())
-        Button(onClick = { result = ZakatCalculator.calculate(assets.toDoubleOrNull() ?: 0.0, debts.toDoubleOrNull() ?: 0.0, nisab.toDoubleOrNull() ?: 0.0) }, modifier = Modifier.padding(top = 8.dp)) { Text("Hesapla") }
-        result?.let { value -> Text(if (value > 0) "Yaklaşık zekât: %.2f".format(value) else "Girilen değerlere göre yaklaşık zekât çıkmıyor; fıkhî şartları ayrıca kontrol et.", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp)) }
+        Button(onClick = {
+            result = ZakatCalculator.calculate(
+                cash.toDoubleOrNull() ?: 0.0,
+                gold.toDoubleOrNull() ?: 0.0,
+                trade.toDoubleOrNull() ?: 0.0,
+                receivable.toDoubleOrNull() ?: 0.0,
+                debts.toDoubleOrNull() ?: 0.0,
+                nisab.toDoubleOrNull() ?: 0.0,
+            )
+        }, modifier = Modifier.padding(top = 8.dp)) { Text("Hesapla") }
+        result?.let { value ->
+            Text(if (value > 0) "Yaklaşık zekât: %.2f".format(value) else "Girilen değerlere göre yaklaşık zekât çıkmıyor; fıkhî şartları ayrıca kontrol et.", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp))
+        }
         Text("Kaynak çerçevesi: Diyanet İlmihal I — Zekât", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 12.dp))
     }
 }
