@@ -39,6 +39,9 @@ import androidx.compose.ui.unit.Density
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.namaz.tr.v8.AppGraph
 import app.namaz.tr.v8.adhan.AdhanNotificationFactory
+import app.namaz.tr.v8.alarm.AdhanMode
+import app.namaz.tr.v8.alarm.AlarmPreferences
+import app.namaz.tr.v8.alarm.PrayerAlarmCoordinator
 import app.namaz.tr.v8.alarm.PrayerAlarmScheduler
 import app.namaz.tr.v8.health.HealthAction
 import app.namaz.tr.v8.health.NotificationHealthInspector
@@ -119,6 +122,10 @@ private fun RootNavigation(
 
     val prayerSettings by graph.prayerSettings.settings.collectAsState(initial = null)
     val qazaTotal by graph.qazaStore.total.collectAsState(initial = 0)
+    var alarmPreferences by remember { mutableStateOf<AlarmPreferences?>(null) }
+    val alarmCoordinator = remember(context, graph) { PrayerAlarmCoordinator(context.applicationContext, graph) }
+    LaunchedEffect(Unit) { alarmPreferences = graph.alarmPreferences.current() }
+
     val todayViewModel: TodayViewModel = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = TodayViewModel(graph.prayerRepository) as T
@@ -150,19 +157,47 @@ private fun RootNavigation(
                 when (navigation.detail) {
                     RootDetail.PRAYER_DETAILS -> {
                         prayerSettings?.let { runtime ->
+                            val modes = alarmPreferences?.perPrayer?.mapValues { it.value.mode.name }.orEmpty()
+                            val reminders = alarmPreferences?.perPrayer?.mapValues { it.value.preReminderMinutes }.orEmpty()
                             PrayerScreen(
                                 settings = runtime,
                                 qazaTotal = qazaTotal,
+                                alarmModeByPrayer = modes,
+                                preReminderByPrayer = reminders,
+                                onLocationChange = { location ->
+                                    scope.launch {
+                                        graph.prayerSettings.setLocation(location)
+                                        todayViewModel.refresh()
+                                        alarmCoordinator.rescheduleUpcoming()
+                                    }
+                                },
                                 onMadhabChange = {
                                     scope.launch {
                                         graph.prayerSettings.setMadhab(it)
                                         todayViewModel.refresh()
+                                        alarmCoordinator.rescheduleUpcoming()
                                     }
                                 },
                                 onAdjustmentChange = { prayer, minutes ->
                                     scope.launch {
                                         graph.prayerSettings.setAdjustment(prayer, minutes)
                                         todayViewModel.refresh()
+                                        alarmCoordinator.rescheduleUpcoming()
+                                    }
+                                },
+                                onAlarmModeChange = { prayer, modeName ->
+                                    scope.launch {
+                                        val mode = runCatching { AdhanMode.valueOf(modeName) }.getOrDefault(AdhanMode.FULL)
+                                        graph.alarmPreferences.setMode(prayer, mode)
+                                        alarmPreferences = graph.alarmPreferences.current()
+                                        alarmCoordinator.rescheduleUpcoming()
+                                    }
+                                },
+                                onPreReminderChange = { prayer, minutes ->
+                                    scope.launch {
+                                        graph.alarmPreferences.setPreReminder(prayer, minutes)
+                                        alarmPreferences = graph.alarmPreferences.current()
+                                        alarmCoordinator.rescheduleUpcoming()
                                     }
                                 },
                                 onQazaTotalChange = { scope.launch { graph.qazaStore.setTotal(it) } },
