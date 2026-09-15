@@ -4,6 +4,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 object QuranLicensedAssetParser {
+    private const val AUDIO_REF = "34b43b044fb36528be7b2380733bb965b7c5b385"
+
     fun parseSurah(tanzilJson: String, mealJson: String, surahNumber: Int): QuranSurah {
         val tanzilRoot = JSONObject(tanzilJson)
         val surahs = tanzilRoot.getJSONArray("surahs")
@@ -45,7 +47,7 @@ object QuranLicensedAssetParser {
             )
         }
         require(verses.isNotEmpty()) { "Sure ayetleri boş: $surahNumber" }
-        return QuranSurah(surahNumber, surah.getString("name"), verses)
+        return QuranSurah(surahNumber, SurahNames.name(surahNumber), verses)
     }
 
     private fun mealArray(json: String): JSONArray {
@@ -54,7 +56,7 @@ object QuranLicensedAssetParser {
     }
 
     private fun audioUrl(reciter: String, surah: Int, aya: Int): String =
-        "https://raw.githubusercontent.com/kurancilar/json/refs/heads/main/audio/$reciter/${surah.toString().padStart(3, '0')}/${aya.toString().padStart(3, '0')}.mp3"
+        "https://raw.githubusercontent.com/kurancilar/json/$AUDIO_REF/audio/$reciter/${surah.toString().padStart(3, '0')}/${aya.toString().padStart(3, '0')}.mp3"
 
     private fun globalId(surah: Int, aya: Int): Int = surah * 1000 + aya
 }
