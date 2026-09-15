@@ -2,7 +2,7 @@ name: Build Namaz V8 Phase 1 APK
 
 on:
   push:
-    branches: [ "namaz-v8-native", "namaz-clean-rebuild" ]
+    branches: [ "namaz-v8-native", "namaz-clean-rebuild", "namaz-v8-fullapk" ]
     paths:
       - "namaz-v8/**"
       - "namaz-native/**"
