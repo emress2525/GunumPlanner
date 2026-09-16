@@ -1,0 +1,59 @@
+name: Build Ankara Avukat Firsat Radari APK
+
+on:
+  push:
+    branches:
+      - ankara-avukat-radar-build
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore Android project
+        shell: bash
+        run: |
+          mkdir -p ankara-avukat-radar
+          base64 -d ankara-avukat-radar-project.tgz.b64 | tar -xz -C ankara-avukat-radar
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Install Android SDK 36
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Run core tests
+        run: gradle -p ankara-avukat-radar :core:test --stacktrace
+
+      - name: Build debug APK
+        run: gradle -p ankara-avukat-radar :app:assembleDebug --stacktrace
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          test -f ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+          sha256sum ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnkaraAvukatFirsatRadari-debug-apk
+          path: ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
