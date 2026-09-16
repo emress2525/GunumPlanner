@@ -1,4 +1,4 @@
-name: Namaz V2 Full Verification
+name: Dinimi Öğreniyorum Full Verification
 
 on:
   push:
@@ -20,20 +20,19 @@ jobs:
         run: |
           set -euo pipefail
           cat source.part00 source.part01 source.part02 source.part03 source.part04 source.part05 source.part06 source.part07 source.part08 source.part09 source.part10 source.part11 > source-full.tar.gz
-          echo "710b80a4db2a7a65287c4e3721b75df2a02708dd6318b54293ea631aab7cfaae  source-full.tar.gz" | sha256sum -c -
+          echo "a7e636dd65980746507d6a0c54b6816892215a872565fb2ac7e84aac7b351a16  source-full.tar.gz" | sha256sum -c -
           rm -rf app build.gradle settings.gradle gradle.properties
           tar -xzf source-full.tar.gz -C .
-          sed -i 's/android.useAndroidX=false/android.useAndroidX=true/' gradle.properties
-          sed -i 's/\.setMinHeight(/.setMinimumHeight(/g' app/src/main/java/com/namazv2/app/MainActivity.java
-          sed -i "/dependencies {/a\\    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')" app/build.gradle
           grep -q '^android.useAndroidX=true$' gradle.properties
-          ! grep -q '\.setMinHeight(' app/src/main/java/com/namazv2/app/MainActivity.java
           grep -q "kotlin-bom:1.8.22" app/build.gradle
-          test -f app/src/main/java/com/namazv2/app/MainActivity.java
+          grep -q "Dinimi Öğreniyorum" app/src/main/res/values/strings.xml
+          grep -q "setOnApplyWindowInsetsListener" app/src/main/java/com/namazv2/app/MainActivity.java
+          test -f app/src/main/java/com/namazv2/core/LearningPathCatalog.java
+          test -f app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          test -f app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
           test -f app/src/main/java/com/namazv2/billing/BillingManager.java
           test -f app/src/main/java/com/namazv2/data/HadithRepository.java
           test -f app/src/main/java/com/namazv2/widget/PrayerWidgetProvider.java
-          test -f app/src/test/java/com/namazv2/core/AdvancedCoreLogicTest.java
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -95,9 +94,9 @@ jobs:
           test -n "$APKSIGNER"
           "$APKSIGNER" verify --verbose app/build/outputs/apk/debug/app-debug.apk
           test -s app/build/outputs/apk/debug/app-debug.apk
-          cp app/build/outputs/apk/debug/app-debug.apk NamazV2-1.0.0-rc1-debug.apk
-          cp app/build/outputs/bundle/release/app-release.aab NamazV2-1.0.0-rc1-unsigned.aab
-          sha256sum NamazV2-1.0.0-rc1-debug.apk NamazV2-1.0.0-rc1-unsigned.aab | tee artifact-sha256.txt
+          cp app/build/outputs/apk/debug/app-debug.apk DinimiOgreniyorum-1.1.0-rc2-debug.apk
+          cp app/build/outputs/bundle/release/app-release.aab DinimiOgreniyorum-1.1.0-rc2-unsigned.aab
+          sha256sum DinimiOgreniyorum-1.1.0-rc2-debug.apk DinimiOgreniyorum-1.1.0-rc2-unsigned.aab | tee artifact-sha256.txt
 
       - name: Enable KVM
         run: |
@@ -123,15 +122,15 @@ jobs:
             adb shell monkey -p com.namazv2.app --throttle 80 --pct-syskeys 0 --pct-anyevent 0 -v 200
             sleep 3
             test -n "$(adb shell pidof com.namazv2.app | tr -d '\r')"
-            adb logcat -d > /tmp/namaz-logcat.txt
-            if grep -E "FATAL EXCEPTION|ANR in com\.namazv2\.app" /tmp/namaz-logcat.txt; then cat /tmp/namaz-logcat.txt; exit 1; fi
+            adb logcat -d > /tmp/dinimi-logcat.txt
+            if grep -E "FATAL EXCEPTION|ANR in com\.namazv2\.app" /tmp/dinimi-logcat.txt; then cat /tmp/dinimi-logcat.txt; exit 1; fi
 
       - name: Upload verified installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: NamazV2-Full-APK
+          name: DinimiOgreniyorum-Full-APK
           path: |
-            NamazV2/NamazV2-1.0.0-rc1-debug.apk
+            NamazV2/DinimiOgreniyorum-1.1.0-rc2-debug.apk
             NamazV2/artifact-sha256.txt
           if-no-files-found: error
           retention-days: 30
@@ -139,8 +138,8 @@ jobs:
       - name: Upload release AAB candidate
         uses: actions/upload-artifact@v4
         with:
-          name: NamazV2-AAB-Candidate
-          path: NamazV2/NamazV2-1.0.0-rc1-unsigned.aab
+          name: DinimiOgreniyorum-AAB-Candidate
+          path: NamazV2/DinimiOgreniyorum-1.1.0-rc2-unsigned.aab
           if-no-files-found: error
           retention-days: 30
 
@@ -148,7 +147,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: NamazV2-Full-Source
+          name: DinimiOgreniyorum-Full-Source
           path: |
             NamazV2/app
             NamazV2/build.gradle
