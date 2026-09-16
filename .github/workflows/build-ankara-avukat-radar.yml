@@ -18,7 +18,8 @@ jobs:
         shell: bash
         run: |
           mkdir -p ankara-avukat-radar
-          base64 -d ankara-avukat-radar-project.tgz.b64 | tar -xz -C ankara-avukat-radar
+          cat ankara-build-archive/part* | base64 -d | tar -xz -C ankara-avukat-radar
+          test "$(find ankara-avukat-radar -type f | wc -l)" -gt 5
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -50,9 +51,11 @@ jobs:
       - name: Verify APK
         shell: bash
         run: |
-          test -f ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
-          ls -lh ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
-          sha256sum ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+          APK=ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
+          test -f "$APK"
+          ls -lh "$APK"
+          sha256sum "$APK"
+          unzip -t "$APK" >/dev/null
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
