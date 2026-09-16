@@ -23,6 +23,8 @@ jobs:
           echo 'ccf101e19d15766a263a84cf947372be433475017a645e9becc29a1f9a3fc2ca  /tmp/ankara-v03.tgz' | sha256sum -c -
           mkdir -p ankara-avukat-radar
           tar -xzf /tmp/ankara-v03.tgz -C ankara-avukat-radar
+          cp ankara-v03-overlay/styles.xml ankara-avukat-radar/app/src/main/res/values/styles.xml
+          grep -q 'Theme.AnkaraAvukatRadar' ankara-avukat-radar/app/src/main/res/values/styles.xml
           test "$(find ankara-avukat-radar -type f | wc -l)" -gt 10
 
       - name: Set up Java 17
