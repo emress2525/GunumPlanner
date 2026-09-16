@@ -1,0 +1,67 @@
+name: Daily Ankara Lawyer Opportunity Scan
+
+on:
+  schedule:
+    - cron: '20 4 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/ankara-avukat-radar-daily-scan.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install scanner dependencies
+        run: pip install -r ankara-avukat-radar-live/requirements.txt
+
+      - name: Restore verified scanner
+        shell: bash
+        run: |
+          cat ankara-avukat-radar-live/scanner_payload/part* | base64 -d | gzip -dc > /tmp/radar_scanner.py
+          python -m py_compile /tmp/radar_scanner.py
+
+      - name: Scan official Ankara sources
+        run: |
+          python /tmp/radar_scanner.py \
+            --output ankara-avukat-radar-live/events.json \
+            --status-output ankara-avukat-radar-live/scan_status.json
+
+      - name: Validate live feed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('ankara-avukat-radar-live/events.json')
+          data = json.loads(p.read_text('utf-8'))
+          assert data.get('schema_version') == 1
+          assert isinstance(data.get('events'), list)
+          assert data.get('event_count') == len(data['events'])
+          assert data.get('generated_at')
+          print('validated events:', len(data['events']))
+          PY
+
+      - name: Publish updated feed
+        shell: bash
+        run: |
+          git config user.name 'Ankara Avukat Radar Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add ankara-avukat-radar-live/events.json ankara-avukat-radar-live/scan_status.json
+          if git diff --cached --quiet; then
+            echo 'No feed changes.'
+          else
+            git commit -m '[radar-data] Daily Ankara opportunity scan'
+            git push
+          fi
