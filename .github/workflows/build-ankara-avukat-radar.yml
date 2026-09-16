@@ -1,66 +1,10 @@
 name: Build Ankara Avukat Firsat Radari APK
 
 on:
-  push:
-    branches:
-      - ankara-avukat-radar-build
   workflow_dispatch:
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Restore Android project
-        shell: bash
-        run: |
-          mkdir -p ankara-avukat-radar
-          cat ankara-build-archive/part* | base64 -d | tar -xz -C ankara-avukat-radar
-          test "$(find ankara-avukat-radar -type f | wc -l)" -gt 5
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Gradle 8.13
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.13'
-
-      - name: Configure Android SDK
-        shell: bash
-        run: |
-          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
-          echo "/usr/local/lib/android/sdk/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          echo "/usr/local/lib/android/sdk/platform-tools" >> "$GITHUB_PATH"
-          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
-          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-
-      - name: Run core tests
-        run: gradle -p ankara-avukat-radar :core:test --stacktrace
-
-      - name: Build debug APK
-        run: gradle -p ankara-avukat-radar :app:assembleDebug --stacktrace
-
-      - name: Verify APK
-        shell: bash
-        run: |
-          APK=ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
-          test -f "$APK"
-          ls -lh "$APK"
-          sha256sum "$APK"
-          unzip -t "$APK" >/dev/null
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: AnkaraAvukatFirsatRadari-debug-apk
-          path: ankara-avukat-radar/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 7
+      - run: echo "APK build temporarily paused while v0.3 archive is uploaded"
