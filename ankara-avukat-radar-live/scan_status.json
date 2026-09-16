@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-09-16T03:55:14.177320",
+  "sources": [
+    {
+      "name": "Ankara Ticaret Odası",
+      "ok": true,
+      "events": 2,
+      "ms": 1472
+    },
+    {
+      "name": "Ankara Barosu",
+      "ok": true,
+      "events": 0,
+      "ms": 1501
+    },
+    {
+      "name": "Ankara Kalkınma Ajansı",
+      "ok": true,
+      "events": 2,
+      "ms": 12374
+    },
+    {
+      "name": "Ankara Sanayi Odası",
+      "ok": true,
+      "events": 10,
+      "ms": 9340
+    },
+    {
+      "name": "Bilkent CYBERPARK",
+      "ok": false,
+      "events": 0,
+      "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "ms": 406
+    },
+    {
+      "name": "OSTİM OSB",
+      "ok": true,
+      "events": 0,
+      "ms": 6209
+    }
+  ],
+  "fresh_event_count": 13,
+  "event_count": 17
+}
