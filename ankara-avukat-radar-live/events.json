@@ -1,96 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T04:29:03",
-  "event_count": 22,
+  "generated_at": "2026-09-21T04:30:40",
+  "event_count": 21,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 2,
-      "ms": 1238
+      "ms": 1224
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1322
+      "ms": 1198
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 1,
-      "ms": 9231
+      "ms": 14391
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 9,
-      "ms": 8869
+      "events": 8,
+      "ms": 8428
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 386
+      "ms": 452
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 5385
+      "ms": 5410
     }
   ],
   "events": [
-    {
-      "id": "c6c06a24c70fe55a",
-      "title": "BÜKREŞ-ANKARA İŞ FORUMU",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN BÜKREŞ-ANKARA İŞ FORUMU Ana Sayfa Duyurular BÜKREŞ-ANKARA İŞ FORUMU 2026-09-18 00:00:00 İşareti : 05/5000 -2720 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ankara Büyükşehir Belediyesi'nden alınan bir yazıda; Ankara Büyükşehir Belediyesi ile Romanya'nın başkenti Bükreş Belediyesi arasında imzalanan Kardeş Şehir ve İş Birliği Protokolü'nün 28. yıl dönümü vesilesiyle, ilişkileri yeniden canlandırmak ve daha da geliştirmek amacıyla 8-10 Ekim 2026 tarihleri arasında Ankara Büyükşehir Belediye Başkanı Sayın Mansur Yavaş ve beraberindeki bir heyetin Bükreş'e ziyaret gerçekleştireceği belirtilmiştir. Bükreş Belediyesi'nin daveti üzerine kardeş şehir ilişkilerini geliştirmek, her iki şehrin ekonomisine katkı sağlamak ve iş insanlarını bir araya getirmek amacıyla Bükreş'te \"BükreşAnkara İş Forum",
-      "starts_at": "2026-09-21T00:00:00",
-      "ends_at": "2026-09-21T02:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/bukres-ankara-is-forumu-7861",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları",
-        "networking"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket sahipleri",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 98,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "ce5d8392cc4ffdf1",
       "title": "Duyurular",
