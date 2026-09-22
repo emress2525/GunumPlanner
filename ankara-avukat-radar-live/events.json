@@ -1,150 +1,93 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-21T04:30:40",
-  "event_count": 21,
+  "generated_at": "2026-09-22T04:29:19",
+  "event_count": 22,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 2,
-      "ms": 1224
+      "ms": 1264
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1198
+      "ms": 1289
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 1,
-      "ms": 14391
+      "events": 2,
+      "ms": 11477
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 8,
-      "ms": 8428
+      "events": 10,
+      "ms": 8483
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 452
+      "ms": 383
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 5410
+      "ms": 7531
     }
   ],
   "events": [
     {
-      "id": "ce5d8392cc4ffdf1",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR DSYS HOREKA KAYITLARI Devamı DUYURULAR İMALAT SANAYİNİN DİJİTAL DÖNÜŞÜMÜNÜN DESTEKLENMESİ İÇİN TEKNİK DESTEK PROJESİ'NİN 4. FARKINDALIK ARTIRMA SEMİNERİ Devamı DUYURULAR SMART ECONOMIC PLANNING AND INDUSTRIAL POLICY (SEPIP) 2026 KONFERANSI Devamı DUYURULAR SAPRI 2026 & ACNDT 2026, TUNUS, 17-20 KASIM 2026 Devamı DUYURULAR TÜRKİYE-SLOVAKYA ETOK/JETCO I. DÖNEM TOPLANTISI HAZIRLIKLARI KAPSAMINDA GÖRÜŞ TALEBİ Devamı DUYURULAR ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Devamı DUYURULAR 2021-2025 VERİLERİNİ İÇEREN İŞLETME DEĞERLENDİRME RAPORU (İDR) Devamı DUYURULAR V. TÜRK DÜNYASI ULUSLARARASI MÜHENDİSLİK ZİRVESİ/25-28 EKİM 2026 Devamı DUYURULAR DOKTORA TEZİ ANKET ÇALIŞMASI HK Devamı DUYURULAR V. TÜRK DÜNYASI ULUSLARARASI MÜHENDİSLİK ZİRVESİ/25-2",
-      "starts_at": "2026-09-21T09:00:00",
-      "ends_at": "2026-09-21T11:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
+      "id": "3b8a170ed4aa1622",
+      "title": "Duatepe Salonu AHİLİK VE TİCARET AHLAKI PANELİ",
+      "description": "Duatepe Salonu AHİLİK VE TİCARET AHLAKI PANELİ - Ankara Ticaret Odası etkinliği.",
+      "starts_at": "2026-09-22T10:00:00",
+      "ends_at": "2026-09-22T13:00:00",
+      "venue": "ATO Congresium",
+      "district": "Çankaya",
       "city": "Ankara",
       "online": false,
       "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
+      "organizer": "Ankara Ticaret Odası",
+      "source_name": "Ankara Ticaret Odası",
+      "source_url": "https://www.atonet.org.tr/EtkinlikArsivi",
       "verified": true,
       "source_confidence": 99,
       "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları",
-        "networking"
+        "insan kaynakları"
       ],
       "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
+        "sektör profesyonelleri"
       ],
       "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
         "Ticaret hukuku",
         "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
+        "KVKK"
       ],
-      "networking_score": 98,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
+      "networking_score": 62,
+      "decision_maker_score": 58,
+      "professional_development_score": 68,
+      "corporate_opportunity_score": 56
     },
     {
-      "id": "tataristan-yatirim-2026",
-      "title": "Tataristan İş ve Yatırım Fırsatları Semineri",
-      "description": "Tataristan Yatırım Geliştirme Ajansı heyeti ile sanayi, enerji, petrokimya, makine, otomotiv, tarım ve gıda alanlarında iş ve yatırım fırsatları.",
-      "starts_at": "2026-09-21T09:30:00",
-      "ends_at": "2026-09-21T11:30:00",
-      "venue": "Türkiye Odalar ve Borsalar Birliği",
-      "district": "Söğütözü",
+      "id": "f81121cb56fd1a9b",
+      "title": "ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI ASO BAŞKANI SEYİT ARDIÇ OVP İSTİŞARE TOPLANTISINA KATILDI ASO BAŞKANI SEYİT ARDIÇ, 2026 YILI İKİNCİ ÇEYREK BÜYÜME RAKAMLARINI DEĞERLENDİRDİ ANKARA SANAYİ ODASI AĞUSTOS AYI MECLİS TOPLANTISI GERÇEKLEŞTİRİLDİ 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU B",
+      "starts_at": "2026-09-22T13:30:00",
+      "ends_at": "2026-09-22T15:30:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
       "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "TOBB",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/tataristan-is-ve-yatirim-firsatlari-semineri-21-eylul-2026-7827",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "sanayi",
-        "dış ticaret",
-        "enerji"
-      ],
-      "audience": [
-        "şirket sahipleri",
-        "yatırımcılar",
-        "sanayiciler",
-        "ihracatçılar",
-        "şirket yöneticileri"
-      ],
-      "legal_needs": [
-        "Uluslararası ticaret",
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Sözleşmeler",
-        "Vergi ve teşvikler"
-      ],
-      "networking_score": 91,
-      "decision_maker_score": 94,
-      "professional_development_score": 82,
-      "corporate_opportunity_score": 96
-    },
-    {
-      "id": "888d6483e596c502",
-      "title": "TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI Ana Sayfa Duyurular TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI 2026-09-18 00:00:00 İşareti : 05/5000-2723 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Türk Standardları Enstitüsü'nün (TSE) yazısına atfen, diş protez laboratuvarları için genel kurallar ile standart tasarısının hazırlandığı ve görüşe açıldığı ifade edilmektedir. Bu kapsamda ekte bilgilerinize sunulan tasarı ile ilgili görüşlerinizin 22 Eylül 2026 tarihine kadar Odamıza (dim@aso.org.tr) iletilmesi gerekmektedir. Saygılarımızla, Ankara Sanayi Odası Ek Listesi TST 12821 İş Yerleri - Diş Protez Laboratuvarları için Genel Kurallar Sta",
-      "starts_at": "2026-09-22T00:00:00",
-      "ends_at": "2026-09-22T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
+      "online": true,
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/tst-12821-is-yerleri-dis-protez-laboratuvarlari-icin-genel-kurallar-standart-tasarisi-7860",
+      "source_url": "https://www.aso.org.tr/",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -179,36 +122,52 @@
       "corporate_opportunity_score": 98
     },
     {
-      "id": "3b8a170ed4aa1622",
-      "title": "Duatepe Salonu AHİLİK VE TİCARET AHLAKI PANELİ",
-      "description": "Duatepe Salonu AHİLİK VE TİCARET AHLAKI PANELİ - Ankara Ticaret Odası etkinliği.",
-      "starts_at": "2026-09-22T10:00:00",
-      "ends_at": "2026-09-22T13:00:00",
-      "venue": "ATO Congresium",
-      "district": "Çankaya",
+      "id": "cc3b9544cb1c98c1",
+      "title": "FRANSA’DA İŞ VE YATIRIM: FRANSA ÜLKE GÜNÜ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN FRANSA’DA İŞ VE YATIRIM: FRANSA ÜLKE GÜNÜ Ana Sayfa Etkinlikler FRANSA’DA İŞ VE YATIRIM: FRANSA ÜLKE GÜNÜ ETKİNLİK TÜRÜ ETKİNLİK BAŞLANGIÇ TARİHİ 2026-09-22 13:30:00 BİTİŞ TARİHİ 2026-09-22 18:00:00 FORM Bu etkinliğe ait forma ulaşmak için tıklayınız Sayın Üyemiz, Odamız ile Fransız Büyükelçiliği ve Türk-Fransız Ticaret Derneği (CCI France Turquie – CCIFT) iş birliğinde, 22 Eylül 2026 Salı günü 13.30–18.00 saatleri arasında Ankara Sanayi Odası'nda, \"Fransa'da İş ve Yatırım\" temalı Fransa Ülke Günü etkinliği düzenlenecektir. Etkinlik, Odamız Yönetim Kurulu Başkanı Sayın Seyit ARDIÇ, Fransa'nın Türkiye Büyükelçisi Ekselansları Isabelle DUMONT ve CCIFT Başkanı Sayın Franck MEREYDE'nin açılış konuşmalarıyla başlayacaktır. Program kapsamında, Fransa-Türkiye ticari ve ekonomik ilişkiler",
+      "starts_at": "2026-09-22T13:30:00",
+      "ends_at": "2026-09-22T18:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
       "city": "Ankara",
       "online": false,
       "free": true,
-      "organizer": "Ankara Ticaret Odası",
-      "source_name": "Ankara Ticaret Odası",
-      "source_url": "https://www.atonet.org.tr/EtkinlikArsivi",
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/event/fransa-da-is-ve-yatirim-fransa-ulke-gunu-310",
       "verified": true,
       "source_confidence": 99,
       "categories": [
+        "yatırım",
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
         "insan kaynakları"
       ],
       "audience": [
-        "sektör profesyonelleri"
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
       ],
       "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
         "Ticaret hukuku",
         "Sözleşmeler",
-        "KVKK"
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
       ],
-      "networking_score": 62,
-      "decision_maker_score": 58,
-      "professional_development_score": 68,
-      "corporate_opportunity_score": 56
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
+      "corporate_opportunity_score": 98
     },
     {
       "id": "fd0eee75cb3cd41b",
@@ -352,6 +311,53 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "2dd857a095a06351",
+      "title": "ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Ana Sayfa Duyurular ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU 2026-09-15 00:00:00 İşareti : - İrtibat: sicil@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası Meslek Komitesi ve Meclis Üyesi Seçimleri 01 Ekim 2026 Perşembe günü Atatürk Bulvarı No:193 Kavaklıdere/ANKARA adresindeki Odamız hizmet binasında gerçekleştirilecektir. Seçime ilişkin tüm hususlar; listelerin, İlçe Seçim Kurulu Başkanlığı tarafından kesinleştirilmesinin ardından gazeteler aracılığıyla ve Odamızın iletişim kanallarından duyurulacaktır. 1. Oda seçimlerinde seçme ve seçilme hakkının kullanılabilmesi için Organ Seçimleri Hakkında Yönetmelikte öngörülen yeterlilik şartlarının taşınması ve İlçe Seçim Kurulu Başkanlığı tarafından kesinleştirilen listelerde yer alınması ge",
+      "starts_at": "2026-10-01T00:00:00",
+      "ends_at": "2026-10-01T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/ankara-sanayi-odasi-organ-secimleri-duyurusu-7863",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "5931ed2a0bd1fe0c",
       "title": "ERİTME VE DÖKÜM ÜLKESİNİN BELİRLENMESİ HAKKINDA KOMİSYON UYGULAMA TÜZÜĞÜ HK.",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ERİTME VE DÖKÜM ÜLKESİNİN BELİRLENMESİ HAKKINDA KOMİSYON UYGULAMA TÜZÜĞÜ HK. Ana Sayfa Duyurular ERİTME VE DÖKÜM ÜLKESİNİN BELİRLENMESİ HAKKINDA KOMİSYON UYGULAMA TÜZÜĞÜ HK. 2026-09-18 00:00:00 İşareti : 05/5000-2712 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) gelen yazıda, Ticaret Bakanlığı'nın yazısına atfen, Avrupa Birliği'nin (AB) yeni Çelik Tüzüğü kapsamında hazırlanan \"Eritme ve Döküm Ülkesinin Belirlenmesi İçin Sunulacak Kanıt Türlerinin Belirlenmesi Hakkında 2026/1963 sayılı Komisyon Uygulama Tüzüğü\"nün 31 Ağustos 2026 tarihli AB Resmi Gazetesi'nde yayımlandığı bildirilmektedir. Söz konusu düzenleme kapsamında \"eritme ve döküm ülkesi\"; ham çelik veya demirin bir üretim fırınında sıvı halde ilk kez üretildiği ve eritme işlemi sonrası",
@@ -399,33 +405,32 @@
       "corporate_opportunity_score": 98
     },
     {
-      "id": "2dd857a095a06351",
-      "title": "ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Ana Sayfa Duyurular ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU 2026-09-15 00:00:00 İşareti : - İrtibat: sicil@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası Meslek Komitesi ve Meclis Üyesi Seçimleri 01 Ekim 2026 Perşembe günü Atatürk Bulvarı No:193 Kavaklıdere/ANKARA adresindeki Odamız hizmet binasında gerçekleştirilecektir. Seçime ilişkin tüm hususlar; listelerin, İlçe Seçim Kurulu Başkanlığı tarafından kesinleştirilmesinin ardından gazeteler aracılığıyla ve Odamızın iletişim kanallarından duyurulacaktır. 1. Oda seçimlerinde seçme ve seçilme hakkının kullanılabilmesi için Organ Seçimleri Hakkında Yönetmelikte öngörülen yeterlilik şartlarının taşınması ve İlçe Seçim Kurulu Başkanlığı tarafından kesinleştirilen listelerde yer alınması ge",
-      "starts_at": "2026-10-01T00:00:00",
-      "ends_at": "2026-10-01T02:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
+      "id": "b98db2d73ce65b5f",
+      "title": "Haberler",
+      "description": "Haberler | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Haberler Tema - Any - Teknoloji ve Ticarileşme Kırsal Kalkınma Sosyal Kalkınma Apply 21 Eylül 2026 Yeşil Ekonomik Fırsatlar ve Zorluklar Analizi Kapsamında Bölgesel Paydaş Toplantısı Gerçekleştirilecek SoGreen Programı kapsamında, 2 Ekim 2026 tarihinde Bölgesel Paydaş Toplantısı gerçekleştirilecektir. Devamını Oku 18 Eylül 2026 İklim Ankara Projesi’nin Lansmanı Gerçekleştirildi Ankara’nın yeşil ve dijital dönüşümüne katkı sağlamayı amaçlayan “İklim Ankara Çevre, Enerji ve İklim Yönetiminde Dijital Dönüşüm Mobil… Devamını Oku 18 Eylül 2026 Ankara Keçisi Yetiştiriciliği ve Tiftik Üretimi Çalıştayı Gerçekleştirildi Ankara Keçisi’nin üretim ve yetiştiriciliğine yönelik yol haritasının ele alındığı çalıştay Kızılcahamam’da gerçekleştirildi. Devamını Oku 18 Eylül 2026 EYE Programı Başarı Hikâyeleri Serisi – Burak Kara Ankara Kalkınma Ajansı’nın aracı kuruluş olarak yer aldığı Erasmus for Young Entrepreneurs (EYE) Programı’nı başarıyla tamamlayan… Devamını Oku 18 Eylül 2026 2026 Yılı Sosyal Yenilik ve Sosyal Kalkınma Teknik Destek Programı 5. Dönem (Eylül-Ekim) Başvuruları Kapatıldı 2026 Yılı Sosyal Yenilik ve Sosyal Kalkınma Teknik Destek Programı kapsamında 5. Dönem (Eylül-Ekim) başvur",
+      "starts_at": "2026-10-02T09:00:00",
+      "ends_at": "2026-10-02T11:00:00",
+      "venue": "Ankara Kalkınma Ajansı",
+      "district": "Çankaya",
       "city": "Ankara",
       "online": false,
       "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/ankara-sanayi-odasi-organ-secimleri-duyurusu-7846",
+      "organizer": "Ankara Kalkınma Ajansı",
+      "source_name": "Ankara Kalkınma Ajansı",
+      "source_url": "https://ankaraka.org.tr/haberler",
       "verified": true,
-      "source_confidence": 99,
+      "source_confidence": 98,
       "categories": [
+        "yatırım",
         "startup",
         "sanayi",
-        "dış ticaret",
         "teknoloji",
         "insan kaynakları"
       ],
       "audience": [
         "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
+        "şirket yöneticileri",
+        "sanayiciler"
       ],
       "legal_needs": [
         "Yatırım sözleşmeleri",
@@ -441,7 +446,7 @@
         "Yazılım sözleşmeleri"
       ],
       "networking_score": 90,
-      "decision_maker_score": 94,
+      "decision_maker_score": 98,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
@@ -483,6 +488,55 @@
       "decision_maker_score": 97,
       "professional_development_score": 77,
       "corporate_opportunity_score": 86
+    },
+    {
+      "id": "8cbd6eb5e157cb02",
+      "title": "BÜKREŞ-ANKARA İŞ FORUMU",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN BÜKREŞ-ANKARA İŞ FORUMU Ana Sayfa Duyurular BÜKREŞ-ANKARA İŞ FORUMU 2026-09-18 00:00:00 İşareti : 05/5000 -2720 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ankara Büyükşehir Belediyesi'nden alınan bir yazıda; Ankara Büyükşehir Belediyesi ile Romanya'nın başkenti Bükreş Belediyesi arasında imzalanan Kardeş Şehir ve İş Birliği Protokolü'nün 28. yıl dönümü vesilesiyle, ilişkileri yeniden canlandırmak ve daha da geliştirmek amacıyla 8-10 Ekim 2026 tarihleri arasında Ankara Büyükşehir Belediye Başkanı Sayın Mansur Yavaş ve beraberindeki bir heyetin Bükreş'e ziyaret gerçekleştireceği belirtilmiştir. Bükreş Belediyesi'nin daveti üzerine kardeş şehir ilişkilerini geliştirmek, her iki şehrin ekonomisine katkı sağlamak ve iş insanlarını bir araya getirmek amacıyla Bükreş'te \"BükreşAnkara İş Forum",
+      "starts_at": "2026-10-10T00:00:00",
+      "ends_at": "2026-10-10T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/bukres-ankara-is-forumu-7861",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları",
+        "networking"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket sahipleri",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 98,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
     },
     {
       "id": "51779e4ba40cde53",
@@ -803,7 +857,7 @@
     {
       "id": "6aff81918bf3146d",
       "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR INTERSEC GLOBAL 2027 FUARI/12-14 OCAK 2027 Devamı DUYURULAR BÜKREŞ-ANKARA İŞ FORUMU Devamı DUYURULAR TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI Devamı DUYURULAR YUNANİSTAN TRAFİK DENETİMLERİ Devamı DUYURULAR ERİTME VE DÖKÜM ÜLKESİNİN BELİRLENMESİ HAKKINDA KOMİSYON UYGULAMA TÜZÜĞÜ HK. Devamı DUYURULAR ASO 63. KURULUŞ YILI ÖDÜLLERİ BAŞVURU ÇAĞRISI Devamı DUYURULAR KOSGEB DESTEKLERİ BİLGİLENDİRME TOPLANTISI (Küresel Rekabetçilik Destek Programı – 2026 Yılı 1. Başvuru Dönemi İstihdamı Koruma Destek Programı – 2026 Yılı 2. Dönemi) Devamı DUYURULAR MESLEKİ EĞİTİM KURSLARI AÇILMASI TALEP EDİLEN MESLEKLER Devamı DUYURULAR NET SIFIR SANAYİ YASASI'NA İLİŞKİN REHBER Devamı DUYURULAR DSYS HOREKA KAYITLARI Deva",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Devamı DUYURULAR INTERSEC GLOBAL 2027 FUARI/12-14 OCAK 2027 Devamı DUYURULAR BÜKREŞ-ANKARA İŞ FORUMU Devamı DUYURULAR TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI Devamı DUYURULAR YUNANİSTAN TRAFİK DENETİMLERİ Devamı DUYURULAR ERİTME VE DÖKÜM ÜLKESİNİN BELİRLENMESİ HAKKINDA KOMİSYON UYGULAMA TÜZÜĞÜ HK. Devamı DUYURULAR ASO 63. KURULUŞ YILI ÖDÜLLERİ BAŞVURU ÇAĞRISI Devamı DUYURULAR KOSGEB DESTEKLERİ BİLGİLENDİRME TOPLANTISI (Küresel Rekabetçilik Destek Programı – 2026 Yılı 1. Başvuru Dönemi İstihdamı Koruma Destek Programı – 2026 Yılı 2. Dönemi) Devamı DUYURULAR MESLEKİ EĞİTİM KURSLARI AÇILMASI TALEP EDİLEN MESLEKLER Devamı DUYURULAR NET SIFIR SANAYİ YASASI",
       "starts_at": "2026-11-20T09:00:00",
       "ends_at": "2026-11-20T11:00:00",
       "venue": "Ankara Sanayi Odası",
