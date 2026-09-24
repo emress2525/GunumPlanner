@@ -1,45 +1,44 @@
 {
-  "generated_at": "2026-09-23T04:29:59.694883",
+  "generated_at": "2026-09-24T04:30:03.725537",
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1742
+      "ms": 1440
     },
     {
       "name": "Ankara Barosu",
-      "ok": false,
+      "ok": true,
       "events": 0,
-      "error": "HTTPError: 502 Server Error: Bad Gateway for url: https://www.ankarabarosu.org.tr/calendar",
-      "ms": 985
+      "ms": 1453
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 17303
+      "ms": 15380
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 9,
-      "ms": 10279
+      "events": 11,
+      "ms": 10118
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 441
+      "ms": 394
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 6597
+      "ms": 6274
     }
   ],
-  "fresh_event_count": 12,
-  "event_count": 23
+  "fresh_event_count": 14,
+  "event_count": 26
 }
