@@ -1,53 +1,53 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-24T04:30:03",
+  "generated_at": "2026-09-25T04:30:25",
   "event_count": 26,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1440
+      "ms": 1853
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1453
+      "ms": 1747
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 15380
+      "ms": 11747
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 11,
-      "ms": 10118
+      "ms": 10317
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 394
+      "ms": 595
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 6274
+      "ms": 8723
     }
   ],
   "events": [
     {
-      "id": "0b9e3f8d5a163476",
+      "id": "c6fc42d68a089914",
       "title": "ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI ASO BAŞKANI SEYİT ARDIÇ OVP İSTİŞARE TOPLANTISINA KATILDI ASO BAŞKANI SEYİT ARDIÇ, 2026 YILI İKİNCİ ÇEYREK BÜYÜME RAKAMLARINI DEĞERLENDİRDİ 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmalar",
-      "starts_at": "2026-09-24T09:00:00",
-      "ends_at": "2026-09-24T11:00:00",
+      "starts_at": "2026-09-25T09:00:00",
+      "ends_at": "2026-09-25T11:00:00",
       "venue": "Çevrim içi",
       "district": "Çevrim içi",
       "city": "Ankara",
@@ -90,11 +90,11 @@
       "corporate_opportunity_score": 98
     },
     {
-      "id": "a18e1c91ce54bcad",
+      "id": "3e99948e6dab66f1",
       "title": "Kurumsal Sürdürülebilirlik Raporlaması Uzmanlığı Eğitimi",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Kurumsal Sürdürülebilirlik Raporlaması Uzmanlığı Eğitimi Ana Sayfa Etkinlikler Kurumsal Sürdürülebilirlik Raporlaması Uzmanlığı Eğitimi ETKİNLİK TÜRÜ EĞİTİM BAŞLANGIÇ TARİHİ 2026-09-24 09:00:00 BİTİŞ TARİHİ 2026-09-24 18:00:00 FORM Bu etkinliğe ait forma ulaşmak için tıklayınız . KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamız Harç Tarifesi Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programları Organizasyon Şeması Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo ASO Kurumsal İletişim Stratejisi BİRİMLER Genel Sekreterlik Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdür",
-      "starts_at": "2026-09-24T09:00:00",
-      "ends_at": "2026-09-24T11:00:00",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Kurumsal Sürdürülebilirlik Raporlaması Uzmanlığı Eğitimi Ana Sayfa Etkinlikler Kurumsal Sürdürülebilirlik Raporlaması Uzmanlığı Eğitimi ETKİNLİK TÜRÜ EĞİTİM BAŞLANGIÇ TARİHİ 2026-09-25 09:00:00 BİTİŞ TARİHİ 2026-09-25 18:00:00 FORM Bu etkinliğe ait forma ulaşmak için tıklayınız . KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamız Harç Tarifesi Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programları Organizasyon Şeması Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo ASO Kurumsal İletişim Stratejisi BİRİMLER Genel Sekreterlik Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdür",
+      "starts_at": "2026-09-25T09:00:00",
+      "ends_at": "2026-09-25T11:00:00",
       "venue": "Ankara Sanayi Odası",
       "district": "Ankara",
       "city": "Ankara",
@@ -102,7 +102,7 @@
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/event/kurumsal-surdurulebilirlik-raporlamasi-uzmanligi-egitimi-304",
+      "source_url": "https://www.aso.org.tr/event/kurumsal-surdurulebilirlik-raporlamasi-uzmanligi-egitimi-305",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -328,7 +328,7 @@
     {
       "id": "853a9795365f63ae",
       "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR TAJİKİSTAN FORWARD! FORUMU Devamı DUYURULAR ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Devamı DUYURULAR İSPANYA ALIM HEYETİ VE TÜRKİYE–İSPANYA SAVUNMA, HAVACILIK VE İLERİ İMALAT B2B ETKİNLİĞİ HK. Devamı DUYURULAR TUNUS 1. ULUSLARARASI HELAL FORUMU, 29-30 EYLÜL 2026 Devamı DUYURULAR NÜKLEER DÜZENLEME KURUMU DENETÇİLERİNİN VASIFLANDIRILMASINA İLİŞKİN USUL VE ESASLAR TASLAĞI Devamı DUYURULAR MEXT- İMALAT SANAYİNDE DİJİTAL VE YEŞİL DÖNÜŞÜM DESTEKLERİ WEBİNARI Devamı DUYURULAR INTERSEC GLOBAL 2027 FUARI/12-14 OCAK 2027 Devamı DUYURULAR BÜKREŞ-ANKARA İŞ FORUMU Devamı DUYURULAR TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI Devamı DUYURULAR YUNANİSTAN TRAFİK DENETİMLERİ Devamı DUYURULAR ERİTME VE DÖKÜM ÜLKE",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR AZERBAYCAN'DA ÜRETİLEN ÜRÜN VE FİRMALAR Devamı DUYURULAR TAJİKİSTAN FORWARD! FORUMU Devamı DUYURULAR ANKARA SANAYİ ODASI ORGAN SEÇİMLERİ DUYURUSU Devamı DUYURULAR İSPANYA ALIM HEYETİ VE TÜRKİYE–İSPANYA SAVUNMA, HAVACILIK VE İLERİ İMALAT B2B ETKİNLİĞİ HK. Devamı DUYURULAR TUNUS 1. ULUSLARARASI HELAL FORUMU, 29-30 EYLÜL 2026 Devamı DUYURULAR NÜKLEER DÜZENLEME KURUMU DENETÇİLERİNİN VASIFLANDIRILMASINA İLİŞKİN USUL VE ESASLAR TASLAĞI Devamı DUYURULAR MEXT- İMALAT SANAYİNDE DİJİTAL VE YEŞİL DÖNÜŞÜM DESTEKLERİ WEBİNARI Devamı DUYURULAR INTERSEC GLOBAL 2027 FUARI/12-14 OCAK 2027 Devamı DUYURULAR BÜKREŞ-ANKARA İŞ FORUMU Devamı DUYURULAR TST 12821 İŞ YERLERİ- DİŞ PROTEZ LABORATUVARLARI İÇİN GENEL KURALLAR STANDART TASARISI Devamı DUYURULAR YUNANİSTAN",
       "starts_at": "2026-09-30T09:00:00",
       "ends_at": "2026-09-30T11:00:00",
       "venue": "Çevrim içi",
