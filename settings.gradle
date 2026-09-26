@@ -14,5 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'GunumPlanner'
+rootProject.name = 'VocalIsolator'
 include ':app'
+project(':app').projectDir = file('vocal-isolator-build/project/app')
