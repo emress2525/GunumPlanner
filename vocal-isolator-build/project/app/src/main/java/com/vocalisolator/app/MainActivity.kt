@@ -1,5 +1,6 @@
 package com.vocalisolator.app
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
 private fun CloudVocalIsolator(activity: MainActivity) {
     val scope = rememberCoroutineScope()
     val browser = LocalUriHandler.current
-    val prefs = remember { activity.getSharedPreferences("vocal_cloud", ComponentActivity.MODE_PRIVATE) }
+    val prefs = remember { activity.getSharedPreferences("vocal_cloud", Context.MODE_PRIVATE) }
 
     var apiKey by remember { mutableStateOf(prefs.getString("api_key", "").orEmpty()) }
     var apiDraft by remember { mutableStateOf(apiKey) }
