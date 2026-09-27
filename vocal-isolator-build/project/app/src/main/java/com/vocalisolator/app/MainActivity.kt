@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -20,35 +21,30 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import com.vocalisolator.app.media.AndroidMediaInspector
-import com.vocalisolator.app.media.AndroidPcmNormalizer
-import com.vocalisolator.app.media.AndroidVideoMuxer
-import com.vocalisolator.app.model.AppError
-import com.vocalisolator.app.model.MediaKind
-import com.vocalisolator.app.model.ProcessingProgress
-import com.vocalisolator.app.model.ProcessingStage
-import com.vocalisolator.app.model.SelectedMedia
-import com.vocalisolator.app.model.SeparationResult
-import com.vocalisolator.app.output.OutputNaming
-import com.vocalisolator.app.separation.AndroidModelProvisioner
-import com.vocalisolator.app.separation.DefaultSeparationOrchestrator
-import com.vocalisolator.app.separation.DemucsNativeBridge
+import com.vocalisolator.app.cloud.CloudQuality
+import com.vocalisolator.app.cloud.CloudResult
+import com.vocalisolator.app.cloud.StemSplitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -57,16 +53,10 @@ import java.io.File
 
 private sealed interface ScreenState {
     data object Empty : ScreenState
-    data class Ready(val media: SelectedMedia) : ScreenState
-    data class Working(val media: SelectedMedia, val progress: ProcessingProgress) : ScreenState
-    data class Results(
-        val media: SelectedMedia,
-        val separation: SeparationResult,
-        val vocalVideo: File? = null,
-        val videoBusy: Boolean = false,
-        val videoProgress: Float = 0f,
-    ) : ScreenState
-    data class Error(val media: SelectedMedia?, val message: String) : ScreenState
+    data class Ready(val uri: Uri, val name: String) : ScreenState
+    data class Working(val uri: Uri, val name: String, val progress: Float, val message: String) : ScreenState
+    data class Results(val name: String, val result: CloudResult) : ScreenState
+    data class Error(val previous: Ready?, val message: String) : ScreenState
 }
 
 class MainActivity : ComponentActivity() {
@@ -75,7 +65,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    VocalIsolatorScreen(this)
+                    CloudVocalIsolator(this)
                 }
             }
         }
@@ -83,79 +73,28 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun VocalIsolatorScreen(activity: MainActivity) {
+private fun CloudVocalIsolator(activity: MainActivity) {
     val scope = rememberCoroutineScope()
-    val inspector = remember { AndroidMediaInspector(activity) }
-    val normalizer = remember { AndroidPcmNormalizer(activity) }
-    val modelProvisioner = remember { AndroidModelProvisioner(activity) }
-    val orchestrator = remember {
-        DefaultSeparationOrchestrator(
-            cacheDir = File(activity.cacheDir, "vocal-isolator"),
-            normalizer = normalizer,
-            modelProvisioner = modelProvisioner,
-            engineFactory = { model -> DemucsNativeBridge { Result.success(model) } },
-        )
-    }
-    val videoMuxer = remember { AndroidVideoMuxer(activity) }
+    val browser = LocalUriHandler.current
+    val prefs = remember { activity.getSharedPreferences("vocal_cloud", ComponentActivity.MODE_PRIVATE) }
 
+    var apiKey by remember { mutableStateOf(prefs.getString("api_key", "").orEmpty()) }
+    var apiDraft by remember { mutableStateOf(apiKey) }
+    var quality by remember { mutableStateOf(CloudQuality.FAST) }
     var state by remember { mutableStateOf<ScreenState>(ScreenState.Empty) }
-    var workJob by remember { mutableStateOf<Job?>(null) }
+    var work by remember { mutableStateOf<Job?>(null) }
     var player by remember { mutableStateOf<MediaPlayer?>(null) }
     var pendingSave by remember { mutableStateOf<File?>(null) }
 
-    fun errorText(error: Throwable): String = when (error) {
-        is AppError.UnsupportedMedia -> "Desteklenmeyen dosya biçimi"
-        is AppError.NoAudioTrack -> "Bu dosyada ses parçası yok"
-        is AppError.CannotReadMedia -> "Dosya okunamadı"
-        is AppError.DecoderFailure -> "Ses çözülemedi"
-        is AppError.ModelLoadFailure -> "AI vokal modeli yüklenemedi"
-        is AppError.InsufficientMemory -> "Bu işlem için yeterli bellek yok"
-        is AppError.InsufficientStorage -> "Geçici işlem için yeterli depolama yok"
-        is AppError.VideoMuxFailure -> "Sadece vokalli video oluşturulamadı"
-        is AppError.Cancelled -> "İşlem iptal edildi"
-        else -> "Vokal ayırma işlemi başarısız"
-    }
-
-    fun copyTo(uri: Uri, source: File) {
-        scope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    activity.contentResolver.openOutputStream(uri, "w")!!.use { out ->
-                        source.inputStream().buffered().use { input -> input.copyTo(out, 1024 * 1024) }
-                    }
-                }
-            }.onFailure {
-                val media = when (val s = state) {
-                    is ScreenState.Ready -> s.media
-                    is ScreenState.Results -> s.media
-                    is ScreenState.Working -> s.media
-                    is ScreenState.Error -> s.media
-                    ScreenState.Empty -> null
-                }
-                state = ScreenState.Error(media, "Dosya kaydedilemedi")
+    fun fileName(uri: Uri): String {
+        var name = uri.lastPathSegment?.substringAfterLast('/') ?: "media"
+        activity.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+            if (c.moveToFirst()) {
+                val i = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (i >= 0) name = c.getString(i) ?: name
             }
         }
-    }
-
-    val saveAudio = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("audio/wav")) { uri ->
-        val file = pendingSave
-        pendingSave = null
-        if (uri != null && file != null) copyTo(uri, file)
-    }
-    val saveVideo = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("video/mp4")) { uri ->
-        val file = pendingSave
-        pendingSave = null
-        if (uri != null && file != null) copyTo(uri, file)
-    }
-
-    fun share(file: File, mime: String) {
-        val uri = FileProvider.getUriForFile(activity, "${activity.packageName}.fileprovider", file)
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = mime
-            putExtra(Intent.EXTRA_STREAM, uri)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-        activity.startActivity(Intent.createChooser(intent, "Paylaş"))
+        return name
     }
 
     fun play(file: File) {
@@ -163,178 +102,279 @@ private fun VocalIsolatorScreen(activity: MainActivity) {
             player?.release()
             player = MediaPlayer().apply {
                 setDataSource(file.absolutePath)
-                setOnCompletionListener { it.release(); if (player === it) player = null }
+                setOnCompletionListener { mp ->
+                    mp.release()
+                    if (player === mp) player = null
+                }
                 prepare()
                 start()
             }
         }
     }
 
-    fun startSeparation(media: SelectedMedia) {
-        workJob?.cancel()
-        workJob = scope.launch {
-            state = ScreenState.Working(media, ProcessingProgress(ProcessingStage.PREPARING, 0f, "Hazırlanıyor"))
-            orchestrator.process(media) { progress ->
-                activity.runOnUiThread { state = ScreenState.Working(media, progress) }
-            }.onSuccess { result ->
-                state = ScreenState.Results(media, result)
-            }.onFailure { error ->
-                state = if (error is AppError.Cancelled) ScreenState.Ready(media) else ScreenState.Error(media, errorText(error))
+    fun share(file: File) {
+        val uri = FileProvider.getUriForFile(
+            activity,
+            "${activity.packageName}.fileprovider",
+            file,
+        )
+        activity.startActivity(
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "audio/mpeg"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                },
+                "Paylaş",
+            )
+        )
+    }
+
+    fun saveTo(uri: Uri, file: File) {
+        scope.launch {
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    activity.contentResolver.openOutputStream(uri, "w")?.use { out ->
+                        file.inputStream().buffered().use { input ->
+                            input.copyTo(out, 1024 * 1024)
+                        }
+                    } ?: error("Dosya yazılamadı")
+                }
+            }.onFailure {
+                state = ScreenState.Error(null, "Dosya kaydedilemedi: ${it.message ?: "bilinmeyen hata"}")
             }
         }
     }
 
-    fun createVocalVideo(results: ScreenState.Results) {
-        if (results.media.kind != MediaKind.VIDEO || results.videoBusy) return
-        val dir = File(activity.cacheDir, "vocal-isolator-video").apply { mkdirs() }
-        val output = File(dir, OutputNaming.vocalVideo(results.media.displayName))
-        workJob?.cancel()
-        workJob = scope.launch {
-            state = results.copy(videoBusy = true, videoProgress = 0f)
-            videoMuxer.createVocalOnlyVideo(results.media.uri, results.separation.vocalsWav, output) { p ->
-                activity.runOnUiThread {
-                    val current = state as? ScreenState.Results ?: return@runOnUiThread
-                    state = current.copy(videoBusy = true, videoProgress = p)
+    val saveLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("audio/mpeg")
+    ) { uri ->
+        val file = pendingSave
+        pendingSave = null
+        if (uri != null && file != null) saveTo(uri, file)
+    }
+
+    fun start(ready: ScreenState.Ready) {
+        if (apiKey.isBlank()) {
+            state = ScreenState.Error(ready, "Önce sunucu API anahtarını kaydet.")
+            return
+        }
+        work?.cancel()
+        work = scope.launch {
+            state = ScreenState.Working(ready.uri, ready.name, 0f, "Başlatılıyor")
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    StemSplitClient(activity, apiKey).separate(ready.uri, quality) { progress, message ->
+                        activity.runOnUiThread {
+                            state = ScreenState.Working(
+                                ready.uri,
+                                ready.name,
+                                progress,
+                                message,
+                            )
+                        }
+                    }
                 }
-            }.onSuccess { file ->
-                state = results.copy(vocalVideo = file, videoBusy = false, videoProgress = 1f)
+            }.onSuccess { result ->
+                state = ScreenState.Results(ready.name, result)
             }.onFailure { error ->
-                state = if (error is AppError.Cancelled) results else ScreenState.Error(results.media, errorText(error))
+                if (error is kotlinx.coroutines.CancellationException) {
+                    state = ready
+                } else {
+                    state = ScreenState.Error(
+                        ready,
+                        error.message ?: "Sunucu işlemi başarısız",
+                    )
+                }
             }
         }
     }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            workJob?.cancel()
-            scope.launch {
-                inspector.inspect(uri).onSuccess {
-                    orchestrator.cleanupCompletedSession()
-                    state = ScreenState.Ready(it)
-                }.onFailure { state = ScreenState.Error(null, errorText(it)) }
-            }
+            work?.cancel()
+            state = ScreenState.Ready(uri, fileName(uri))
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            workJob?.cancel()
-            orchestrator.cancel()
-            videoMuxer.cancel()
+            work?.cancel()
             player?.release()
         }
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        Text("Vocal Isolator", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-        Text("Video veya müzikten şarkıcı sesini cihazında ayır.", style = MaterialTheme.typography.bodyMedium)
-        Button(onClick = { picker.launch(arrayOf("audio/*", "video/*")) }, modifier = Modifier.fillMaxWidth()) {
+        Text(
+            "Vocal Isolator Cloud",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            "Moises mantığı: telefon ağır AI hesabı yapmaz; dosya sunucuda ayrılır.",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text("Sunucu bağlantısı", fontWeight = FontWeight.Bold)
+                OutlinedTextField(
+                    value = apiDraft,
+                    onValueChange = { apiDraft = it.trim() },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    label = { Text("StemSplit API anahtarı") },
+                    visualTransformation = PasswordVisualTransformation(),
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = {
+                        apiKey = apiDraft.trim()
+                        prefs.edit().putString("api_key", apiKey).apply()
+                    }) {
+                        Text(if (apiKey.isBlank()) "Anahtarı Kaydet" else "Güncelle")
+                    }
+                    OutlinedButton(onClick = {
+                        browser.openUri("https://stemsplit.io/app/settings/api")
+                    }) {
+                        Text("Ücretsiz Anahtar Al")
+                    }
+                }
+                if (apiKey.isNotBlank()) {
+                    Text("✓ Sunucu anahtarı kayıtlı", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+
+        Text("Kalite / hız")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = quality == CloudQuality.FAST,
+                onClick = { quality = CloudQuality.FAST },
+                label = { Text("Hızlı") },
+            )
+            FilterChip(
+                selected = quality == CloudQuality.BALANCED,
+                onClick = { quality = CloudQuality.BALANCED },
+                label = { Text("Dengeli") },
+            )
+            FilterChip(
+                selected = quality == CloudQuality.BEST,
+                onClick = { quality = CloudQuality.BEST },
+                label = { Text("En İyi") },
+            )
+        }
+
+        Button(
+            onClick = { picker.launch(arrayOf("audio/*", "video/*")) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text("Video / Müzik Seç")
         }
 
         when (val current = state) {
             ScreenState.Empty -> {
-                Text("MP4, MKV, MOV, MP3, WAV ve M4A desteklenir.")
+                Text("MP3, WAV, M4A ve medya dosyalarını seçebilirsin.")
             }
+
             is ScreenState.Ready -> {
-                MediaCard(current.media)
-                Button(onClick = { startSeparation(current.media) }, modifier = Modifier.fillMaxWidth()) {
+                MediaCard(current.name)
+                Button(
+                    onClick = { start(current) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
                     Text("Vokali Ayır")
                 }
             }
+
             is ScreenState.Working -> {
-                MediaCard(current.media)
-                Text(current.progress.message.ifBlank { "İşleniyor" })
-                LinearProgressIndicator(progress = { current.progress.fraction }, modifier = Modifier.fillMaxWidth())
-                Text("%${(current.progress.fraction * 100).toInt()}")
+                MediaCard(current.name)
+                Text(current.message)
+                LinearProgressIndicator(
+                    progress = { current.progress.coerceIn(0f, 1f) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Text("%${(current.progress * 100).toInt()}")
                 OutlinedButton(
                     onClick = {
-                        orchestrator.cancel()
-                        videoMuxer.cancel()
-                        workJob?.cancel()
-                        state = ScreenState.Ready(current.media)
+                        work?.cancel()
+                        state = ScreenState.Ready(current.uri, current.name)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("İptal") }
+                ) {
+                    Text("İptal")
+                }
             }
+
             is ScreenState.Results -> {
-                MediaCard(current.media)
+                MediaCard(current.name)
                 StemCard(
                     title = "🎤 Sadece Vokal",
-                    file = current.separation.vocalsWav,
+                    file = current.result.vocals,
                     onPlay = { play(it) },
                     onSave = {
                         pendingSave = it
-                        saveAudio.launch(OutputNaming.vocals(current.media.displayName))
+                        saveLauncher.launch("${current.name.substringBeforeLast('.')}_vocals.mp3")
                     },
-                    onShare = { share(it, "audio/wav") },
+                    onShare = { share(it) },
                 )
                 StemCard(
                     title = "🎵 Enstrümantal",
-                    file = current.separation.instrumentalWav,
+                    file = current.result.instrumental,
                     onPlay = { play(it) },
                     onSave = {
                         pendingSave = it
-                        saveAudio.launch(OutputNaming.instrumental(current.media.displayName))
+                        saveLauncher.launch("${current.name.substringBeforeLast('.')}_instrumental.mp3")
                     },
-                    onShare = { share(it, "audio/wav") },
+                    onShare = { share(it) },
                 )
-                if (current.media.kind == MediaKind.VIDEO) {
-                    if (current.vocalVideo == null) {
-                        Button(onClick = { createVocalVideo(current) }, enabled = !current.videoBusy, modifier = Modifier.fillMaxWidth()) {
-                            Text(if (current.videoBusy) "Video oluşturuluyor…" else "Videoyu Sadece Vokalle Oluştur")
-                        }
-                        if (current.videoBusy) {
-                            LinearProgressIndicator(progress = { current.videoProgress }, modifier = Modifier.fillMaxWidth())
-                        }
-                    } else {
-                        Card(modifier = Modifier.fillMaxWidth()) {
-                            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text("🎬 Sadece Vokalli Video", fontWeight = FontWeight.Bold)
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Button(onClick = {
-                                        pendingSave = current.vocalVideo
-                                        saveVideo.launch(OutputNaming.vocalVideo(current.media.displayName))
-                                    }) { Text("Kaydet") }
-                                    OutlinedButton(onClick = { share(current.vocalVideo, "video/mp4") }) { Text("Paylaş") }
-                                }
-                            }
-                        }
-                    }
-                }
                 OutlinedButton(
-                    onClick = {
-                        orchestrator.cleanupCompletedSession()
-                        state = ScreenState.Empty
-                    },
+                    onClick = { state = ScreenState.Empty },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Yeni Dosya") }
+                ) {
+                    Text("Yeni Dosya")
+                }
             }
+
             is ScreenState.Error -> {
                 Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
                         Text("Hata", fontWeight = FontWeight.Bold)
                         Text(current.message)
-                        Button(onClick = { state = current.media?.let { ScreenState.Ready(it) } ?: ScreenState.Empty }) { Text("Tamam") }
+                        Button(onClick = {
+                            state = current.previous ?: ScreenState.Empty
+                        }) {
+                            Text("Tamam")
+                        }
                     }
                 }
             }
         }
-        Spacer(Modifier.height(20.dp))
-        Text("Tüm ayırma işlemi telefonda yapılır; dosyan bir sunucuya yüklenmez.", style = MaterialTheme.typography.bodySmall)
+
+        Spacer(Modifier.height(12.dp))
+        Text(
+            "Bu sürümde ayırma işlemi sunucuda yapılır. Seçtiğin dosya ayırma için StemSplit hizmetine yüklenir.",
+            style = MaterialTheme.typography.bodySmall,
+        )
     }
 }
 
 @Composable
-private fun MediaCard(media: SelectedMedia) {
+private fun MediaCard(name: String) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(media.displayName, fontWeight = FontWeight.Bold)
-            val seconds = media.durationMs / 1000
-            Text("${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')} • ${if (media.kind == MediaKind.VIDEO) "Video" else "Ses"}")
+        Column(Modifier.padding(16.dp)) {
+            Text(name, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -348,9 +388,12 @@ private fun StemCard(
     onShare: (File) -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             Text(title, fontWeight = FontWeight.Bold)
-            Text("${file.length() / 1024 / 1024} MB")
+            Text("${file.length() / 1024 / 1024} MB • MP3")
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onPlay(file) }) { Text("Dinle") }
                 OutlinedButton(onClick = { onSave(file) }) { Text("Kaydet") }
