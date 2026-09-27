@@ -32,7 +32,6 @@ target_include_directories(demucs_jni PRIVATE
 )
 
 target_compile_definitions(demucs_jni PRIVATE
-    EIGEN_DONT_PARALLELIZE
     EIGEN_MPL2_ONLY
 )
 
@@ -42,6 +41,12 @@ target_compile_options(demucs_jni PRIVATE
     -Wall
     -Wextra
     -fexceptions
+    -fopenmp
+)
+
+target_link_options(demucs_jni PRIVATE
+    -fopenmp
+    -static-openmp
 )
 
 find_library(LOG_LIB log)
