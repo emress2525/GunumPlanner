@@ -243,6 +243,64 @@ void emitCrossfade(
     }
 }
 
+
+Eigen::Tensor3dXf runDirectSegment(
+    const demucscpp::demucs_model &model,
+    demucscpp::demucs_segment_buffers &buffers,
+    demucscpp::stft_buffers &stftBuf,
+    const Eigen::MatrixXf &audio,
+    demucscpp::ProgressCallback progress) {
+
+    const int64_t count = audio.cols();
+    if (count <= 0 || count > WINDOW_FRAMES) {
+        throw std::runtime_error("invalid direct segment size");
+    }
+
+    // Match demucs.cpp normalization, but avoid its extra shift/split pass.
+    const Eigen::VectorXf refMeanPerSample = audio.colwise().mean();
+    const float refMean = refMeanPerSample.size() > 0 ? refMeanPerSample.mean() : 0.0f;
+
+    float refStd = 1.0f;
+    if (refMeanPerSample.size() > 1) {
+        const float variance =
+            (refMeanPerSample.array() - refMean).square().sum() /
+            static_cast<float>(refMeanPerSample.size() - 1);
+        refStd = std::sqrt(std::max(variance, 1.0e-12f));
+    }
+    if (!std::isfinite(refStd) || refStd < 1.0e-6f) refStd = 1.0f;
+
+    const Eigen::MatrixXf normalized =
+        (audio.array() - refMean) / refStd;
+
+    const int padTotal = static_cast<int>(WINDOW_FRAMES - count);
+    const int leftPad = padTotal / 2;
+
+    buffers.mix.setZero();
+    buffers.mix.block(0, leftPad, CHANNELS, static_cast<int>(count)) = normalized;
+
+    demucscpp::model_inference(
+        model,
+        buffers,
+        stftBuf,
+        progress,
+        0.0f,
+        1.0f);
+
+    Eigen::Tensor3dXf targets(4, CHANNELS, static_cast<int>(count));
+    for (int source = 0; source < 4; ++source) {
+        for (int channel = 0; channel < CHANNELS; ++channel) {
+            for (int64_t i = 0; i < count; ++i) {
+                targets(source, channel, static_cast<Eigen::Index>(i)) =
+                    buffers.targets_out(
+                        source,
+                        channel,
+                        static_cast<Eigen::Index>(leftPad + i)) * refStd + refMean;
+            }
+        }
+    }
+    return targets;
+}
+
 std::string fromJString(JNIEnv *env, jstring value) {
     if (!value) return {};
     const char *chars = env->GetStringUTFChars(value, nullptr);
@@ -314,6 +372,15 @@ Java_com_vocalisolator_app_separation_DemucsNativeBridge_nativeSeparate(
         StereoTail previousVocals;
         StereoTail previousInstrumental;
 
+        // Reuse the large Demucs working buffers across all windows.
+        // Calling demucs_inference() here would split every 7.8 s window again,
+        // roughly doubling the expensive model passes.
+        demucscpp::demucs_segment_buffers segmentBuffers(
+            CHANNELS,
+            static_cast<int>(WINDOW_FRAMES),
+            4);
+        demucscpp::stft_buffers stftBuffers(segmentBuffers.padded_segment_samples);
+
         for (int64_t window = 0; window < windowCount; ++window) {
             if (handle->cancelled.load(std::memory_order_relaxed)) throw CancelledInference();
             const int64_t start = window * STEP_FRAMES;
@@ -328,7 +395,12 @@ Java_com_vocalisolator_app_separation_DemucsNativeBridge_nativeSeparate(
                        std::min(0.999f, baseProgress + std::max(0.0f, std::min(1.0f, inner)) * windowScale),
                        message);
             };
-            Eigen::Tensor3dXf targets = demucscpp::demucs_inference(*handle->model, audio, progress);
+            Eigen::Tensor3dXf targets = runDirectSegment(
+                *handle->model,
+                segmentBuffers,
+                stftBuffers,
+                audio,
+                progress);
             if (targets.dimension(0) < 4 || targets.dimension(1) != 2 || targets.dimension(2) < count) {
                 throw std::runtime_error("unexpected demucs output shape");
             }
