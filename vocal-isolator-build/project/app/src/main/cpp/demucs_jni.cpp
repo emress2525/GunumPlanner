@@ -23,8 +23,8 @@ constexpr int STATUS_INVALID_WAV = 4;
 constexpr int SAMPLE_RATE = 44100;
 constexpr int CHANNELS = 2;
 constexpr int BITS_PER_SAMPLE = 16;
-constexpr int64_t WINDOW_FRAMES = SAMPLE_RATE * 11LL;
-constexpr int64_t OVERLAP_FRAMES = WINDOW_FRAMES / 4LL;
+constexpr int64_t WINDOW_FRAMES = 343980LL; // 7.8 s @ 44.1 kHz
+constexpr int64_t OVERLAP_FRAMES = WINDOW_FRAMES / 10LL; // 10% overlap
 constexpr int64_t STEP_FRAMES = WINDOW_FRAMES - OVERLAP_FRAMES;
 
 struct CancelledInference final : std::exception {};
