@@ -1,94 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-01T04:33:37",
-  "event_count": 30,
+  "generated_at": "2026-10-02T04:32:53",
+  "event_count": 34,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1302
+      "ms": 1269
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1250
+      "ms": 1394
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 10676
+      "ms": 9966
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 7,
-      "ms": 8782
+      "events": 6,
+      "ms": 8158
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
-      "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 423
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.cyberpark.com.tr', port=443) at 0x7f1cd9919f40>, 'Connection to www.cyberpark.com.tr timed out. (connect timeout=18)'))",
+      "ms": 18108
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 5671
+      "ms": 5390
     }
   ],
   "events": [
-    {
-      "id": "01ce1c883536216b",
-      "title": "ODAMIZ ORGAN SEÇİMLERİ OTOPARK KULLANIMI HK.",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ODAMIZ ORGAN SEÇİMLERİ OTOPARK KULLANIMI HK. Ana Sayfa Duyurular ODAMIZ ORGAN SEÇİMLERİ OTOPARK KULLANIMI HK. 2026-09-30 00:00:00 İşareti : - İrtibat: sicil@aso.org.tr Sayın Üyemiz, Odamız Organ seçimleri 01 Ekim 2026 Perşembe günü saat 09:00 – 17:00 saatleri arasında Odamızın Atatürk Bulvarı No:193 Kavaklıdere adresinde bulunan hizmet binasında gerçekleştirilecektir. Bu kapsamda, katılım sağlayacak üyelerimiz aşağıda adresi ve konumu belirtilen otoparktan ücretsiz faydalanabilecektir. Bilgilerinize sunarız. Saygılarımızla, ANKARA SANAYİ ODASI Otopark konumu ve yol tarifi: https://www.google.com/maps/search/?api=1&query=39.910083,32.857500 KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamız Harç Tarifesi Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Plan",
-      "starts_at": "2026-10-01T09:00:00",
-      "ends_at": "2026-10-01T17:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/odamiz-organ-secimleri-otopark-kullanimi-hk-7894",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "b98db2d73ce65b5f",
       "title": "Haberler",
@@ -168,6 +121,101 @@
       "corporate_opportunity_score": 86
     },
     {
+      "id": "df2fb8c4b551d7c7",
+      "title": "ULUSLARARASI KİRLETMEDEN ÜRETMEK MÜMKÜN (POLLUTE-LESS PRODUCTION POSSIBLE) KONFERANSI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ULUSLARARASI KİRLETMEDEN ÜRETMEK MÜMKÜN (POLLUTE-LESS PRODUCTION POSSIBLE) KONFERANSI Ana Sayfa Duyurular ULUSLARARASI KİRLETMEDEN ÜRETMEK MÜMKÜN (POLLUTE-LESS PRODUCTION POSSIBLE) KONFERANSI 2026-10-01 00:00:00 İşareti : 13/5000-2846 İrtibat: cevre@aso.org.tr Sayın Üyemiz, Çevre, Şehircilik ve İklim Değişikliği Bakanlığı Çevre Yönetimi Genel Müdürlüğünce sanayide yeşil dönüşümün hızlandırılması, kirliliğin kaynağında önlenmesi, kaynakların etkin kullanılması ve çevresel performansın artırılması amacıyla ulusal ve uluslararası platformlarda iş birliği, bilgi paylaşımı ve yaygınlaştırma çalışmaları yürütülmekte olup; bu kapsamda İstanbul Teknik Üniversitesi (İTÜ) ev sahipliğinde 6 Ekim 2026 tarihinde İstanbul'da \"Uluslararası Kirletmeden Üretmek Mümkün (Pollute-less Production Poss",
+      "starts_at": "2026-10-06T00:00:00",
+      "ends_at": "2026-10-06T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/uluslararasi-kirletmeden-uretmek-mumkun-pollute-less-production-possible-konferansi-7900",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket yöneticileri",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "102902b2e9f91789",
+      "title": "5. CLOUDEARTHi KONFERANSI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 5. CLOUDEARTHi KONFERANSI Ana Sayfa Duyurular 5. CLOUDEARTHi KONFERANSI 2026-10-01 00:00:00 İşareti : 12/5000-2891 İrtibat: gym@aso.org.tr Sayın Üyemiz, Ankara Medipol Üniversitesi Teknoloji Transfer Ofisi (Medipol TTO) tarafından alınan yazıda , 6–8 Ekim 2026 tarihlerinde Anafartalar Kampüsünde 5. CloudEARTHi Konferansı'nın gerçekleştirileceği belirtilmiştir. Avusturya, İspanya, Bulgaristan ve Polonya'nın ardından bu yıl Ankara Medipol Üniversitesi ev sahipliğinde düzenlenecek uluslararası konferansın teması \"Deep Technology for Health and Wellbeing: Advancing Research, Innovation, and Multidisciplinary Collaboration for a Healthier and More Equitable Society\" olarak belirlenmiştir. Konferans; Avrupa ve çevre ülkelerden akademi, sanayi ve girişimcilik ekosisteminin öncü aktörleri",
+      "starts_at": "2026-10-08T00:00:00",
+      "ends_at": "2026-10-08T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/5-cloudearthi-konferansi-7898",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "552c1a0f9db68b06",
       "title": "2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI Ana Sayfa Duyurular 2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI 2026-09-30 00:00:00 İşareti : 05/5000 -2817 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Sanayi ve Teknoloji Bakanlığı'nın yazısına atfen; yıllık denetim programına alınacak ürünlerin her yıl risk analizi çalışmasıyla belirlendiği ve söz konusu ürünlerin üretici ve ithalatçılarının bulunduğu iller dikkate alınarak planlandığı ifade edilerek, 2027 yılı denetim programına alınacak ürünlerin tespit edilmesine yönelik çalışmalara başlandığı belirtilmiştir. Bu kapsamda, yoğun olarak kullanılan ve yüksek risk taşıması muhtemel ürünlerin çalışmaya dâhil edilebilmesini teminen, Bakanlığın sorumluluk alanına giren ürünler (htt",
@@ -181,6 +229,53 @@
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
       "source_url": "https://www.aso.org.tr/post/2027-yili-piyasa-gozetimi-ve-denetimi-programi-7891",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "5efc21c2876573b4",
+      "title": "ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI Ana Sayfa Haberler ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI 2026-10-01 00:00:00 ASO BAŞKANI ARDIÇ: KAZANAN ANKARA VE TÜRKİYE SANAYİSİ OLACAK Ankara Sanayi Odası 18. Dönem seçimlerinin ilk aşaması olan Meclis ve Komite Üyeleri seçimi gerçekleştirildi. 41 meslek grubunda 112’si meclis üyesi olmak üzere 265 meslek komitesi üyesinin belirlendiği seçimlerde ASO Başkanı Seyit Ardıç, 12 numaralı Cam ve Cam Ürünleri Sanayi Meslek Komitesi seçim sandığında oyunu kullandı. ASO Başkan Seyit Ardıç, oyunu kullandıktan sonra yaptığı açıklamada, seçimin bayram havasında geçtiğini belirterek şunları söyledi: “Bugün sanayicimizin kendi evinde, Ankara Sanayi Odamızda organ seçimlerimizi gerçekleştiriyoruz. 41 meslek gr",
+      "starts_at": "2026-10-09T00:00:00",
+      "ends_at": "2026-10-09T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/ankarali-sanayicilerden-sandikta-birlik-ve-beraberlik-mesaji-7901",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -307,6 +402,53 @@
       ],
       "networking_score": 98,
       "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "023ccb0554c2367f",
+      "title": "GLOBAL TİCARET YÖNETİM PROGRAMI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN GLOBAL TİCARET YÖNETİM PROGRAMI Ana Sayfa Duyurular GLOBAL TİCARET YÖNETİM PROGRAMI 2026-10-01 00:00:00 İşareti : 05/5000-2872 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası ve Akbank iş birliğiyle, firmaların küresel pazarlardaki rekabet gücünü artırmaya yönelik \" Global Ticaret Yönetim Programı \" düzenlenecektir. Program kapsamında; dış ticaret, finansman alternatifleri, dijital çözümler ve dijital pazarlama, hedef pazar analizi, gümrükleme, e-ticaret/e-ihracat, ihracata yönelik devlet destekleri ve finansal okuryazarlık başlıklarında eğitimler verilerek, ihracat yapan veya ihracata başlamayı hedefleyen firmaların geleneksel dış ticaret yöntemlerini güncel teknolojik imkânlarla bütünleştirmeleri, yeni pazarlara erişim kapasitelerini geliştirmeleri ve operasyonel verim",
+      "starts_at": "2026-10-11T00:00:00",
+      "ends_at": "2026-10-11T02:00:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/global-ticaret-yonetim-programi-7897",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
@@ -590,6 +732,52 @@
       "decision_maker_score": 97,
       "professional_development_score": 77,
       "corporate_opportunity_score": 86
+    },
+    {
+      "id": "99d8c78f3bf12977",
+      "title": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı!",
+      "description": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! Etkinlik Hakkında 17 Ekim 2026 10:00 - 21 Kasım 2026 17:00 Ankara Kalkınma Ajansı koordinasyonunda, Genç MÜSİAD Ankara ve OSTİM Teknik Üniversitesi iş birliğinde gerçekleştirilen Genç Ticaret Elçileri 11. Dönem Eğitim Programı için başvurular başladı! Kimler Başvurabilir? Türkiye’de lisans, yüksek lisans veya doktora düzeyinde öğrenim gören uluslararası öğrenciler programa başvurabilir. Kontenjanla sınırlı olan programa başvurular 5 Ekim Pazartesi günü saat 18.00’e kadar alınacaktır. Başvuruların değerlendirilmesinin ardından uygun bulunan adaylar mülakata davet edilecek , mülakat sonucunda programa kabul edilen adaylara e-posta yoluyla bilgi verilecektir. Programın Amacı Genç Ticaret Elçileri Programı ile Türkiye ile öğrencilerin ülkeleri arasındaki ekonomik ve ticari ilişkilerin geliştirilmesine katkı sağlayabilecek uluslararası öğrencilerin desteklenmesi amaçlanmaktadır. Programı tamamlayarak ülkelerine dönecek öğrencilerin, Türkiye’nin dış ticaret ilişkilerinin geliştirilmesine katkı sunabilecek gönüllü ticaret elçileri olarak yetiştirilmesi hedeflen",
+      "starts_at": "2026-10-17T10:00:00",
+      "ends_at": "2026-10-17T17:00:00",
+      "venue": "OSTİM",
+      "district": "Yenimahalle",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Kalkınma Ajansı",
+      "source_name": "Ankara Kalkınma Ajansı",
+      "source_url": "https://ankaraka.org.tr/genc-ticaret-elcileri-11-donem-egitim-programi-basvurulari-basladi",
+      "verified": true,
+      "source_confidence": 98,
+      "categories": [
+        "yatırım",
+        "startup",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket yöneticileri",
+        "ihracatçılar"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
     },
     {
       "id": "3d2e53cc047fb635",
