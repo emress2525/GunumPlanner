@@ -1,124 +1,87 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-02T04:32:53",
-  "event_count": 34,
+  "generated_at": "2026-10-03T04:33:15",
+  "event_count": 36,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1269
+      "ms": 1566
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1394
+      "ms": 1573
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 9966
+      "ms": 12412
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 6,
-      "ms": 8158
+      "events": 7,
+      "ms": 9904
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.cyberpark.com.tr', port=443) at 0x7f1cd9919f40>, 'Connection to www.cyberpark.com.tr timed out. (connect timeout=18)'))",
-      "ms": 18108
+      "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "ms": 426
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
-      "events": 0,
-      "ms": 5390
+      "events": 1,
+      "ms": 8963
     }
   ],
   "events": [
     {
-      "id": "b98db2d73ce65b5f",
-      "title": "Haberler",
-      "description": "Haberler | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Haberler Tema - Any - Teknoloji ve Ticarileşme Kırsal Kalkınma Sosyal Kalkınma Apply 30 Eylül 2026 Ankara Aile ve Sosyal Hizmetler İl Müdürlüğü ile Teknik Destek Sözleşmesi İmzalandı Ankara Kalkınma Ajansı’nın 2026 Yılı 4. Dönem Sosyal Yenilik ve Sosyal Kalkınma Teknik Destek Programı kapsamında teknik destek sözleşmesi… Devamını Oku 28 Eylül 2026 Ankara Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek programı Sıkça Sorulan Sorular-3 Ankara Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek programı Sıkça Sorulan Sorular-3 yayınlandı. Devamını Oku 28 Eylül 2026 EYE Programı Başarı Hikayeleri Serisi-Mustafa Yılmazyiğit Ankara Kalkınma Ajansı’nın aracı kuruluş olarak yer aldığı Erasmus for Young Entrepreneurs (EYE) Programı’nı başarıyla tamamlayan… Devamını Oku 25 Eylül 2026 TechAnkara Proje Pazarı 2026 İlk 100 Dijital Projeler Kitabı Yayımlandı TechAnkara Proje Pazarı kapsamında, jüri değerlendirmeleri sonucu belirlenen ilk 100 proje açıklandı. Devamını Oku 25 Eylül 2026 Tarım Sektöründe Yeşil Yakalı Personel Yetiştirme Eğitim Programı Tamamlandı Yeşil Yakalı Personel Yetiştirme Eğitim Programı, 7-25 Eylül 2026 tarihleri arasında gerçekleştirildi Devamını",
-      "starts_at": "2026-10-02T09:00:00",
-      "ends_at": "2026-10-02T11:00:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Çankaya",
+      "id": "526d3294303d85fb",
+      "title": "OSTİM Türkiye ve ABD arasında Kurulacak İnovasyon Ağında Yer Alıyor",
+      "description": "OSTİM Türkiye ve ABD arasında Kurulacak İnovasyon Ağında Yer Alıyor | Ostim Organize Sanayi Bölgesi 1 2 2 Firma Girişi Online İşlemler Şikayet Sorgulama Öneri İstek Formu Ostim Web TV OSTİM Radyo Anasayfa Kurumsal OSTİM Hakkında OSB Müdürlüğü Başkandan Mesaj Yönetim Kurulu Organizasyon Kalite Politikası Bölgesel Kalkınma Kurumsal Kimlik Faaliyet Raporları Hizmetler Yeşil Dönüşüm ve Sürdürülebilirlik Ofisi OSTİM Dijital Dönüşüm Ofisi Dış Ticaret Koordinatörlüğü Basın ve Halkla İlişkiler Müdürlüğü Bilgi ve İletişim Teknolojileri Müdürlüğü Enerji Müdürlüğü İmar ve Altyapı Müdürlüğü İşyeri Açma ve Çalışma Ruhsat Müdürlüğü Çevre ve Güvenlik Müdürlüğü Mali ve İdari İşler Müdürlüğü Müşteri İlişkileri Koordinatörlüğü Lisanssız Güneş Enerjisi Santrali Başvurusu Firmalar & Ürünler Basın Merkezi İstihdam Ofisi İletişim Türkçe Türkçe English Anasayfa Kurumsal OSTİM Hakkında OSB Müdürlüğü Başkandan Mesaj Yönetim Kurulu Organizasyon Kalite Politikası Bölgesel Kalkınma Kurumsal Kimlik Faaliyet Raporları Hizmetler Yeşil Dönüşüm ve Sürdürülebilirlik Ofisi OSTİM Dijital Dönüşüm Ofisi Dış Ticaret Koordinatörlüğü Basın ve Halkla İlişkiler Müdürlüğü Bilgi ve İletişim Teknolojileri Müdürlüğü Enerji Müdürlüğü İmar ve Altyapı Müdürlüğü İşyeri Açma ve Çalışma Ruhsat Müdürlüğü Çevre ve Güvenlik Müdürlüğü Mali ve İdari İşler Müdürlüğü Müşteri İlişkileri Koordinatörlüğü Lisanssız Güneş Enerjisi Santrali Başvurusu Firmalar & Ürünler Basın Merkezi İstihdam Ofisi İletişim Türkçe Türkçe English Firma Girişi Online İşlemler Şikayet Sorgulama Öneri İstek Formu Ostim Web TV OSTİM Radyo 100. Yıl Bulvarı No:10",
+      "starts_at": "2026-10-04T01:10:00",
+      "ends_at": "2026-10-04T03:10:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
       "city": "Ankara",
-      "online": false,
+      "online": true,
       "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/haberler",
+      "organizer": "OSTİM OSB",
+      "source_name": "OSTİM OSB",
+      "source_url": "https://ostim.org.tr/haberler/ostim-turkiye-ve-abd-arasinda-kurulacak-inovasyon-aginda-yer",
       "verified": true,
-      "source_confidence": 98,
+      "source_confidence": 97,
       "categories": [
-        "yatırım",
-        "startup",
+        "sanayi",
+        "dış ticaret",
         "teknoloji",
         "insan kaynakları"
       ],
       "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri"
+        "sanayiciler",
+        "ihracatçılar"
       ],
       "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
         "KVKK",
-        "Fikri mülkiyet",
-        "Yazılım sözleşmeleri"
+        "Yazılım sözleşmeleri",
+        "Fikri mülkiyet"
       ],
       "networking_score": 83,
-      "decision_maker_score": 97,
+      "decision_maker_score": 85,
       "professional_development_score": 77,
-      "corporate_opportunity_score": 86
-    },
-    {
-      "id": "10c621c12570e9f6",
-      "title": "Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası",
-      "description": "Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası Etkinlik Hakkında Katılmak için Başvur 24 Temmuz 2026 16:16 - 2 Ekim 2026 17:00 20 Temmuz 2026 tarihinde ilan edilen ve başvuruları 2 Ekim 2026 tarihine kadar devam edecek olan Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı kapsamında, potansiyel başvuru sahiplerinin proje tekliflerini geliştirme süreçlerine destek olmak amacıyla Teknik Yardım Masası hizmeti sunulacaktır. Teknik Yardım Masası, proje başvuru süresince randevu usulüyle hizmet verecek ve 17 Ağustos tarihinde görüşmelere başlanacaktır. Görüşmelerde Ankara Kalkınma Ajansı proje ekibi tarafından program öncelikleri, başvuru koşulları, proje fikrinin yapılandırılması ve başvuru dosyasında dikkat edilmesi gereken hususlara ilişkin yönlendirme sağlanacaktır. Teknik Yardım Masası’ndan yararlanmak isteyen başvuru sahiplerinin, randevu öncesinde proje tekliflerine ve sosyal girişim iş modeli kanvaslarına ilişkin bir taslak hazırlamış olmaları beklenmektedir. Teknik Yardım Masası kapsamında sağlanac",
-      "starts_at": "2026-10-02T16:16:00",
-      "ends_at": "2026-10-02T18:16:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Çankaya",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/ankarada-sosyal-girisimcilik-ekosistemi-kapasite-gelistirme-mali-destek-programi-teknik-yardim",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 83,
-      "decision_maker_score": 97,
-      "professional_development_score": 77,
-      "corporate_opportunity_score": 86
+      "corporate_opportunity_score": 96
     },
     {
       "id": "df2fb8c4b551d7c7",
@@ -165,6 +128,100 @@
       ],
       "networking_score": 90,
       "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "0b826968197797f4",
+      "title": "NÜKLEER SANAYİ KÜMELENMESİ (NÜKSAK) ÜYE FİRMALARA YAZILIM TABANLI MENTÖRLÜK DESTEĞİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN NÜKLEER SANAYİ KÜMELENMESİ (NÜKSAK) ÜYE FİRMALARA YAZILIM TABANLI MENTÖRLÜK DESTEĞİ Ana Sayfa Duyurular NÜKLEER SANAYİ KÜMELENMESİ (NÜKSAK) ÜYE FİRMALARA YAZILIM TABANLI MENTÖRLÜK DESTEĞİ 2026-10-02 00:00:00 İşareti : 13/5000-2892 İrtibat: tore.silis@aso.org.tr Sayın Üyemiz, T.C. Sanayi ve Teknoloji Bakanlığı'nın destekleriyle ve Ankara Sanayi Odası'nın (ASO) koordinasyonunda faaliyetlerini sürdüren Nükleer Sanayi Kümelenmesi (ASO NÜKSAK), üye firmalarının yeşil ve dijital dönüşüm süreçlerine uyumunu desteklemek, tedarik zincirindeki rekabet güçlerini artırmak ve sürdürülebilirlik alanındaki kurumsal kapasitelerini geliştirmek amacıyla çeşitli hizmetler sunmaktadır. Bu kapsamda, firmaların çevresel performanslarının ölçülmesi ve raporlanması için gerekli teknik bilgi ve uygulama k",
+      "starts_at": "2026-10-07T00:00:00",
+      "ends_at": "2026-10-07T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/nukleer-sanayi-kumelenmesi-nuksak-uye-firmalara-yazilim-tabanli-mentorluk-destegi-7902",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "1b6514039db02aa3",
+      "title": "TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ Ana Sayfa Duyurular TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ 2026-10-02 00:00:00 İşareti : 05/5000 -2877 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen aşağıdaki hususlar belirtilmiştir: • Türkiye-Özbekistan Ticaret Çalışma Grubu 2. Toplantısı'nın 8 Ekim 2026 tarihinde Ankara'da gerçekleştirilmesi öngörülmektedir. • Toplantı hazırlıklarında kullanılmak üzere güncel bilgi notlarına ihtiyaç duyulmaktadır. • Görüş talep edilen başlıklar: Özbekistan ile ticari ve ekonomik ilişkilerin artırılmasına yönelik iş birliği imkânları, öncelik verilecek sektörler, ticaretin geliştirilmesine ilişkin öneriler ile iki",
+      "starts_at": "2026-10-08T00:00:00",
+      "ends_at": "2026-10-08T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/turkiye-ozbekistan-ticaret-calisma-grubu-2-toplantisi-gorus-talebi-7903",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
@@ -1334,6 +1391,53 @@
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
       "source_url": "https://www.aso.org.tr/post/sapri-2026-amp-acndt-2026-tunus-17-20-kasim-2026-7848",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "af3948e58f533438",
+      "title": "VİYANA INTERNATIONAL MACHINERY FORUM 2026 ALIM HEYETİ ÖN BAŞVURUSU HAKKINDA",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN VİYANA INTERNATIONAL MACHINERY FORUM 2026 ALIM HEYETİ ÖN BAŞVURUSU HAKKINDA Ana Sayfa Duyurular VİYANA INTERNATIONAL MACHINERY FORUM 2026 ALIM HEYETİ ÖN BAŞVURUSU HAKKINDA 2026-10-01 00:00:00 İşareti : 05/5000-2876 İrtibat: dim@aso.org.tr Sayın Üyemiz, Avusturya Federal Ekonomi Odası (WKÖ) ev sahipliğinde, International Machinery Forum 2026 , 19–20 Kasım 2026 tarihlerinde Viyana'da gerçekleştirilecektir. Avusturya Federal Ekonomi, Enerji ve Turizm Bakanlığı ile Avusturya Federal Ekonomi Odası iş birliğinde düzenlenen Forumun bu yılki ana teması \"From Materials to Products – Competing Across the Global Industrial Value Chain\" (Malzemeden Ürüne – Küresel Endüstriyel Değer Zincirinde Rekabet) olarak belirlenmiştir. Konferans, sergi, ikili iş görüşmeleri (B2B) ve saha ziyaretlerinden",
+      "starts_at": "2026-11-20T00:00:00",
+      "ends_at": "2026-11-20T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/viyana-international-machinery-forum-2026-alim-heyeti-on-basvurusu-hakkinda-7896",
       "verified": true,
       "source_confidence": 99,
       "categories": [
