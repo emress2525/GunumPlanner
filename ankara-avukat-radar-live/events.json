@@ -1,332 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T11:07:05",
-  "event_count": 41,
+  "generated_at": "2026-10-08T11:24:36",
+  "event_count": 36,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1597
+      "ms": 1493
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1647
+      "ms": 1663
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 18169
+      "ms": 15366
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 5,
-      "ms": 10094
+      "events": 3,
+      "ms": 9593
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 451
+      "ms": 563
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 9183
+      "ms": 6211
     }
   ],
   "events": [
-    {
-      "id": "326829027667064c",
-      "title": "2027 YILI DESTEKLENEN YURT DIŞI ETKİNLİKLER LİSTESİ HAKKINDA",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 2027 YILI DESTEKLENEN YURT DIŞI ETKİNLİKLER LİSTESİ HAKKINDA Ana Sayfa Duyurular 2027 YILI DESTEKLENEN YURT DIŞI ETKİNLİKLER LİSTESİ HAKKINDA 2026-10-05 00:00:00 İşareti : 05/5000-2932 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Ticaret Bakanlığı'nın yazısına atfen, yurt dışı etkinlik katılım desteği kapsamında desteklenecek etkinliklerin \"Desteklenen Yurt Dışı Etkinlikler Listesi\"nde yer alması gerektiği belirtilmiş olup, 2027 yılı için bireysel katılımı desteklenecek yurt dışı etkinlikler listesinin oluşturulmasına yönelik çalışmalar yürütüldüğü bildirilmiştir. Bu kapsamda, ekte yer alan \"Desteklenen Yurt Dışı Etkinlikler\" listelerinin 2026 yılı sekmesinde bulunan etkinliklerden 2027 yılında da devam etmesinde fayda görülen",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/2027-yili-desteklenen-yurt-disi-etkinlikler-listesi-hakkinda-7912",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "65336b86a9569e6f",
-      "title": "KANADA İLE İLGİLİ GÖRÜŞ TALEBİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KANADA İLE İLGİLİ GÖRÜŞ TALEBİ Ana Sayfa Duyurular KANADA İLE İLGİLİ GÖRÜŞ TALEBİ 2026-10-05 00:00:00 İşareti : 05/5000-2933 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen, Kanada Başbakanı Mark Carney'nin, T.C. Cumhurbaşkanı Recep Tayyip Erdoğan'ın davetlisi olarak 22-23 Ekim 2026 tarihlerinde ülkemize resmi bir ziyaret gerçekleştirmesinin öngörüldüğü belirtilmekte olup, Kanada'ya ilişkin bilgi notlarına ihtiyaç duyulduğu ifade edilmektedir. Bu itibarla, bahse konu ziyaretin hazırlık çalışmalarında kullanılmak üzere, Kanada ile ticari ve ekonomik ilişkilerin artırılmasına yönelik işbirliği imkânları, öncelik verilecek sektörler, ticaret ve yatırımların geliştirilmesine yönelik öneriler,",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/kanada-ile-ilgili-gorus-talebi-7908",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "fb43389485ef3f96",
-      "title": "OPTİSYENLİK MÜESSESELERİNİN İNTERNET ÜZERİNDEN KONTAKT LENS SATIŞINA İLİŞKİN KILAVUZ TASLAĞI HAKKINDA",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN OPTİSYENLİK MÜESSESELERİNİN İNTERNET ÜZERİNDEN KONTAKT LENS SATIŞINA İLİŞKİN KILAVUZ TASLAĞI HAKKINDA Ana Sayfa Duyurular OPTİSYENLİK MÜESSESELERİNİN İNTERNET ÜZERİNDEN KONTAKT LENS SATIŞINA İLİŞKİN KILAVUZ TASLAĞI HAKKINDA 2026-10-05 00:00:00 İşareti : 05/5000-2929 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Sağlık Bakanlığı'nın yazısına atfen; 3 Temmuz 2026 tarihli Yönetmelik değişikliği kapsamında, kontakt lenslerin internet üzerinden yalnızca yetkili optisyenlik müesseseleri tarafından, izin verilen internet siteleri üzerinden ve reçeteli olarak satışına ilişkin usul ve esasların belirlenmesi amacıyla \"Optisyenlik Müesseselerinin İnternet Üzerinden Kontakt Lens Satışına İlişkin Kılavuz Taslağı\" hazırlandığı belirtilme",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/optisyenlik-muesseselerinin-internet-uzerinden-kontakt-lens-satisina-iliskin-kilavuz-taslagi-hakkinda-7906",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "sağlık",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Sağlık hukuku"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "1b6514039db02aa3",
-      "title": "TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ Ana Sayfa Duyurular TÜRKİYE-ÖZBEKİSTAN TİCARET ÇALIŞMA GRUBU 2. TOPLANTISI GÖRÜŞ TALEBİ 2026-10-02 00:00:00 İşareti : 05/5000 -2877 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen aşağıdaki hususlar belirtilmiştir: • Türkiye-Özbekistan Ticaret Çalışma Grubu 2. Toplantısı'nın 8 Ekim 2026 tarihinde Ankara'da gerçekleştirilmesi öngörülmektedir. • Toplantı hazırlıklarında kullanılmak üzere güncel bilgi notlarına ihtiyaç duyulmaktadır. • Görüş talep edilen başlıklar: Özbekistan ile ticari ve ekonomik ilişkilerin artırılmasına yönelik iş birliği imkânları, öncelik verilecek sektörler, ticaretin geliştirilmesine ilişkin öneriler ile iki",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/turkiye-ozbekistan-ticaret-calisma-grubu-2-toplantisi-gorus-talebi-7903",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "102902b2e9f91789",
-      "title": "5. CLOUDEARTHi KONFERANSI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 5. CLOUDEARTHi KONFERANSI Ana Sayfa Duyurular 5. CLOUDEARTHi KONFERANSI 2026-10-01 00:00:00 İşareti : 12/5000-2891 İrtibat: gym@aso.org.tr Sayın Üyemiz, Ankara Medipol Üniversitesi Teknoloji Transfer Ofisi (Medipol TTO) tarafından alınan yazıda , 6–8 Ekim 2026 tarihlerinde Anafartalar Kampüsünde 5. CloudEARTHi Konferansı'nın gerçekleştirileceği belirtilmiştir. Avusturya, İspanya, Bulgaristan ve Polonya'nın ardından bu yıl Ankara Medipol Üniversitesi ev sahipliğinde düzenlenecek uluslararası konferansın teması \"Deep Technology for Health and Wellbeing: Advancing Research, Innovation, and Multidisciplinary Collaboration for a Healthier and More Equitable Society\" olarak belirlenmiştir. Konferans; Avrupa ve çevre ülkelerden akademi, sanayi ve girişimcilik ekosisteminin öncü aktörleri",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/5-cloudearthi-konferansi-7898",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "552c1a0f9db68b06",
-      "title": "2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI Ana Sayfa Duyurular 2027 YILI PİYASA GÖZETİMİ VE DENETİMİ PROGRAMI 2026-09-30 00:00:00 İşareti : 05/5000 -2817 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Sanayi ve Teknoloji Bakanlığı'nın yazısına atfen; yıllık denetim programına alınacak ürünlerin her yıl risk analizi çalışmasıyla belirlendiği ve söz konusu ürünlerin üretici ve ithalatçılarının bulunduğu iller dikkate alınarak planlandığı ifade edilerek, 2027 yılı denetim programına alınacak ürünlerin tespit edilmesine yönelik çalışmalara başlandığı belirtilmiştir. Bu kapsamda, yoğun olarak kullanılan ve yüksek risk taşıması muhtemel ürünlerin çalışmaya dâhil edilebilmesini teminen, Bakanlığın sorumluluk alanına giren ürünler (htt",
-      "starts_at": "2026-10-08T00:00:00",
-      "ends_at": "2026-10-08T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/2027-yili-piyasa-gozetimi-ve-denetimi-programi-7891",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "5efc21c2876573b4",
       "title": "ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI",
@@ -1242,6 +957,54 @@
       "networking_score": 97,
       "decision_maker_score": 98,
       "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "90ae54dbba46c24b",
+      "title": "İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR Ana Sayfa Duyurular İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR 2026-10-07 00:00:00 İşareti : 05/5000-2949 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ticaret Bakanlığı İhracat Genel Müdürlüğü'nden gelen yazıya istinaden ihracatçıların eğitimine yönelik yürütülen faaliyetlere kurumsal bir nitelik kazandırmak, dış ticaret alanında yetişmiş iş gücünün niteliğini artırmak ve bu süreçte üniversitelerimizin akademik birikiminden azami ölçüde faydalanmak amacıyla Yükseköğretim Kurulu iş birliğinde İhracat Akademisinin hayata geçirildiği belirtilmiştir. Bu minvalde, İhracat Akademisi bünyesinde düzenlenen İhracat Uzmanlığı ve Modüler Eğitim Programlarının yeni dönem kayıtlarının devam ettiği bildi",
+      "starts_at": "2026-10-28T00:00:00",
+      "ends_at": "2026-10-28T02:00:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/ihracat-uzmanligi-ve-moduler-egitim-programlari-kayitlari-devam-ediyor-7917",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket yöneticileri",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
     {
