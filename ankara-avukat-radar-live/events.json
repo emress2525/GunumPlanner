@@ -1,61 +1,62 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T10:51:30",
+  "generated_at": "2026-10-12T12:04:22",
   "event_count": 40,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
-      "ok": true,
-      "events": 1,
-      "ms": 2016
+      "ok": false,
+      "events": 0,
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7fca8ded2b40>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18169
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1448
+      "ms": 1231
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 3,
-      "ms": 12331
+      "ms": 13794
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 6,
-      "ms": 10016
+      "ms": 8348
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 415
+      "ms": 325
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 7604
+      "ms": 8580
     }
   ],
   "events": [
     {
-      "id": "f05304079f3ce5b8",
-      "title": "TSE STANDART TASARISINA İLİŞKİN GÖRÜŞ TALEBİ (TST 13933)",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TSE STANDART TASARISINA İLİŞKİN GÖRÜŞ TALEBİ (TST 13933) Ana Sayfa Duyurular TSE STANDART TASARISINA İLİŞKİN GÖRÜŞ TALEBİ (TST 13933) 2026-09-28 00:00:00 İşareti : 05/5000- 2821 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan yazıda, Türk Standartları Enstitüsü tarafından hazırlanan ‘'TST 13933 Bilgisayar ve Tablet (İkinci El) Yenileme Merkezleri ve Yerinde Yenileme Noktası İçin Kurallar'' başlıklı standart tasarısı ekte bilgilerinize sunulmaktadır. Söz konusu tasarıya ilişkin görüş ve değerlendirmelerinizin 12 Ekim 2026 Pazartesi günü mesai bitimine kadar Odamızın dim@aso.org.tr e-posta adresine iletilmesi hususunu bilgilerinize sunarız. Saygılarımızla, Ankara Sanayi Odası Ek Listesi Standart Tasarı.pdf KURUMSAL YAPI Aso'nun Tarihçesi Kalite P",
-      "starts_at": "2026-10-12T00:00:00",
-      "ends_at": "2026-10-12T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
+      "id": "6952edbf0d14bdaa",
+      "title": "SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları YAYINLARIMIZ ASO",
+      "starts_at": "2026-10-12T12:10:00",
+      "ends_at": "2026-10-12T14:10:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
       "city": "Ankara",
-      "online": false,
+      "online": true,
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/tse-standart-tasarisina-iliskin-gorus-talebi-tst-13933-7883",
+      "source_url": "https://www.aso.org.tr/",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -1483,7 +1484,7 @@
     {
       "id": "d8279b7c6f3bc4b0",
       "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI Devamı DUYURULAR İHRACAT AKADEMİSİ İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI Devamı DUYURULAR DİJİTAL GENÇLİK MERKEZİ (DİGEM) KARİYER YOLU MENTÖRLÜK PROGRAMI Devamı DUYURULAR TECHANKARA PROJE PAZARI 2026 Devamı DUYURULAR INVEST GHANA ZİRVESİ, 16-17 KASIM 2026, AKRA-GANA Devamı DUYURULAR I. ULUSLARARASI EĞLENCE VE CAZİBE ALANLARI FAALİYETLERİ FUARI Devamı DUYURULAR RUSYA FEDERASYONU / KARAYOLU TAŞIMACILIĞINDA YENİ DÜZENLEMELER HK. Devamı DUYURULAR AB ORMANSIZLAŞMANIN ÖNLENMESİ TÜZÜĞÜ-KAPSAM DEĞİŞİKLİĞİ Devamı DUYURULAR 3. FAS ULUSLARARASI MADENCİLİK KONFERANSI VE FUARI (IMC 2026)/6-8 EKİM 2026 Devamı DUYURULAR YÜZME HAVUZLARI ELEKTRİK TESİSATI GENEL TEKNİK ŞARTNAMESİ TASLAĞI Devamı DUYURULAR \"ŞİÖ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR TÜRK-RUS KEK 20. DÖNEM TOPLANTISI İÇİN GÖRÜŞ TALEBİ Devamı DUYURULAR İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI Devamı DUYURULAR İHRACAT AKADEMİSİ İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI Devamı DUYURULAR DİJİTAL GENÇLİK MERKEZİ (DİGEM) KARİYER YOLU MENTÖRLÜK PROGRAMI Devamı DUYURULAR TECHANKARA PROJE PAZARI 2026 Devamı DUYURULAR INVEST GHANA ZİRVESİ, 16-17 KASIM 2026, AKRA-GANA Devamı DUYURULAR I. ULUSLARARASI EĞLENCE VE CAZİBE ALANLARI FAALİYETLERİ FUARI Devamı DUYURULAR RUSYA FEDERASYONU / KARAYOLU TAŞIMACILIĞINDA YENİ DÜZENLEMELER HK. Devamı DUYURULAR AB ORMANSIZLAŞMANIN ÖNLENMESİ TÜZÜĞÜ-KAPSAM DEĞİŞİKLİĞİ Devamı DUYURULAR 3. FAS ULUSLARARASI MADENCİLİK KONFERANSI VE FUARI (IMC 2026)/6-8 EKİM 2026 Devamı DUYURULAR YÜZME HAVUZLARI ELE",
       "starts_at": "2026-11-17T09:00:00",
       "ends_at": "2026-11-17T11:00:00",
       "venue": "Ankara Sanayi Odası",
