@@ -1,247 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-14T09:33:20",
-  "event_count": 44,
+  "generated_at": "2026-10-15T09:11:06",
+  "event_count": 40,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
-      "ok": false,
-      "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f8925bfc620>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18239
+      "ok": true,
+      "events": 1,
+      "ms": 1245
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1423
+      "ms": 1282
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 3,
-      "ms": 9029
+      "ms": 14969
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 9,
-      "ms": 8699
+      "events": 7,
+      "ms": 8736
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 421
+      "ms": 380
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 7936
+      "ms": 5413
     }
   ],
   "events": [
-    {
-      "id": "9a3bcfa0b620cb70",
-      "title": "MYK TÜRKİYE YÜZYILI MİLLÎ YETERLİLİK PROGRAMI KAPSAMINDA MESLEK VE BECERİ HARİTALAMA ÇALIŞMALARI İÇİN GÖRÜŞ VE ÖNERİ TALEBİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN MYK TÜRKİYE YÜZYILI MİLLÎ YETERLİLİK PROGRAMI KAPSAMINDA MESLEK VE BECERİ HARİTALAMA ÇALIŞMALARI İÇİN GÖRÜŞ VE ÖNERİ TALEBİ Ana Sayfa Duyurular MYK TÜRKİYE YÜZYILI MİLLÎ YETERLİLİK PROGRAMI KAPSAMINDA MESLEK VE BECERİ HARİTALAMA ÇALIŞMALARI İÇİN GÖRÜŞ VE ÖNERİ TALEBİ 2026-09-29 09:15:00 İşareti : 12/5000-2823 İrtibat: gym@aso.org.tr Sayın Üyemiz, Odamıza Çalışma ve Sosyal Güvenlik Bakanlığı'na bağlı Mesleki Yeterlilik Kurumu (MYK) tarafından iletilen yazıda, Türkiye Yüzyılı Millî Yeterlilik Programı kapsamında yürütülecek sektör, meslek ve beceri haritalama çalışmalarına ilişkin olarak kurum ve kuruluşlardan görüş ve iş birliği önerisi talep edilmiştir. Çalışmanın amacı; kamu ve özel sektörün mevcut ve gelecekteki meslek ve beceri ihtiyaçlarının belirlenmesi, mesleklerdeki dönüşüm",
-      "starts_at": "2026-10-14T09:15:00",
-      "ends_at": "2026-10-14T11:15:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/myk-turkiye-yuzyili-milli-yeterlilik-programi-kapsaminda-meslek-ve-beceri-haritalama-calismalari-icin-gorus-ve-oneri-talebi-7887",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "79cb200d02f6b4f3",
-      "title": "SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları YAYINLARIMIZ ASO",
-      "starts_at": "2026-10-14T14:00:00",
-      "ends_at": "2026-10-14T16:00:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "380a52c27aa52197",
-      "title": "YÖNETİCİLER İÇİN İŞ HUKUKU: GÜNLÜK KARARLARDA GÖRÜNMEYEN HUKUKİ VE MALİ RİSKLER EĞİTİMİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN YÖNETİCİLER İÇİN İŞ HUKUKU: GÜNLÜK KARARLARDA GÖRÜNMEYEN HUKUKİ VE MALİ RİSKLER EĞİTİMİ Ana Sayfa Etkinlikler YÖNETİCİLER İÇİN İŞ HUKUKU: GÜNLÜK KARARLARDA GÖRÜNMEYEN HUKUKİ VE MALİ RİSKLER EĞİTİMİ ETKİNLİK TÜRÜ EĞİTİM BAŞLANGIÇ TARİHİ 2026-10-14 14:00:00 BİTİŞ TARİHİ 2026-10-14 17:30:00 FORM Bu etkinliğe ait forma ulaşmak için tıklayınız . KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamız Harç Tarifesi Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programları Organizasyon Şeması Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo ASO Kurumsal İletişim Stratejisi BİRİMLER Genel Sekreterlik Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Ye",
-      "starts_at": "2026-10-14T14:00:00",
-      "ends_at": "2026-10-14T16:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/event/yoneticiler-icin-is-hukuku-gunluk-kararlarda-gorunmeyen-hukuki-ve-mali-riskler-egitimi-321",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları",
-        "hukuk"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Mesleki gelişim",
-        "Uyuşmazlık çözümü"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 88,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "121d8daa89305f6f",
-      "title": "TAJİKİSTAN FORWARD! FORUMU",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TAJİKİSTAN FORWARD! FORUMU Ana Sayfa Duyurular TAJİKİSTAN FORWARD! FORUMU 2026-09-23 00:00:00 İşareti : 05/5000-2761 İrtibat: dim@aso.org.tr Sayın Üyemiz; Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Tacikistan Cumhuriyeti Ankara Büyükelçiliği'nin yazısına atfen; Tacikistan'nın Duşanbe kentinde 14-15 Ekim 2026 tarihlerinde \"Girişimcilik Haftası\" kapsamında \"Tajikistan Forward!\" İş Forumu'nun düzenleneceği belirtilmekte olup, söz konusu forum çerçevesinde kamu ve özel sektör iş birliğinin güçlendirilmesi, ikili ticaret ve yatırım imkânlarının değerlendirileceği bildirilmektedir. Anılan program dahilinde enerji, yenilenebilir enerji, sanayi, tarım, madencilik, inşaat, tekstil, turizm, lojistik, finans ve dijital teknolojiler sektörlerinin ele alınacağı ve yeni i",
-      "starts_at": "2026-10-15T00:00:00",
-      "ends_at": "2026-10-15T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/tajikistan-forward-forumu-7872",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "gayrimenkul",
-        "insan kaynakları",
-        "networking"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Gayrimenkul hukuku",
-        "İnşaat hukuku",
-        "Eser sözleşmeleri"
-      ],
-      "networking_score": 98,
-      "decision_maker_score": 98,
-      "professional_development_score": 86,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "b4be772aa699af80",
       "title": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor",
