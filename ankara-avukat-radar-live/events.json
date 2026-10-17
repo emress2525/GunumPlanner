@@ -1,234 +1,48 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T09:03:57",
-  "event_count": 42,
+  "generated_at": "2026-10-17T08:36:39",
+  "event_count": 45,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
-      "ok": true,
+      "ok": false,
       "events": 0,
-      "ms": 1193
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f0741328da0>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18299
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1301
+      "ms": 1518
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 3,
-      "ms": 14503
+      "events": 2,
+      "ms": 13595
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 8,
-      "ms": 8007
+      "events": 10,
+      "ms": 8599
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 379
+      "ms": 456
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 10805
+      "ms": 6020
     }
   ],
   "events": [
-    {
-      "id": "f51009d05c35a289",
-      "title": "HASTANE İHALESİ HK.",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN HASTANE İHALESİ HK. Ana Sayfa Duyurular HASTANE İHALESİ HK. 2026-10-12 00:00:00 İşareti : 05/5000-2996 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Kiev Ticaret Müşavirliği'nin yazısına atfen, Ukrayna'nın Lviv şehrinde hayata geçirilmesi planlanan Lviv Cerrahi Hastanesi Kamu Özel İş birliği (PPP) Projesi kapsamında, Lviv Belediye Meclisi ve Dünya Bankası Grubu üyesi Uluslararası Finans Kurumu (IFC) iş birliğinde, 22 Ekim 2026 tarihinde İstanbul'da \"Bidders' Conference\" (İstekliler Konferansı) düzenleneceği bildirilmiştir. Wyndham Grand İstanbul otelde düzenlenecek konferansta projenin kapsamı, hukuki ve mali yapısı, ön yeterlilik kriterleri ve ihale takvimi hakkında bilgi verilecektir. 23 Ekim 2026 Cuma günü, aynı yerde IF",
-      "starts_at": "2026-10-16T09:00:00",
-      "ends_at": "2026-10-16T18:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/hastane-ihalesi-hk-7932",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "sağlık",
-        "insan kaynakları",
-        "hukuk"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Sağlık hukuku",
-        "Mesleki gelişim",
-        "Uyuşmazlık çözümü"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 91,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "2010871dd7802d36",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI (20-22 EKİM 2026) Devamı 16.10.2026 DUYURULAR İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI Devamı 16.10.2026 DUYURULAR TS EN ISO 56002 İNOVASYON YÖNETİM SİSTEMİ EĞİTİM PROGRAMI Devamı 15.10.2026 DUYURULAR KARBON FİYATLAMASI ÇAĞINDA SANAYİ: SKDM, ETS VE REKABETÇİLİK PANELİ Devamı 13.10.2026 DUYURULAR İMALAT SANAYİ İSTİHDAMI KORUMA DESTEK PROGRAMI Devamı 13.10.2026 DUYURULAR KOSGEB İLE DİJİTAL FİNANSMAN: GO DİJİTAL CÜZDAN VE YAPAY ZEKA KREDİ PROGRAMI BİLGİLENDİRME TOPLANTISI Devamı 13.10.2026 DUYURULAR YAPI ARAŞTIRMA MERKEZİ - YAPI BİLGİ MODELLEME (BIM) EĞİTİM PROGRAMLARI Devamı 13.10.2026 DUYURULAR HASTANE İHALESİ HK. Devamı 12.10.2026 DUYURULAR TÜRK-RUS KEK 20. DÖNEM TOPLANT",
-      "starts_at": "2026-10-16T16:10:00",
-      "ends_at": "2026-10-16T18:10:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "sağlık",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Sağlık hukuku"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "bcbc9696b7a8406d",
-      "title": "SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları YAYINLARIMIZ ASO",
-      "starts_at": "2026-10-16T16:10:00",
-      "ends_at": "2026-10-16T18:10:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "91b74dbc16283dc0",
-      "title": "Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası",
-      "description": "Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı Teknik Yardım Masası Etkinlik Hakkında Katılmak için Başvur 24 Temmuz 2026 16:16 - 16 Ekim 2026 17:00 20 Temmuz 2026 tarihinde ilan edilen ve başvuruları 16 Ekim 2026 tarihine kadar devam edecek olan Ankara’da Sosyal Girişimcilik Ekosistemi Kapasite Geliştirme Mali Destek Programı kapsamında, potansiyel başvuru sahiplerinin proje tekliflerini geliştirme süreçlerine destek olmak amacıyla Teknik Yardım Masası hizmeti sunulacaktır. Teknik Yardım Masası, proje başvuru süresince randevu usulüyle hizmet verecek ve 17 Ağustos tarihinde görüşmelere başlanacaktır. Görüşmelerde Ankara Kalkınma Ajansı proje ekibi tarafından program öncelikleri, başvuru koşulları, proje fikrinin yapılandırılması ve başvuru dosyasında dikkat edilmesi gereken hususlara ilişkin yönlendirme sağlanacaktır. Teknik Yardım Masası’ndan yararlanmak isteyen başvuru sahiplerinin, randevu öncesinde proje tekliflerine ve sosyal girişim iş modeli kanvaslarına ilişkin bir taslak hazırlamış olmaları beklenmektedir. Teknik Yardım Masası kapsamında sağlan",
-      "starts_at": "2026-10-16T16:16:00",
-      "ends_at": "2026-10-16T18:16:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Çankaya",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/ankarada-sosyal-girisimcilik-ekosistemi-kapasite-gelistirme-mali-destek-programi-teknik-yardim",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 83,
-      "decision_maker_score": 97,
-      "professional_development_score": 77,
-      "corporate_opportunity_score": 86
-    },
     {
       "id": "32461edc41fa75a5",
       "title": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor",
@@ -311,6 +125,53 @@
       ],
       "networking_score": 90,
       "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "4056e0fdcadf6baa",
+      "title": "TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI (20-22 EKİM 2026)",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI (20-22 EKİM 2026) Ana Sayfa Duyurular TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI (20-22 EKİM 2026) 2026-10-16 00:00:00 İşareti : 05/5000-3032 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ticaret Bakanlığı'ndan alınan bir yazıda, iş çevrelerinin dış ticaret konusunda bilgilendirilmesi, ihracatın geliştirilmesi ve tabana yaygınlaştırılması amacıyla 2011 yılından bu yana düzenlenen Dış Ticaret Bilgilendirme Seminerlerinin, 2026 yılında \"Ticaret Bakanlığı İhracat Süreçleri ve Devlet Destekleri Eğitim Programı\" adıyla sürdürüldüğü belirtilmiştir. Bu kapsamda, 20-21-22 Ekim 2026 tarihlerinde, Türkiye genelindeki tüm iş çevrelerinin katılımına açık ve ücretsiz olarak çevrim içi eğitim programı",
+      "starts_at": "2026-10-19T00:00:00",
+      "ends_at": "2026-10-19T02:00:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/ticaret-bakanligi-ihracat-surecleri-ve-devlet-destekleri-egitim-programi-20-22-ekim-2026-7939",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
@@ -899,6 +760,55 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "216f3b56215a599c",
+      "title": "MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ Ana Sayfa Duyurular MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ 2026-10-16 00:00:00 İşareti : 05/5000 -3060 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen aşağıdaki hususlar belirtilmiştir: • Madagaskar'ın ana ticaret kapısı olan Toamasina Limanı'nda, Toamasina Özerk Liman İşletmesi (SPAT) tarafından \"Toamasina Liman Lojistiği Modernizasyon Projesi\" başlatılmıştır. • Proje kapsamında yatırımcıların ön yeterliliklerinin belirlenmesine yönelik İlgi Beyanı Çağrıları açılmıştır. • Planlanan yatırımlar: konteyner depolama ve elleçleme alanı, yaklaşık 500 kamyon kapasiteli park ve akıllı trafik yönetim sistemlerini içeren kargo",
+      "starts_at": "2026-10-28T00:00:00",
+      "ends_at": "2026-10-28T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/madagaskar-toamasina-liman-lojistigi-modernizasyon-projesi-7944",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "yatırım",
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "yatırımcılar",
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "90ae54dbba46c24b",
       "title": "İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR Ana Sayfa Duyurular İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR 2026-10-07 00:00:00 İşareti : 05/5000-2949 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ticaret Bakanlığı İhracat Genel Müdürlüğü'nden gelen yazıya istinaden ihracatçıların eğitimine yönelik yürütülen faaliyetlere kurumsal bir nitelik kazandırmak, dış ticaret alanında yetişmiş iş gücünün niteliğini artırmak ve bu süreçte üniversitelerimizin akademik birikiminden azami ölçüde faydalanmak amacıyla Yükseköğretim Kurulu iş birliğinde İhracat Akademisinin hayata geçirildiği belirtilmiştir. Bu minvalde, İhracat Akademisi bünyesinde düzenlenen İhracat Uzmanlığı ve Modüler Eğitim Programlarının yeni dönem kayıtlarının devam ettiği bildi",
@@ -1044,7 +954,7 @@
     {
       "id": "51e1dde8d8828756",
       "title": "İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI Ana Sayfa Duyurular İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI 2026-10-09 00:00:00 İşareti : 12/5000-2987 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Sanayi ve Teknoloji Bakanlığının yazısına atfen; imalat sanayisinde faaliyet gösteren işletmelerin finansmana erişiminin kolaylaştırılması, üretim kapasitelerinin sürdürülmesi ve mevcut istihdam seviyelerinin korunması amacıyla yürütülen İstihdamı Koruma Destek Programının , 2026 yılı ikinci döneminde genişletilen kapsamı ve iyileştirilen finansman koşullarıyla uygulamaya alındığı bildirilmiştir. Program kapsamında, gerekli koşulları sağlayan KOBİ ve büyük işletmelere 6 aya kadar anapara ödemesiz, 36 aya kadar vadeli kredi imkânı sunulmakta o",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI Ana Sayfa Duyurular İMALAT SANAYİ İSTİHDAMI KORUMA PROGRAMI 2026-10-16 00:00:00 İşareti : 05/5000-3031 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Sanayi ve Teknoloji Bakanlığı'nın yazısına atfen, imalat sanayisinde faaliyet gösteren işletmelerin finansmana erişiminin kolaylaştırılması, üretim kapasitelerinin sürdürülmesi ve mevcut istihdam seviyelerinin korunması amacıyla yürütülen İmalat Sanayi İstihdamı Koruma Programının, 2026 yılı ikinci döneminde genişletilen kapsamı ve iyileştirilen finansman koşullarıyla uygulamaya alındığı bildirilmiştir. Program kapsamında, gerekli koşulları sağlayan KOBİ ve büyük ölçekli işletmelere 6 aya kadar anapara ödemesiz, 36 aya kadar vadeli kredi imkâ",
       "starts_at": "2026-10-31T00:00:00",
       "ends_at": "2026-10-31T02:00:00",
       "venue": "TOBB",
@@ -1054,7 +964,7 @@
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/imalat-sanayi-istihdami-koruma-programi-7929",
+      "source_url": "https://www.aso.org.tr/post/imalat-sanayi-istihdami-koruma-programi-7938",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -1282,6 +1192,53 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "bf7f8d691b197a3e",
+      "title": "TÜRKİYE-FRANSA HAYVANCILIK VE YETİŞTİRİCİLİK SEMİNERİ DUYURUSU HK.",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TÜRKİYE-FRANSA HAYVANCILIK VE YETİŞTİRİCİLİK SEMİNERİ DUYURUSU HK. Ana Sayfa Duyurular TÜRKİYE-FRANSA HAYVANCILIK VE YETİŞTİRİCİLİK SEMİNERİ DUYURUSU HK. 2026-10-16 00:00:00 İşareti : 05/5000-3049 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Fransa Büyükelçiliği Ticaret Müşavirliği Business France'ın yazısına atfen, Türkiye-Fransa Hayvancılık ve Yetiştiricilik Semineri'nin 5 Kasım 2026 tarihinde, Fransa İstanbul Başkonsolosu Nadia Fanton'un katılımıyla İzmir Ticaret Odası'nda (İZTO) gerçekleştirileceği bildirilmektedir. Seminerde; hayvan genetiği, ıslah, hayvan sağlığı ve beslenmesi, süt üretimi, hayvan refahı ve sürdürülebilir hayvancılık konularının ele alınacağı; teknik sunumların yanı sıra Türk ve Fransız sektör temsil",
+      "starts_at": "2026-11-05T00:00:00",
+      "ends_at": "2026-11-05T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/turkiye-fransa-hayvancilik-ve-yetistiricilik-semineri-duyurusu-hk-7941",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "f4d31dbb19dcffdc",
       "title": "AVRUPA KOBİ HAFTASI",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN AVRUPA KOBİ HAFTASI Ana Sayfa Duyurular AVRUPA KOBİ HAFTASI 2026-09-30 00:00:00 İşareti : 12/5000-2875 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, KOSGEB'in yazısına atfen; Avrupa Birliği tarafından KOBİ'lerin ve girişimciliğin desteklenmesi amacıyla düzenlenen Avrupa KOBİ Haftası'nın 02-08 Kasım 2026 tarihleri arasında gerçekleştirileceği bildirilmiştir. Bu kapsamda, Avrupa KOBİ Haftası kapsamında düzenlenecek etkinliklerin Avrupa KOBİ Haftası portalına kaydedilmesi gerektiği belirtilmiştir. Etkinlik kayıtları aşağıdaki bağlantı üzerinden gerçekleştirilebileceği hususunu bilgilerinize sunarız. Bağlantı adresi: https://sme-week.ec.europa.eu/home/view/event/add Saygılarımızla, ANKARA SANAYİ ODASI KURUMSAL YAPI Aso'nun Tarihçes",
@@ -1327,6 +1284,57 @@
       "networking_score": 90,
       "decision_maker_score": 98,
       "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "b86651aa08f25199",
+      "title": "KOMORLAR BİRLİĞİ İHALE ÇAĞRISI HK.",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KOMORLAR BİRLİĞİ İHALE ÇAĞRISI HK. Ana Sayfa Duyurular KOMORLAR BİRLİĞİ İHALE ÇAĞRISI HK. 2026-10-16 00:00:00 İşareti : 05/5000-3053 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Antananarivo Ticaret Müşavirliği tarafından iletilen bir yazıya atfen, Komorlar Birliği Deniz ve Hava Ulaştırma Bakanlığı tarafından, Dünya Bankasının finansman desteğiyle yürütülen Komorlar Deniz Ağı Bağlantısı Projesi (Projet Inter Connectivité Maritime des Comores / PICMC) kapsamında, Komorlar'a bağlı Anjouan Adası'nda yer alan Vassy ikincil limanının altyapı inşaatı işleri için bir uluslararası açık ihale yayımlandığı bildirilmektedir. Yazıda devamla; ihale süreci, \"Dünya Bankası IPF Borçluları İçin Satın alma Düzenlemeleri\" belgesinde tanımlan",
+      "starts_at": "2026-11-09T00:00:00",
+      "ends_at": "2026-11-09T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/komorlar-birligi-ihale-cagrisi-hk-7943",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "gayrimenkul",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri",
+        "Gayrimenkul hukuku",
+        "İnşaat hukuku",
+        "Eser sözleşmeleri"
+      ],
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
       "corporate_opportunity_score": 98
     },
     {
@@ -1813,6 +1821,104 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "e3e0ba410e6abe2e",
+      "title": "6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA Ana Sayfa Duyurular 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA 2026-10-16 00:00:00 İşareti : 05/5000 -3058 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen; Etiyopya Ticaret Odası ve Sektörel Birlikler (AACCSA) tarafından 3-5 Aralık 2026 tarihlerinde Addis Ababa'da 6. Üretim ve Teknoloji – Güzellik ve Kozmetik Fuarı'nın (6th Addis Chamber International Manufacturing & Technology – Beauty and Cosmetics Expo) düzenleneceği belirtilmiştir. Fuar; üretim, makine, güzellik ve kozmetik ürünlerinin yanı sıra tarım ve gıda, inşaat, bilişim ve yazılım, tekstil ve hazır giyim, enerji, lojistik ve taşımacılık ile otomotiv sektörlerinden firmaların",
+      "starts_at": "2026-12-05T00:00:00",
+      "ends_at": "2026-12-05T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/6-matex-ethiopia-fuari-3-5-aralik-2026-addis-ababa-7945",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "gayrimenkul",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri",
+        "Gayrimenkul hukuku",
+        "İnşaat hukuku",
+        "Eser sözleşmeleri"
+      ],
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "edefea5893dde9de",
+      "title": "SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR ASO’DAN ANKARA SANAYİSİNİN SKDM FOTOĞRAFI 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları YAYINLARIMIZ ASO",
+      "starts_at": "2026-12-05T16:10:00",
+      "ends_at": "2026-12-05T18:10:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "d40760d0001e8966",
       "title": "34. ULUSLARARASI DAKAR FUARI (FIDAK)/10-31 ARALIK 2026",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 34. ULUSLARARASI DAKAR FUARI (FIDAK)/10-31 ARALIK 2026 Ana Sayfa Duyurular 34. ULUSLARARASI DAKAR FUARI (FIDAK)/10-31 ARALIK 2026 2026-09-15 00:00:00 İşareti : 05/5000 -2671 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen; Senegal'in Dakar şehrinde 10-31 Aralık 2026 tarihlerinde \"Dijitalleşme ve İnovasyon: Ekonomik Dönüşümün İtici Gücü\" temasıyla \"34. Uluslararası Dakar Fuarı\"nın (FIDAK) düzenleneceği belirtilmiştir. Fuarın 30'dan fazla ülkeden 1.500'ün üzerinde katılımcıyı bir araya getirmesinin öngörüldüğü, fuar kapsamında çeşitli forumlar ile B2B iş görüşmelerinin gerçekleştirileceği bildirilmiştir. Fuara ilişkin detaylı bilgilere cices@cices.sn adresinden veya +221 33 859 96 03 / +221 33 859",
@@ -1951,6 +2057,55 @@
       "networking_score": 90,
       "decision_maker_score": 94,
       "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "70c636816640c3cc",
+      "title": "6. SAİNT-LOUİS ULUSLARARASI FUARI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 6. SAİNT-LOUİS ULUSLARARASI FUARI Ana Sayfa Duyurular 6. SAİNT-LOUİS ULUSLARARASI FUARI 2026-10-16 00:00:00 İşareti : 05/5000-3051 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Dakar Ticaret Müşavirliği'nin yazısına atfen, Senegal'da bölge ekonomik potansiyelinin tanıtılmasının, ticari ilişkilerin geliştirilmesinin, yatırımların teşvikinin, yerel ve uluslararası ekonomik aktörler arasında iş birliklerinin artırılmasının amaçlandığı \"6. Saint-Louis Uluslararası Fuarı\"nın, 5- 20 Ocak 2027 tarihleri arasında düzenleneceği bildirilmiştir. Aynı zamanda fuar kapsamında Saint-Louis Ticaret, Sanayi ve Tarım Odası tarafından bölgedeki iş insanlarıyla Türk firmalar arasında ikili iş görüşmelerinin (B2B) organize edilmesinin istendiği",
+      "starts_at": "2027-01-20T00:00:00",
+      "ends_at": "2027-01-20T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/6-saint-louis-uluslararasi-fuari-7940",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "yatırım",
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket sahipleri",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
       "corporate_opportunity_score": 98
     },
     {
