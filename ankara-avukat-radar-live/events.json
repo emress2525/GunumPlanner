@@ -1,54 +1,54 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-17T08:36:39",
-  "event_count": 45,
+  "generated_at": "2026-10-18T08:53:04",
+  "event_count": 46,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f0741328da0>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18299
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7fd38cd02ed0>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18280
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1518
+      "ms": 1275
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 2,
-      "ms": 13595
+      "ms": 9817
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 10,
-      "ms": 8599
+      "ms": 8121
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 456
+      "ms": 426
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 6020
+      "ms": 5829
     }
   ],
   "events": [
     {
-      "id": "32461edc41fa75a5",
+      "id": "4a0d4a2e35237939",
       "title": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor",
       "description": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor Etkinlik Hakkında Program 8 Ekim 2026 13:46 - 15 Ekim 2026 23:59 Ankara Kalkınma Ajansı tarafından yürütülen “Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı” kapsamında gerçekleştirilen bilgilendirme toplantılarının tamamlanmasıyla programda eğitim aşamasına geçiliyor. Programın ikinci aşamasını oluşturan Sosyal Girişimcilik Eğitimleri , Ekim ayında başlayacak. Gençlerin sosyal girişim fikirlerini geliştirmeleri ve sürdürülebilir iş modellerine dönüştürmeleri için ihtiyaç duyacakları temel bilgi ve becerileri kazandırmayı amaçlayan eğitim programı aşağıdaki başlıklardan oluşacak: Modül 1- Sosyal Girişimcilik Giriş Eğitim Programı Modül 2- Sürdürülebilir ve Kapsayıcı İş Modelleri Eğitimlerin ardından katılımcılar, fikir geliştirme atölyeleri, bootcamp çalışmaları ve sektörel mentorlük desteği ile hızlandırma programına dahil olacak. Bu süreçte gençler, sosyal girişimcilik fikirlerini uzman mentorlarla geliştirme fırsatı bulacak ve Şubat 2027’de düzenlenecek Etki Arenası Yarışmasına katılabi",
-      "starts_at": "2026-10-17T10:00:00",
-      "ends_at": "2026-10-17T16:00:00",
+      "starts_at": "2026-10-18T10:00:00",
+      "ends_at": "2026-10-18T16:00:00",
       "venue": "Ankara Kalkınma Ajansı",
       "district": "Çankaya",
       "city": "Ankara",
@@ -81,52 +81,6 @@
       "decision_maker_score": 97,
       "professional_development_score": 77,
       "corporate_opportunity_score": 86
-    },
-    {
-      "id": "99d8c78f3bf12977",
-      "title": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı!",
-      "description": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! Etkinlik Hakkında 17 Ekim 2026 10:00 - 21 Kasım 2026 17:00 Ankara Kalkınma Ajansı koordinasyonunda, Genç MÜSİAD Ankara ve OSTİM Teknik Üniversitesi iş birliğinde gerçekleştirilen Genç Ticaret Elçileri 11. Dönem Eğitim Programı için başvurular başladı! Kimler Başvurabilir? Türkiye’de lisans, yüksek lisans veya doktora düzeyinde öğrenim gören uluslararası öğrenciler programa başvurabilir. Kontenjanla sınırlı olan programa başvurular 5 Ekim Pazartesi günü saat 18.00’e kadar alınacaktır. Başvuruların değerlendirilmesinin ardından uygun bulunan adaylar mülakata davet edilecek , mülakat sonucunda programa kabul edilen adaylara e-posta yoluyla bilgi verilecektir. Programın Amacı Genç Ticaret Elçileri Programı ile Türkiye ile öğrencilerin ülkeleri arasındaki ekonomik ve ticari ilişkilerin geliştirilmesine katkı sağlayabilecek uluslararası öğrencilerin desteklenmesi amaçlanmaktadır. Programı tamamlayarak ülkelerine dönecek öğrencilerin, Türkiye’nin dış ticaret ilişkilerinin geliştirilmesine katkı sunabilecek gönüllü ticaret elçileri olarak yetiştirilmesi hedeflen",
-      "starts_at": "2026-10-17T10:00:00",
-      "ends_at": "2026-10-17T17:00:00",
-      "venue": "OSTİM",
-      "district": "Yenimahalle",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/genc-ticaret-elcileri-11-donem-egitim-programi-basvurulari-basladi",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "ihracatçılar"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
     },
     {
       "id": "4056e0fdcadf6baa",
@@ -1821,6 +1775,52 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "7d5fc0b8922b5e46",
+      "title": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı!",
+      "description": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! Etkinlik Hakkında 17 Ekim 2026 10:00 - 21 Kasım 2026 17:00 Ankara Kalkınma Ajansı koordinasyonunda, Genç MÜSİAD Ankara ve OSTİM Teknik Üniversitesi iş birliğinde gerçekleştirilen Genç Ticaret Elçileri 11. Dönem Eğitim Programı için başvurular başladı! Kimler Başvurabilir? Türkiye’de lisans, yüksek lisans veya doktora düzeyinde öğrenim gören uluslararası öğrenciler programa başvurabilir. Kontenjanla sınırlı olan programa başvurular 5 Ekim Pazartesi günü saat 18.00’e kadar alınacaktır. Başvuruların değerlendirilmesinin ardından uygun bulunan adaylar mülakata davet edilecek , mülakat sonucunda programa kabul edilen adaylara e-posta yoluyla bilgi verilecektir. Programın Amacı Genç Ticaret Elçileri Programı ile Türkiye ile öğrencilerin ülkeleri arasındaki ekonomik ve ticari ilişkilerin geliştirilmesine katkı sağlayabilecek uluslararası öğrencilerin desteklenmesi amaçlanmaktadır. Programı tamamlayarak ülkelerine dönecek öğrencilerin, Türkiye’nin dış ticaret ilişkilerinin geliştirilmesine katkı sunabilecek gönüllü ticaret elçileri olarak yetiştirilmesi hedeflen",
+      "starts_at": "2026-11-21T10:00:00",
+      "ends_at": "2026-11-21T17:00:00",
+      "venue": "OSTİM",
+      "district": "Yenimahalle",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Kalkınma Ajansı",
+      "source_name": "Ankara Kalkınma Ajansı",
+      "source_url": "https://ankaraka.org.tr/genc-ticaret-elcileri-11-donem-egitim-programi-basvurulari-basladi",
+      "verified": true,
+      "source_confidence": 98,
+      "categories": [
+        "yatırım",
+        "startup",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket yöneticileri",
+        "ihracatçılar"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "e3e0ba410e6abe2e",
       "title": "6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA Ana Sayfa Duyurular 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA 2026-10-16 00:00:00 İşareti : 05/5000 -3058 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen; Etiyopya Ticaret Odası ve Sektörel Birlikler (AACCSA) tarafından 3-5 Aralık 2026 tarihlerinde Addis Ababa'da 6. Üretim ve Teknoloji – Güzellik ve Kozmetik Fuarı'nın (6th Addis Chamber International Manufacturing & Technology – Beauty and Cosmetics Expo) düzenleneceği belirtilmiştir. Fuar; üretim, makine, güzellik ve kozmetik ürünlerinin yanı sıra tarım ve gıda, inşaat, bilişim ve yazılım, tekstil ve hazır giyim, enerji, lojistik ve taşımacılık ile otomotiv sektörlerinden firmaların",
@@ -1869,6 +1869,53 @@
       "networking_score": 97,
       "decision_maker_score": 98,
       "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "1e51ca18079680ad",
+      "title": "ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları Y",
+      "starts_at": "2026-12-05T16:10:00",
+      "ends_at": "2026-12-05T18:10:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
     {
