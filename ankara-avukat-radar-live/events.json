@@ -1,187 +1,54 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19T09:57:56",
-  "event_count": 47,
+  "generated_at": "2026-10-20T09:28:05",
+  "event_count": 44,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7ff58cb7eb40>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18300
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f094cdad280>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18298
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1462
+      "ms": 1429
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 2,
-      "ms": 13543
+      "events": 1,
+      "ms": 11867
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 7,
-      "ms": 8785
+      "ms": 8070
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 519
+      "ms": 422
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 7051
+      "ms": 6284
     }
   ],
   "events": [
     {
-      "id": "9bb9c84d391d1dca",
-      "title": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor",
-      "description": "Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı Sosyal Girişimcilik Eğitimleri Başlıyor Etkinlik Hakkında Program 8 Ekim 2026 13:46 - 15 Ekim 2026 23:59 Ankara Kalkınma Ajansı tarafından yürütülen “Geleceğe Etki: Gençler için Sosyal Girişimcilik Programı” kapsamında gerçekleştirilen bilgilendirme toplantılarının tamamlanmasıyla programda eğitim aşamasına geçiliyor. Programın ikinci aşamasını oluşturan Sosyal Girişimcilik Eğitimleri , Ekim ayında başlayacak. Gençlerin sosyal girişim fikirlerini geliştirmeleri ve sürdürülebilir iş modellerine dönüştürmeleri için ihtiyaç duyacakları temel bilgi ve becerileri kazandırmayı amaçlayan eğitim programı aşağıdaki başlıklardan oluşacak: Modül 1- Sosyal Girişimcilik Giriş Eğitim Programı Modül 2- Sürdürülebilir ve Kapsayıcı İş Modelleri Eğitimlerin ardından katılımcılar, fikir geliştirme atölyeleri, bootcamp çalışmaları ve sektörel mentorlük desteği ile hızlandırma programına dahil olacak. Bu süreçte gençler, sosyal girişimcilik fikirlerini uzman mentorlarla geliştirme fırsatı bulacak ve Şubat 2027’de düzenlenecek Etki Arenası Yarışmasına katılabi",
-      "starts_at": "2026-10-19T10:00:00",
-      "ends_at": "2026-10-19T16:00:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Çankaya",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/gelecege-etki-gencler-icin-sosyal-girisimcilik-programi-sosyal-girisimcilik-egitimleri-basliyor",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 83,
-      "decision_maker_score": 97,
-      "professional_development_score": 77,
-      "corporate_opportunity_score": 86
-    },
-    {
-      "id": "6e833ca7fe5b47ae",
-      "title": "KOSGEB İLE DİJİTAL FİNANSMAN: GO DİJİTAL CÜZDAN VE YAPAY ZEKA KREDİ PROGRAMI BİLGİLENDİRME TOPLANTISI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KOSGEB İLE DİJİTAL FİNANSMAN: GO DİJİTAL CÜZDAN VE YAPAY ZEKA KREDİ PROGRAMI BİLGİLENDİRME TOPLANTISI Ana Sayfa Duyurular KOSGEB İLE DİJİTAL FİNANSMAN: GO DİJİTAL CÜZDAN VE YAPAY ZEKA KREDİ PROGRAMI BİLGİLENDİRME TOPLANTISI 2026-10-13 14:08:00 İşareti : 12/5000-3001 İrtibat: gym@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası ile KOSGEB iş birliğinde düzenlenecek olan \"KOSGEB ile Dijital Finansman: GO Dijital Cüzdan ve Yapay Zekâ Kredi Programı Bilgilendirme Toplantısı\" , 20 Ekim 2026 Salı günü 14.00–16.30 saatleri arasında ASO Zafer Çağlayan Meclis Salonu'nda gerçekleştirilecektir. Toplantıda, KOSGEB Ankara OSTİM ve Sincan Müdürü Sn. Dr. Aziz Acar ile GO Dijital A.Ş. yetkilisi Sn. Özgür Güler tarafından GO Dijital Cüzdan uygulamasının işleyişi, işletmelere sağladığı avantajlar ve Ya",
-      "starts_at": "2026-10-19T14:00:00",
-      "ends_at": "2026-10-19T16:30:00",
-      "venue": "OSTİM",
-      "district": "Yenimahalle",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/kosgeb-ile-dijital-finansman-go-dijital-cuzdan-ve-yapay-zeka-kredi-programi-bilgilendirme-toplantisi-7934",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "353c7f7a4a75b478",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA Devamı 19.10.2026 DUYURULAR MORİTYUS İHALE Devamı 19.10.2026 DUYURULAR 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA Devamı 16.10.2026 DUYURULAR MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ Devamı 16.10.2026 DUYURULAR KOMORLAR BİRLİĞİ İHALE ÇAĞRISI HK. Devamı 16.10.2026 DUYURULAR TIBBİ CİHAZ DENETİM SÜRECİNDEKİ İLETİŞİM YÖNTEMLERİ HAKKINDA Devamı 16.10.2026 DUYURULAR TÜRKİYE-FRANSA HAYVANCILIK VE YETİŞTİRİCİLİK SEMİNERİ DUYURUSU HK. Devamı 16.10.2026 DUYURULAR 6. SAİNT-LOUİS ULUSLARARASI FUARI Devamı 16.10.2026 DUYURULAR TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI (20-22 EKİM 2026) Devamı 16.",
-      "starts_at": "2026-10-19T19:10:00",
-      "ends_at": "2026-10-19T21:10:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "64e88ed9f164776f",
-      "title": "ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ YÜKSEK TEKNOLOJİNİN BAŞKENTİ ANKARA İHRACATTA REKOR KIRIYOR 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları Y",
-      "starts_at": "2026-10-19T19:10:00",
-      "ends_at": "2026-10-19T21:10:00",
+      "id": "89a8ac09552b2991",
+      "title": "ASO’DA YENİ DÖNEMİN İLK YÖNETİM KURULU TOPLANTISI GERÇEKLEŞTİRİLDİ ......... ASO VE ATO’NUN YENİ MECLİS BAŞKANLIK DİVANLARI BİR ARAYA GELDİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’DA YENİ DÖNEMİN İLK YÖNETİM KURULU TOPLANTISI GERÇEKLEŞTİRİLDİ ......... ASO VE ATO’NUN YENİ MECLİS BAŞKANLIK DİVANLARI BİR ARAYA GELDİ ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ 1 2 3 4 5 6 7 8 9 10",
+      "starts_at": "2026-10-20T14:00:00",
+      "ends_at": "2026-10-20T16:00:00",
       "venue": "Çevrim içi",
       "district": "Çevrim içi",
       "city": "Ankara",
@@ -224,58 +91,11 @@
       "corporate_opportunity_score": 98
     },
     {
-      "id": "eeac3f25e68fefc0",
-      "title": "TÜRK-RUS KEK 20. DÖNEM TOPLANTISI İÇİN GÖRÜŞ TALEBİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TÜRK-RUS KEK 20. DÖNEM TOPLANTISI İÇİN GÖRÜŞ TALEBİ Ana Sayfa Duyurular TÜRK-RUS KEK 20. DÖNEM TOPLANTISI İÇİN GÖRÜŞ TALEBİ 2026-10-12 00:00:00 İşareti : 05/5000-2988 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen, Türk-Rus Ticari ve Ekonomik İşbirliğine Dair Hükümetler arası Karma Komisyonu (KEK) 20. Dönem Toplantısının 27 Kasım 2026 tarihinde İstanbul'da gerçekleştirilmesinin öngörüldüğü belirtilerek, TOBB'un görev ve yetki alanına giren konular ile ilgili güncel bilgi notlarına ihtiyaç duyulduğu ifade edilmektedir. Bu itibarla, bahse konu toplantının hazırlıklarında kullanılmak üzere, Rusya Federasyonu ile ticari ve ekonomik ilişkilerin arttırılmasına yönelik işbirliği imkânları, öncel",
-      "starts_at": "2026-10-20T00:00:00",
-      "ends_at": "2026-10-20T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/turk-rus-kek-20-donem-toplantisi-icin-gorus-talebi-7931",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "dae2fed0d735da51",
-      "title": "TECHANKARA PROJE PAZARI 2026",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TECHANKARA PROJE PAZARI 2026 Ana Sayfa Duyurular TECHANKARA PROJE PAZARI 2026 2026-10-08 00:00:00 İşareti : 12/5000 - 2973 İrtibat: gym@aso.org.tr Sayın Üyemiz, Ankara Valiliği'nden alınan bir yazıda, Ankara Kalkınma Ajansı'nın yazısına atfen; 2011 yılından bu yana organize edilen \"TechAnkara Proje Pazarı\" etkinliğinin, bu yıl on ikinci kez olmak üzere 20 Ekim 2026 tarihinde, Hacettepe Üniversitesi Beytepe Kampüsü Tunçalp Özgen Kongre ve Kültür Merkezi salonunda gerçekleştirileceği belirtilmiştir. Teknoloji ve inovasyon alanındaki aktörler arasındaki iş birliğini artıracak faaliyetlerin işlerlik kazanmasını hedefleyen TechAnkara Proje Pazarı 2026; yurt içi ve yurt dışından kurum ve kuruluşlar, üniversiteler, teknoloji geliştirme bölgeleri, organize sanayi bölgeleri, teknoloji firm",
-      "starts_at": "2026-10-20T00:00:00",
-      "ends_at": "2026-10-20T02:00:00",
+      "id": "3777f9193ed988d5",
+      "title": "Duyurular",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK. Devamı 20.10.2026 DUYURULAR 16 EKİM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 19.10.2026 DUYURULAR 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA Devamı 19.10.2026 DUYURULAR MORİTYUS İHALE Devamı 19.10.2026 DUYURULAR 6. MATEX ETHIOPIA FUARI/3-5 ARALIK 2026, ADDİS ABABA Devamı 16.10.2026 DUYURULAR MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ Devamı 16.10.2026 DUYURULAR KOMORLAR BİRLİĞİ İHALE ÇAĞRISI HK. Devamı 16.10.2026 DUYURULAR TIBBİ CİHAZ DENETİM SÜRECİNDEKİ İLETİŞİM YÖNTEMLERİ HAKKINDA Devamı 16.10.2026 DUYURULAR TÜRKİYE-FRANSA HAYVANCILIK VE YETİŞTİRİCİLİK SEMİNERİ DUYURUSU HK. Devamı 16.10.2026 DUYURULAR 6. SAİNT-LOUİS ULUS",
+      "starts_at": "2026-10-20T20:10:00",
+      "ends_at": "2026-10-20T22:10:00",
       "venue": "Ankara Sanayi Odası",
       "district": "Ankara",
       "city": "Ankara",
@@ -283,7 +103,7 @@
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/techankara-proje-pazari-2026-7926",
+      "source_url": "https://www.aso.org.tr/duyurular",
       "verified": true,
       "source_confidence": 99,
       "categories": [
@@ -1188,6 +1008,55 @@
         "Yazılım sözleşmeleri"
       ],
       "networking_score": 90,
+      "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "cc1147e3b0fd41ca",
+      "title": "16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA Ana Sayfa Duyurular 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA 2026-10-19 00:00:00 İşareti : 05/5000-3062 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Ticaret Bakanlığı'nın yazısına atfen, Türkiye'nin 3-5 Kasım 2026 tarihlerinde İspanya'nın ev sahipliğinde Madrid'de gerçekleştirilecek 30. İber-Amerika Konferansı Zirvesi'ne Ortak Gözlemci statüsünde katılacağı bildirilmekte olup, ülkemizin bu statü ile anılan zirve kapsamında gerçekleştirilecek çeşitli üst düzeyli yan etkinliklere katılabileceği bildirilmiştir. Bu çerçevede, 3-4 Kasım 2026 tarihlerindeki 16. İber-Amerik",
+      "starts_at": "2026-11-03T00:00:00",
+      "ends_at": "2026-11-03T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/16-iber-amerika-is-dunyasi-toplantisi-ve-iber-amerika-dijital-forumu-3-5-kasim-2026-madrid-ispanya-7950",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları",
+        "networking"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "şirket yöneticileri",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 98,
       "decision_maker_score": 98,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
