@@ -1,45 +1,45 @@
 {
-  "generated_at": "2026-10-20T09:28:05.402847",
+  "generated_at": "2026-10-21T09:23:49.903745",
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f094cdad280>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18298
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f9e95495a00>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18288
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1429
+      "ms": 1276
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 1,
-      "ms": 11867
+      "events": 3,
+      "ms": 23085
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 7,
-      "ms": 8070
+      "events": 6,
+      "ms": 8071
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 422
+      "ms": 430
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 6284
+      "ms": 8037
     }
   ],
-  "fresh_event_count": 8,
-  "event_count": 44
+  "fresh_event_count": 9,
+  "event_count": 48
 }
