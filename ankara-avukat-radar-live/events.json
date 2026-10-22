@@ -1,279 +1,48 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-21T09:23:49",
-  "event_count": 48,
+  "generated_at": "2026-10-22T09:26:46",
+  "event_count": 45,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f9e95495a00>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18288
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7fd7bbbcdf70>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18314
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1276
+      "ms": 1481
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 3,
-      "ms": 23085
+      "events": 1,
+      "ms": 14543
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 6,
-      "ms": 8071
+      "ms": 9229
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 430
+      "ms": 513
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 8037
+      "ms": 8293
     }
   ],
   "events": [
-    {
-      "id": "d1d38834b8005bea",
-      "title": "Teknoloji Girişimciliği ve Ticarileşme",
-      "description": "Teknoloji Girişimciliği ve Ticarileşme | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Teknoloji Girişimciliği ve Ticarileşme TEKNOLOJİ GİRİŞİMCİLİĞİ ve TİCARİLEŞME Teknoloji Girişimciliği ve Ticarileşme Sonuç Odaklı Programı, Ankara’da bilişim, ilaç ve tıbbi cihaz, savunma ve havacılık, iş ve inşaat makineleri başta olmak üzere teknoloji yoğun sektörlerin geliştirilmesi, bu sektörler arasındaki iş birliği olanaklarının güçlendirilerek teknolojik derinleşme ve çeşitlenmenin sağlanabilmesi, bu sektörlerin de dâhil olduğu tüm teknoloji geliştirme ve yenilikçi girişimcilik ekosisteminin Ankara’yı küresel ölçekte rekabet edebilir bir bölge haline getirmek amacıyla kurgulanmış bir programdır. Strateji ve Analiz ANALİZ Dijital Oyun Sektörü Raporu Bu raporda temel amaç Ankara’da ve Türkiye’de, dijital oyun sektörünün gelişme potansiyeline dair temel bulguları tespit etmek ve son derece dinamik bir gelişme potansiyeline sahip olan sektöre ilişkin gelecek perspektifini ortaya koymaktır. Bu bağlamda özellikle kamu politikalarına da belirli alanlarda yol gösterici önerilerin yapılması yine raporun diğer amaçları arasındadır. Bununla birlikte, raporda sektörün dünyadaki temel eğilimleri ve gelişme alanları ve pazar potansiyeli hakkında da bulgular",
-      "starts_at": "2026-10-21T09:00:00",
-      "ends_at": "2026-10-21T11:00:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/teknoloji-girisimciligi-ve-ticarilesme",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "teknoloji",
-        "gayrimenkul",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Yazılım sözleşmeleri",
-        "Gayrimenkul hukuku",
-        "İnşaat hukuku",
-        "Eser sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 96
-    },
-    {
-      "id": "e0c9c4ecafe07336",
-      "title": "Haberler",
-      "description": "Haberler | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Haberler Tema - Any - Teknoloji ve Ticarileşme Kırsal Kalkınma Sosyal Kalkınma Apply 21 Ekim 2026 12. TechAnkara Proje Pazarı 2026 Ankara’nın Teknoloji Girişimlerini Yatırımcılarla Buluşturdu Ankara Kalkınma Ajansı koordinasyonunda Hacettepe Üniversitesi ev sahipliğinde düzenlenen TechAnkara Proje Pazarı 2026 gerçekleştirildi. Devamını Oku 16 Ekim 2026 Ankara Keçisi Ürün Analizi Çalıştayı Gerçekleştirildi Anadoludakiler: 81 İl 81 Ürün Programı” kapsamında, Ankara’yı temsil edecek ürün olarak belirlenen Ankara Keçisi ve tiftik değer zincirinin… Devamını Oku 16 Ekim 2026 Ankara Keçisi ve Tiftik Temelli Tekstil Ürünleri Çalıştayı Düzenlendi Ankara Keçisi ve Tiftik Temelli Tekstil Ürünleri Çalıştayı Düzenlendi Devamını Oku 14 Ekim 2026 Permakültür Eğitimi Düzenlendi Ankara Kalkınma Ajansı ve Gölbaşı İlçe Tarım Müdürlüğü iş birliğiyle permakültür eğitimi düzenlendi. Devamını Oku 12 Ekim 2026 TechAnkara Proje Pazarı 2026 Program Akışı Açıklandı TechAnkara Proje Pazarı 2026 Program Akışı Açıklandı Devamını Oku 8 Ekim 2026 Dış Ticaret İstihbarat Merkezi Uzmanlarına Yönelik Yapay Zekâ Destekli Eğitim Programı Gerçekleştirildi Program 6-7 Ekim 2026 tarihlerinde Teknopark Ankara’da gerçekleş",
-      "starts_at": "2026-10-21T09:00:00",
-      "ends_at": "2026-10-21T11:00:00",
-      "venue": "Ankara Kalkınma Ajansı",
-      "district": "Çankaya",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/haberler",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "yatırımcılar",
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "ihracatçılar"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "53779d67af2b5546",
-      "title": "KARBON FİYATLAMASI ÇAĞINDA SANAYİ: SKDM, ETS VE REKABETÇİLİK PANELİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KARBON FİYATLAMASI ÇAĞINDA SANAYİ: SKDM, ETS VE REKABETÇİLİK PANELİ Ana Sayfa Duyurular KARBON FİYATLAMASI ÇAĞINDA SANAYİ: SKDM, ETS VE REKABETÇİLİK PANELİ 2026-10-13 00:00:00 İşareti : 00000013/5000-3005 İrtibat: cevre@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası tarafından sanayimizin yeşil dönüşüm sürecine uyumunun desteklenmesi ve uluslararası rekabet gücünün korunmasına yönelik çeşitli çalışmalar yürütülmektedir. Bu kapsamda, Avrupa Birliği Sınırda Karbon Düzenleme Mekanizması (SKDM) ve Türkiye Emisyon Ticaret Sistemi (ETS) başta olmak üzere karbon fiyatlandırma mekanizmalarının sanayiye etkilerinin, ihracat üzerindeki yansımalarının ve sektörlerin dönüşüm süreçlerinin ele alınacağı \"Karbon Fiyatlaması Çağında Sanayi: SKDM, ETS ve Rekabetçilik Paneli\" , 22 Ekim 2026 Perşembe",
-      "starts_at": "2026-10-21T13:30:00",
-      "ends_at": "2026-10-21T17:10:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/karbon-fiyatlamasi-caginda-sanayi-skdm-ets-ve-rekabetcilik-paneli-7936",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "20ceefe9e9c214c6",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR SRİ LANKA EXPO 2027 FUAR DUYURUSU HK. Devamı 21.10.2026 DUYURULAR AVRUPA BİRLİĞİ KAMU ALIMLARI TÜZÜĞÜ TASLAĞI: GENEL ÇERÇEVE VE ÜÇÜNCÜ TARAF ÜLKE KONUMU ÇALIŞTAYI HK. Devamı 21.10.2026 DUYURULAR NÜKLEER TEDARİKÇİ FARKINDALIĞI EĞİTİMİ Devamı 20.10.2026 DUYURULAR DEMİRYOLU İŞLETMECİLİĞİ YETKİLENDİRME YÖNETMELİĞİ GÖRÜŞ TALEBİ Devamı 20.10.2026 DUYURULAR GÜRCİSTAN AGRO BATUMİ 2026 FUAR DUYURUSU Devamı 20.10.2026 DUYURULAR AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK. Devamı 20.10.2026 DUYURULAR 16 EKİM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 19.10.2026 DUYURULAR 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA Devamı 19.10.2026 DUYURULAR MORİTYUS İHALE Devamı 19.10.2026 DUYURULAR 6. MATEX ETH",
-      "starts_at": "2026-10-21T21:10:00",
-      "ends_at": "2026-10-21T23:10:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "f724a57f90e39cbd",
-      "title": "ASO’DA YENİ DÖNEMİN İLK YÖNETİM KURULU TOPLANTISI GERÇEKLEŞTİRİLDİ ......... ASO VE ATO’NUN YENİ MECLİS BAŞKANLIK DİVANLARI BİR ARAYA GELDİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’DA YENİ DÖNEMİN İLK YÖNETİM KURULU TOPLANTISI GERÇEKLEŞTİRİLDİ ......... ASO VE ATO’NUN YENİ MECLİS BAŞKANLIK DİVANLARI BİR ARAYA GELDİ ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI ASO BAŞKANI SEYİT ARDIÇ, CUMHURBAŞKANI YARDIMCISI CEVDET YILMAZ TARAFINDAN AÇIKLANAN 2027-2029 DÖNEMİ OVP'Yİ DEĞERLENDİRDİ 1 2 3 4 5 6 7 8 9 10",
-      "starts_at": "2026-10-21T21:10:00",
-      "ends_at": "2026-10-21T23:10:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "3d2e53cc047fb635",
       "title": "ASO 63. KURULUŞ YILI ÖDÜLLERİ BAŞVURU ÇAĞRISI",
@@ -1291,6 +1060,53 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "3e0fde9fb3dd6856",
+      "title": "Duyurular",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR SRİ LANKA EXPO 2027 FUAR DUYURUSU HK. Devamı 21.10.2026 DUYURULAR AVRUPA BİRLİĞİ KAMU ALIMLARI TÜZÜĞÜ TASLAĞI: GENEL ÇERÇEVE VE ÜÇÜNCÜ TARAF ÜLKE KONUMU ÇALIŞTAYI HK. Devamı 21.10.2026 DUYURULAR NÜKLEER TEDARİKÇİ FARKINDALIĞI EĞİTİMİ Devamı 20.10.2026 DUYURULAR DEMİRYOLU İŞLETMECİLİĞİ YETKİLENDİRME YÖNETMELİĞİ GÖRÜŞ TALEBİ Devamı 20.10.2026 DUYURULAR GÜRCİSTAN AGRO BATUMİ 2026 FUAR DUYURUSU Devamı 20.10.2026 DUYURULAR AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK. Devamı 20.10.2026 DUYURULAR 16 EKİM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 19.10.2026 DUYURULAR 16. İBER-AMERİKA İŞ DÜNYASI TOPLANTISI VE İBER-AMERİKA DİJİTAL FORUMU, 3-5 KASIM 2026, MADRİD-İSPANYA Devamı 19.10.2026 DUYURULAR MORİTYUS İHALE Devamı 19.10.2026 DUYURULAR 6. MATEX ETH",
+      "starts_at": "2026-11-05T21:10:00",
+      "ends_at": "2026-11-05T23:10:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/duyurular",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "f4d31dbb19dcffdc",
       "title": "AVRUPA KOBİ HAFTASI",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN AVRUPA KOBİ HAFTASI Ana Sayfa Duyurular AVRUPA KOBİ HAFTASI 2026-09-30 00:00:00 İşareti : 12/5000-2875 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, KOSGEB'in yazısına atfen; Avrupa Birliği tarafından KOBİ'lerin ve girişimciliğin desteklenmesi amacıyla düzenlenen Avrupa KOBİ Haftası'nın 02-08 Kasım 2026 tarihleri arasında gerçekleştirileceği bildirilmiştir. Bu kapsamda, Avrupa KOBİ Haftası kapsamında düzenlenecek etkinliklerin Avrupa KOBİ Haftası portalına kaydedilmesi gerektiği belirtilmiştir. Etkinlik kayıtları aşağıdaki bağlantı üzerinden gerçekleştirilebileceği hususunu bilgilerinize sunarız. Bağlantı adresi: https://sme-week.ec.europa.eu/home/view/event/add Saygılarımızla, ANKARA SANAYİ ODASI KURUMSAL YAPI Aso'nun Tarihçes",
@@ -2171,6 +1987,53 @@
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
       "source_url": "https://www.aso.org.tr/",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "37e7f31579425966",
+      "title": "SRİ LANKA EXPO 2027 FUAR DUYURUSU HK.",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SRİ LANKA EXPO 2027 FUAR DUYURUSU HK. Ana Sayfa Duyurular SRİ LANKA EXPO 2027 FUAR DUYURUSU HK. 2026-10-21 00:00:00 İşareti : 05/5000-3083 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Sri Lanka Ankara Büyükelçiliği'nin yazısına atfen, 14-17 Ocak 2027 tarihleri arasında Sri Lanka'nın başkenti Kolombo'daki Bandaranaike Memorial International Conference Hall'da Sri Lanka Expo 2027 Fuarı'nın düzenleneceği bildirilmiştir. Söz konusu fuara ülkemizden katılımın teşvik edilmesi amacıyla çeşitli destekler sağlanacağı, bu kapsamda konaklama ve ulaşım yardımı gibi kolaylaştırıcı faaliyetlerin başvuru sırasına göre yürütüleceği belirtilmekte olup etkinliğe ilişkin ayrıntılı bilgi ve kayıt işlemlerine https://srilankaexpo.lk ve https://sri",
+      "starts_at": "2027-01-17T00:00:00",
+      "ends_at": "2027-01-17T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/sri-lanka-expo-2027-fuar-duyurusu-hk-7958",
       "verified": true,
       "source_confidence": 99,
       "categories": [
