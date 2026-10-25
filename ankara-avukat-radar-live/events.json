@@ -1,189 +1,48 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-24T08:54:50",
-  "event_count": 45,
+  "generated_at": "2026-10-25T09:11:18",
+  "event_count": 42,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": false,
       "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7fb34a429100>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18253
+      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7fbc464d2b40>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
+      "ms": 18422
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1258
+      "ms": 1276
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 1,
-      "ms": 16350
+      "ms": 12066
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 5,
-      "ms": 8530
+      "ms": 8350
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 363
+      "ms": 437
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 7599
+      "ms": 8145
     }
   ],
   "events": [
-    {
-      "id": "86b13d842e4dda11",
-      "title": "TED ÜNİVERSİTESİ KURUMSAL SÜRDÜRÜLEBİLİRLİK RAPORLAMASI EĞİTİMİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TED ÜNİVERSİTESİ KURUMSAL SÜRDÜRÜLEBİLİRLİK RAPORLAMASI EĞİTİMİ Ana Sayfa Duyurular TED ÜNİVERSİTESİ KURUMSAL SÜRDÜRÜLEBİLİRLİK RAPORLAMASI EĞİTİMİ 2026-09-29 14:08:00 İşareti : 12/5000-2818 İrtibat: gym@aso.org.tr Sayın Üyemiz, TED Üniversitesi Sürekli Eğitim Merkezi Müdürlüğü tarafından Odamıza iletilen yazıda, Kamu Gözetimi, Muhasebe ve Denetim Standartları Kurumu (KGK) tarafından akredite edilen Kurumsal Sürdürülebilirlik Raporlaması Eğitimi'nin 1–2–3, 8–9–10, 15–16–17 ve 24 Ekim 2026 tarihlerinde, toplam 60 saat ve yüz yüze gerçekleştirileceği belirtilmiştir. Eğitim sonunda başarı şartlarını sağlayan katılımcılara KGK ve TED Üniversitesi tarafından sertifika verileceği ifade edilmiştir. Eğitime ilişkin detaylı bilgi, program içeriği ve ücret bilgilerine aşağıdaki bağlantı üze",
-      "starts_at": "2026-10-24T14:08:00",
-      "ends_at": "2026-10-24T16:08:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/ted-universitesi-kurumsal-surdurulebilirlik-raporlamasi-egitimi-7888",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "a8c9491ce4b16127",
-      "title": "AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK.",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK. Ana Sayfa Duyurular AB ÇELİK TÜZÜĞÜ'NE İLİŞKİN DANIŞMA SÜRECİ HK. 2026-10-20 00:00:00 İşareti : 05/5000-3084 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen, Avrupa Komisyonu'nun, 1 Temmuz 2026 tarihinde uygulamaya konulan 2026/1384/AB sayılı yeni AB Çelik Tüzüğü'nün etkilerine yönelik bir istişare süreci başlatıldığının duyurulduğu belirtilmiştir. Yazıda, konuya ilişkin duyuruda, küresel aşırı kapasitenin ticarette yaratacağı olumsuz etkilerden AB çelik piyasasını korumak için bir tarife kontenjanı sisteminin uygulandığı bahse konu Tüzüğün uygulama ve işleyişinin değerlendirilmesi amacıyla, durumdan etkilenmesi muhtemel tüm sektörler üzerindek",
-      "starts_at": "2026-10-25T00:00:00",
-      "ends_at": "2026-10-25T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/ab-celik-tuzugu-ne-iliskin-danisma-sureci-hk-7952",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "0ac04b6756a966d3",
-      "title": "TİSK ORTAK YARINLAR ÖDÜL PROGRAMI 2026",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TİSK ORTAK YARINLAR ÖDÜL PROGRAMI 2026 Ana Sayfa Duyurular TİSK ORTAK YARINLAR ÖDÜL PROGRAMI 2026 2026-10-06 00:00:00 İşareti : 12/5000-2945 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türkiye İşveren Sendikaları Konfederasyonu (TİSK) tarafından Odamıza iletilen yazıda, kurumsal sosyal sorumluluk alanında farkındalığın artırılması, iyi uygulamaların kamuoyuyla paylaşılması ve kurumların sosyal fayda sağlayan projeler geliştirmeye teşvik edilmesi amacıyla yürütülen Ortak Yarınlar Ödül Programı nın bu yıl yedincisinin gerçekleştirileceği bildirilmiştir. TİSK Mikrocerrahi ve Rekonstrüksiyon Vakfı (TİSK MCV) desteğiyle gerçekleştirilen programın 2026 yılı ana temasının \"Yapay Zekâ Çağında Ortak Değer\" olarak belirlendiği; bu kapsamda yapay zekâ çağının getirdiği dönüşüme sosyal sorumluluk a",
-      "starts_at": "2026-10-25T00:00:00",
-      "ends_at": "2026-10-25T02:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/tisk-ortak-yarinlar-odul-programi-2026-7914",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "21ff40ccaf264dab",
       "title": "MOSKOVA TİCARET MÜŞAVİRLİĞİNE YAPILACAK BAŞVURULAR HK.",
