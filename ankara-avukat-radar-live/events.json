@@ -1,192 +1,53 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-27T09:51:13",
+  "generated_at": "2026-10-28T10:37:25",
   "event_count": 42,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
-      "ok": false,
-      "events": 0,
-      "error": "ConnectTimeout: HTTPSConnectionPool(host='www.atonet.org.tr', port=443): Max retries exceeded with url: /EtkinlikArsivi (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.atonet.org.tr', port=443) at 0x7f851601f3e0>, 'Connection to www.atonet.org.tr timed out. (connect timeout=18)'))",
-      "ms": 18270
+      "ok": true,
+      "events": 2,
+      "ms": 1270
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1351
+      "ms": 1275
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 1,
-      "ms": 11671
+      "ms": 10984
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 6,
-      "ms": 8763
+      "events": 8,
+      "ms": 8015
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-      "ms": 526
+      "ms": 374
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
-      "events": 1,
-      "ms": 11056
+      "events": 0,
+      "ms": 6015
     }
   ],
   "events": [
     {
-      "id": "6f92a93253f881b0",
-      "title": "OSTİM Modeli, Türk Dünyası Mühendislerine Tanıtıldı",
-      "description": "OSTİM Modeli, Türk Dünyası Mühendislerine Tanıtıldı | Ostim Organize Sanayi Bölgesi 1 2 2 Firma Girişi Online İşlemler Şikayet Sorgulama Öneri İstek Formu Ostim Web TV OSTİM Radyo Anasayfa Kurumsal OSTİM Hakkında OSB Müdürlüğü Başkandan Mesaj Yönetim Kurulu Organizasyon Kalite Politikası Bölgesel Kalkınma Kurumsal Kimlik Faaliyet Raporları Hizmetler Yeşil Dönüşüm ve Sürdürülebilirlik Ofisi OSTİM Dijital Dönüşüm Ofisi Dış Ticaret Koordinatörlüğü Basın ve Halkla İlişkiler Müdürlüğü Bilgi ve İletişim Teknolojileri Müdürlüğü Enerji Müdürlüğü İmar ve Altyapı Müdürlüğü İşyeri Açma ve Çalışma Ruhsat Müdürlüğü Çevre ve Güvenlik Müdürlüğü Mali ve İdari İşler Müdürlüğü Müşteri İlişkileri Koordinatörlüğü Lisanssız Güneş Enerjisi Santrali Başvurusu Firmalar & Ürünler Basın Merkezi İstihdam Ofisi İletişim Türkçe Türkçe English Anasayfa Kurumsal OSTİM Hakkında OSB Müdürlüğü Başkandan Mesaj Yönetim Kurulu Organizasyon Kalite Politikası Bölgesel Kalkınma Kurumsal Kimlik Faaliyet Raporları Hizmetler Yeşil Dönüşüm ve Sürdürülebilirlik Ofisi OSTİM Dijital Dönüşüm Ofisi Dış Ticaret Koordinatörlüğü Basın ve Halkla İlişkiler Müdürlüğü Bilgi ve İletişim Teknolojileri Müdürlüğü Enerji Müdürlüğü İmar ve Altyapı Müdürlüğü İşyeri Açma ve Çalışma Ruhsat Müdürlüğü Çevre ve Güvenlik Müdürlüğü Mali ve İdari İşler Müdürlüğü Müşteri İlişkileri Koordinatörlüğü Lisanssız Güneş Enerjisi Santrali Başvurusu Firmalar & Ürünler Basın Merkezi İstihdam Ofisi İletişim Türkçe Türkçe English Firma Girişi Online İşlemler Şikayet Sorgulama Öneri İstek Formu Ostim Web TV OSTİM Radyo 100. Yıl Bulvarı No:101/A 06374 OSTİM/",
-      "starts_at": "2026-10-27T22:10:00",
-      "ends_at": "2026-10-28T00:10:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "OSTİM OSB",
-      "source_name": "OSTİM OSB",
-      "source_url": "https://ostim.org.tr/haberler/ostim-modeli-turk-dunyasi-muhendislerine-tanitildi",
-      "verified": true,
-      "source_confidence": 97,
-      "categories": [
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "sanayiciler",
-        "ihracatçılar"
-      ],
-      "legal_needs": [
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "KVKK",
-        "Yazılım sözleşmeleri",
-        "Fikri mülkiyet"
-      ],
-      "networking_score": 83,
-      "decision_maker_score": 85,
-      "professional_development_score": 77,
-      "corporate_opportunity_score": 96
-    },
-    {
-      "id": "216f3b56215a599c",
-      "title": "MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ Ana Sayfa Duyurular MADAGASKAR TOAMASİNA LİMAN LOJİSTİĞİ MODERNİZASYON PROJESİ 2026-10-16 00:00:00 İşareti : 05/5000 -3060 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen aşağıdaki hususlar belirtilmiştir: • Madagaskar'ın ana ticaret kapısı olan Toamasina Limanı'nda, Toamasina Özerk Liman İşletmesi (SPAT) tarafından \"Toamasina Liman Lojistiği Modernizasyon Projesi\" başlatılmıştır. • Proje kapsamında yatırımcıların ön yeterliliklerinin belirlenmesine yönelik İlgi Beyanı Çağrıları açılmıştır. • Planlanan yatırımlar: konteyner depolama ve elleçleme alanı, yaklaşık 500 kamyon kapasiteli park ve akıllı trafik yönetim sistemlerini içeren kargo",
-      "starts_at": "2026-10-28T00:00:00",
-      "ends_at": "2026-10-28T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/madagaskar-toamasina-liman-lojistigi-modernizasyon-projesi-7944",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "yatırımcılar",
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "90ae54dbba46c24b",
-      "title": "İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR Ana Sayfa Duyurular İHRACAT UZMANLIĞI VE MODÜLER EĞİTİM PROGRAMLARI KAYITLARI DEVAM EDİYOR 2026-10-07 00:00:00 İşareti : 05/5000-2949 İrtibat: dim@aso.org.tr Sayın Üyemiz, Ticaret Bakanlığı İhracat Genel Müdürlüğü'nden gelen yazıya istinaden ihracatçıların eğitimine yönelik yürütülen faaliyetlere kurumsal bir nitelik kazandırmak, dış ticaret alanında yetişmiş iş gücünün niteliğini artırmak ve bu süreçte üniversitelerimizin akademik birikiminden azami ölçüde faydalanmak amacıyla Yükseköğretim Kurulu iş birliğinde İhracat Akademisinin hayata geçirildiği belirtilmiştir. Bu minvalde, İhracat Akademisi bünyesinde düzenlenen İhracat Uzmanlığı ve Modüler Eğitim Programlarının yeni dönem kayıtlarının devam ettiği bildi",
-      "starts_at": "2026-10-28T00:00:00",
-      "ends_at": "2026-10-28T02:00:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/ihracat-uzmanligi-ve-moduler-egitim-programlari-kayitlari-devam-ediyor-7917",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "c354e0a118e3133f",
-      "title": "V. TÜRK DÜNYASI ULUSLARARASI MÜHENDİSLİK ZİRVESİ/25-28 EKİM 2026",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN V. TÜRK DÜNYASI ULUSLARARASI MÜHENDİSLİK ZİRVESİ/25-28 EKİM 2026 Ana Sayfa Duyurular V. TÜRK DÜNYASI ULUSLARARASI MÜHENDİSLİK ZİRVESİ/25-28 EKİM 2026 2026-09-16 00:00:00 İşareti : 05/5000 -2677 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türk Mühendisler Derneği'nden alınan bir yazıda; 25-28 Ekim 2026 tarihlerinde Özbekistan Cumhuriyeti'nin başkenti Taşkent'te \"V. Türk Dünyası Uluslararası Mühendislik Zirvesi\"nin düzenlenmesinin planlandığı belirtilmiştir. Türk Dünyası Uluslararası Mühendislik Zirvelerinin birincisinin 6 Aralık 2024 tarihinde Ankara'da, ikincisinin 13-16 Mayıs 2025 tarihlerinde Kazakistan'ın Türkistan şehrinde, üçüncüsünün 6-7 Ekim 2025 tarihlerinde Kuzey Kıbrıs Türk Cumhuriyeti'nin Lefkoşa şehrinde, dördüncüsünün ise 6-8 Mayıs 2026 tarihlerinde Azerbaycan'ın Bakü şehri",
-      "starts_at": "2026-10-28T00:00:00",
-      "ends_at": "2026-10-28T02:00:00",
+      "id": "e9032203ef80e7ea",
+      "title": "Duyurular",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR AB SINIRDA KARBON DÜZENLEME MEKANİZMASI (SKDM) GÜNCEL GELİŞMELER Devamı 28.10.2026 DUYURULAR ABD DÜŞÜK DEĞERLİ GÖNDERİLERE İLİŞKİN DÜZENLEME TASLAĞI Devamı 26.10.2026 DUYURULAR KÜBA HAKKINDA GÖRÜŞ TALEBİ Devamı 26.10.2026 DUYURULAR GAFSHOES - 38. ULUSLARARASI AYAKKABI VE TERLİK FUARI Devamı 26.10.2026 DUYURULAR TS EN ISO 56002 İNOVASYON YÖNETİM SİSTEMİ EĞİTİM PROGRAMI Devamı 26.10.2026 DUYURULAR 21 EKİM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 23.10.2026 DUYURULAR KURUMSAL SÜRDÜRÜLEBİLİRLİK RAPORLAMASI UZMANLIĞI EĞİTİMİ Devamı 23.10.2026 DUYURULAR AB DİJİTAL ÜRÜN PASAPORTU - SORU TOPLAMA ANKETİ Devamı 23.10.2026 DUYURULAR GANA YATIRIM ZİRVESİ HK. Devamı 23.10.2026 DUYURULAR MOSKOVA TİCARET MÜŞAVİRLİĞİNE YAPILACAK BAŞVURULAR HK. Devamı 23.10.",
+      "starts_at": "2026-10-28T23:10:00",
+      "ends_at": "2026-10-29T01:10:00",
       "venue": "Ankara Sanayi Odası",
       "district": "Ankara",
       "city": "Ankara",
@@ -194,10 +55,11 @@
       "free": true,
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/v-turk-dunyasi-uluslararasi-muhendislik-zirvesi-25-28-ekim-2026-7844",
+      "source_url": "https://www.aso.org.tr/duyurular",
       "verified": true,
       "source_confidence": 99,
       "categories": [
+        "yatırım",
         "startup",
         "sanayi",
         "dış ticaret",
@@ -225,6 +87,53 @@
         "Yazılım sözleşmeleri"
       ],
       "networking_score": 98,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "26ec2dcf7645f3ac",
+      "title": "ASO’dan Çin ile Döküm Sanayiinde İş Birliği Anlaşması",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ASO’dan Çin ile Döküm Sanayiinde İş Birliği Anlaşması ASO’DA YENİ DÖNEMİN İLK YÖNETİM KURULU TOPLANTISI GERÇEKLEŞTİRİLDİ ASO VE ATO’NUN YENİ MECLİS BAŞKANLIK DİVANLARI BİR ARAYA GELDİ ASO’DAN KADIN GİRİŞİMCİLİĞİNİ GÜÇLENDİRECEK YOL HARİTASI SEYİT ARDIÇ, ASO YÖNETİM KURULU BAŞKANLIĞINA YENİDEN SEÇİLDİ ANKARALI SANAYİCİLERDEN SANDIKTA BİRLİK VE BERABERLİK MESAJI ASO’DA FRANSA ÜLKE GÜNÜ ETKİNLİĞİ ASO BAŞKANI ARDIÇ, ANKARA SANAYİSİNİN VİZYON PROJELERİNİ CUMHURBAŞKANI ERDOĞAN’A SUNDU ASO’DA GÜNDEM NÜKLEER: HEDEF, KÜRESEL TEDARİK ZİNCİRİNDE KALICI OLMAK ASO’NUN 15. GELENEKSEL BÜYÜKELÇİLİKLER RESEPSİYONU DİPLOMASİ VE İŞ DÜNYASINI BULUŞTURDU ASO’DAN TÜRKİYE’NİN YENİLİKÇİ SINIFININ HARİTASI 1 2 3 4 5 6 7 8 9 10 TÜMÜ Geri İleri SEYİT ARDIÇ YÖNETİM KURULU BAŞKANI Özgeçmiş Meclis Konuşmaları",
+      "starts_at": "2026-10-28T23:10:00",
+      "ends_at": "2026-10-29T01:10:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
       "decision_maker_score": 94,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
@@ -659,6 +568,70 @@
       "decision_maker_score": 98,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
+    },
+    {
+      "id": "b279f1c9f9f3fadc",
+      "title": "TİSK- ENDÜSTRİ İLİŞKİLERİ EĞİTİMİ",
+      "description": "TİSK- ENDÜSTRİ İLİŞKİLERİ EĞİTİMİ - Ankara Ticaret Odası etkinliği.",
+      "starts_at": "2026-11-03T14:30:00",
+      "ends_at": "2026-11-03T16:30:00",
+      "venue": "ATO Meclis Salonu",
+      "district": "Çankaya",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Ticaret Odası",
+      "source_name": "Ankara Ticaret Odası",
+      "source_url": "https://www.atonet.org.tr/EtkinlikArsivi",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "iş dünyası"
+      ],
+      "audience": [
+        "sektör profesyonelleri"
+      ],
+      "legal_needs": [
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "KVKK"
+      ],
+      "networking_score": 62,
+      "decision_maker_score": 58,
+      "professional_development_score": 68,
+      "corporate_opportunity_score": 56
+    },
+    {
+      "id": "39bb6a012a665298",
+      "title": "ÜRÜN GÜVENLİĞİ BİLGİLENDİRME TOPLANTISI",
+      "description": "ÜRÜN GÜVENLİĞİ BİLGİLENDİRME TOPLANTISI - Ankara Ticaret Odası etkinliği.",
+      "starts_at": "2026-11-04T09:00:00",
+      "ends_at": "2026-11-04T16:00:00",
+      "venue": "ATO Duatepe Salonu",
+      "district": "Çankaya",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Ticaret Odası",
+      "source_name": "Ankara Ticaret Odası",
+      "source_url": "https://www.atonet.org.tr/EtkinlikArsivi",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "iş dünyası"
+      ],
+      "audience": [
+        "sektör profesyonelleri"
+      ],
+      "legal_needs": [
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "KVKK"
+      ],
+      "networking_score": 62,
+      "decision_maker_score": 58,
+      "professional_development_score": 68,
+      "corporate_opportunity_score": 56
     },
     {
       "id": "bf7f8d691b197a3e",
