@@ -1,94 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-10T12:42:58",
-  "event_count": 36,
+  "generated_at": "2026-11-11T11:55:01",
+  "event_count": 38,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 1,
-      "ms": 1573
+      "ms": 1533
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1605
+      "ms": 1708
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 1,
-      "ms": 22442
+      "ms": 19296
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 8,
-      "ms": 10817
+      "events": 9,
+      "ms": 9819
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1011)')))",
-      "ms": 421
+      "ms": 416
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 7709
+      "ms": 7882
     }
   ],
   "events": [
-    {
-      "id": "fb9aaf8aa3fd00a4",
-      "title": "1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI Ana Sayfa Duyurular 1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI 2026-11-10 00:00:00 İşareti : 12/5000-3314 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türk Kızılay Ankara Toplum Merkezi ve OSTİM Teknik Üniversitesi iş birliğiyle, STRIVE Projesi kapsamında 1. Uluslararası Bireyler İstihdam ve Kariyer Fuarı düzenlenecektir. Söz konusu Fuar; iş arayanlara yeni fırsatlar sunmayı, firmaların nitelikli iş gücüne erişimini kolaylaştırmayı, güçlü iş birliklerini desteklemeyi ve daha sürdürülebilir bir geleceğe katkıda bulunmayı amaçlamaktadır. Tarih: 14 Kasım 2026, Cumartesi Saat: 10.00 - 16.00 Yer: OSTİM Teknik Üniversitesi Ana Yerleşkesi, F Blok 3. Kat Fuaye Alanı Etkinliğe ilişkin ayrıntılar ekteki afişte yer almaktadır. Firma katılım",
-      "starts_at": "2026-11-10T10:00:00",
-      "ends_at": "2026-11-10T16:00:00",
-      "venue": "OSTİM",
-      "district": "Yenimahalle",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/1-uluslararasi-bireyler-istihdam-ve-kariyer-fuari-7997",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "2bae7757ec4b2841",
       "title": "KASIM 2026 ELEKTRONİK SOHBET TOPLANTILARI HK.",
@@ -276,6 +229,53 @@
       "networking_score": 97,
       "decision_maker_score": 98,
       "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "b1e7ef0323958345",
+      "title": "1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN 1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI Ana Sayfa Duyurular 1. ULUSLARARASI BİREYLER İSTİHDAM VE KARİYER FUARI 2026-11-10 00:00:00 İşareti : 12/5000-3314 İrtibat: gym@aso.org.tr Sayın Üyemiz, Türk Kızılay Ankara Toplum Merkezi ve OSTİM Teknik Üniversitesi iş birliğiyle, STRIVE Projesi kapsamında 1. Uluslararası Bireyler İstihdam ve Kariyer Fuarı düzenlenecektir. Söz konusu Fuar; iş arayanlara yeni fırsatlar sunmayı, firmaların nitelikli iş gücüne erişimini kolaylaştırmayı, güçlü iş birliklerini desteklemeyi ve daha sürdürülebilir bir geleceğe katkıda bulunmayı amaçlamaktadır. Tarih: 14 Kasım 2026, Cumartesi Saat: 10.00 - 16.00 Yer: OSTİM Teknik Üniversitesi Ana Yerleşkesi, F Blok 3. Kat Fuaye Alanı Etkinliğe ilişkin ayrıntılar ekteki afişte yer almaktadır. Firma katılım",
+      "starts_at": "2026-11-14T10:00:00",
+      "ends_at": "2026-11-14T16:00:00",
+      "venue": "OSTİM",
+      "district": "Yenimahalle",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/1-uluslararasi-bireyler-istihdam-ve-kariyer-fuari-7997",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
     {
@@ -626,6 +626,53 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "1c41b609ee2a042d",
+      "title": "TS EN ISO 56002 İNOVASYON YÖNETİM SİSTEMİ EĞİTİM PROGRAMI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TS EN ISO 56002 İNOVASYON YÖNETİM SİSTEMİ EĞİTİM PROGRAMI Ana Sayfa Duyurular TS EN ISO 56002 İNOVASYON YÖNETİM SİSTEMİ EĞİTİM PROGRAMI 2026-11-10 14:08:00 İşareti : 12/5000-3002 İrtibat: gym@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası ve Türk Standardları Enstitüsü (TSE) iş birliğinde; üyelerimizin inovasyon odaklı dönüşüm süreçlerini desteklemek, yenilikçilik kapasitelerini geliştirmek ve uluslararası rekabet güçlerinin artırılmasına katkı sağlamak amacıyla 21–22 Kasım ve 26–27 Kasım 2026 tarihlerinde TS EN ISO 56002 İnovasyon Yönetim Sistemi Eğitim Programı düzenlenecektir. Ankara Sanayi Odası hizmet binasında yüz yüze gerçekleştirilecek eğitim planı aşağıda yer almaktadır: Eğitim Programı · TS EN ISO 56002 İnovasyon Yönetim Sistemi – Rehberlik Temel Eğitimi 21–22 Kasım 2026 ·",
+      "starts_at": "2026-11-18T14:08:00",
+      "ends_at": "2026-11-18T16:08:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/ts-en-iso-56002-inovasyon-yonetim-sistemi-egitim-programi-8000",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "f25b61343ee83009",
       "title": "SAPRI 2026 & ACNDT 2026, TUNUS, 17-20 KASIM 2026",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN SAPRI 2026 & ACNDT 2026, TUNUS, 17-20 KASIM 2026 Ana Sayfa Duyurular SAPRI 2026 & ACNDT 2026, TUNUS, 17-20 KASIM 2026 2026-09-17 00:00:00 İşareti : 05/5000-2697 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Tunus Cumhuriyeti İstanbul Başkonsolosluğu'nun yazısına atfen, 17-20 Kasım 2026 tarihleri arasında Tunus'ta \"10. Uluslararası Yedek Parça, Ekipman ve Endüstriyel Hizmetler Fuarı (SAPRI 2026)\" ve 18-19 Kasım 2026 tarihlerinde \"8. Afrika Tahribatsız Muayene Konferansı'nın (ACNDT 2026)\" gerçekleştirileceği bildirilmektedir. Söz konusu etkinliklere ilişkin detaylı bilgi için www.sapri.tn bağlantı adresinin ziyaret edilmesi mümkündür. Bilgilerinize sunarız. Saygılarımızla, Ankara Sanayi Odası KURUMSAL YAPI Aso'nun Tarihçesi K",
@@ -639,6 +686,53 @@
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
       "source_url": "https://www.aso.org.tr/post/sapri-2026-amp-acndt-2026-tunus-17-20-kasim-2026-7848",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "25f9a135444f9ee0",
+      "title": "YAZILIM TABANLI HESAPLAMA VE MENTÖRLÜK HİZMET PAKETLERİ",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN YAZILIM TABANLI HESAPLAMA VE MENTÖRLÜK HİZMET PAKETLERİ Ana Sayfa Duyurular YAZILIM TABANLI HESAPLAMA VE MENTÖRLÜK HİZMET PAKETLERİ 2026-11-10 00:00:00 İşareti : 05/5000-3330 İrtibat: cevre@aso.org.tr Sayın Üyemiz, Ankara Sanayi Odası (ASO) üyelerimizin yeşil dönüşüm süreçlerine uyumunu desteklemek, tedarik zincirindeki rekabet güçlerini artırmak ve sürdürülebilirlik alanındaki kurumsal kapasitelerini geliştirmek amacıyla çeşitli hizmetler sunmaktadır. Bu kapsamda, firmaların çevresel performanslarının ölçülmesi ve raporlanması için gerekli teknik bilgi ve uygulama kapasitesinin geliştirilmesine yönelik yazılım tabanlı hesaplama ve mentörlük hizmetleri sunulacaktır. Hizmet kalemleri ve ücretlendirme bilgisi aşağıda yer almaktadır. Paket 1: ISO 14064-1 Kurumsal Karbon Ayak İzi Rapo",
+      "starts_at": "2026-11-20T00:00:00",
+      "ends_at": "2026-11-20T02:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/yazilim-tabanli-hesaplama-ve-mentorluk-hizmet-paketleri-7998",
       "verified": true,
       "source_confidence": 99,
       "categories": [
