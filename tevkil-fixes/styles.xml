@@ -1,0 +1,10 @@
+<resources>
+    <style name="RadarTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#4ED3BD</item>
+        <item name="android:statusBarColor">#071322</item>
+        <item name="android:navigationBarColor">#071322</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>
