@@ -18,28 +18,8 @@ jobs:
         run: |
           tar -xzf TevkilRadar-source.tar.gz
           cp tevkil-fixes/styles.xml TevkilRadar/app/src/main/res/values/styles.xml
-      - name: Fix receiver registration for Android 13+
-        run: |
-          python3 - <<'PY'
-          import re
-          from pathlib import Path
-          path = Path("TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java")
-          source = path.read_text()
-          regex = r'(?m)^([ \t]*)(?:this\.)?registerReceiver\s*\(\s*refreshReceiver\s*,\s*([^;]*?)\s*\);'
-          match = re.search(regex, source)
-          if not match:
-              print("\n".join(str(i)+": "+line for i,line in enumerate(source.splitlines(),1) if "registerReceiver" in line or "refreshReceiver" in line))
-              raise SystemExit("Cannot locate refreshReceiver registration for compatibility fix")
-          indent, arguments = match.group(1), match.group(2)
-          new = (
-              indent + "if (android.os.Build.VERSION.SDK_INT >= 33) {\n"
-              + indent + "    registerReceiver(refreshReceiver, " + arguments + ", android.content.Context.RECEIVER_NOT_EXPORTED);\n"
-              + indent + "} else {\n"
-              + indent + "    registerReceiver(refreshReceiver, " + arguments + ");\n"
-              + indent + "}"
-          )
-          path.write_text(source[:match.start()] + new + source[match.end():])
-          PY
+          # API 26-32 requires the legacy 2-argument receiver registration; API 33+ uses NOT_EXPORTED.
+          sed -i '/@Override protected void onResume()/i\    @android.annotation.SuppressLint("UnspecifiedRegisterReceiverFlag")' TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
