@@ -18,6 +18,8 @@ jobs:
         run: |
           tar -xzf TevkilRadar-source.tar.gz
           cp tevkil-fixes/styles.xml TevkilRadar/app/src/main/res/values/styles.xml
+          # API 26-32 requires the legacy 2-argument receiver registration; API 33+ uses NOT_EXPORTED.
+          sed -i '/@Override protected void onResume()/i\    @android.annotation.SuppressLint("UnspecifiedRegisterReceiverFlag")' TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
