@@ -28,6 +28,7 @@ jobs:
           regex = r'(?m)^([ \t]*)(?:this\.)?registerReceiver\s*\(\s*refreshReceiver\s*,\s*([^;]*?)\s*\);'
           match = re.search(regex, source)
           if not match:
+              print("\n".join(str(i)+": "+line for i,line in enumerate(source.splitlines(),1) if "registerReceiver" in line or "refreshReceiver" in line))
               raise SystemExit("Cannot locate refreshReceiver registration for compatibility fix")
           indent, arguments = match.group(1), match.group(2)
           new = (
