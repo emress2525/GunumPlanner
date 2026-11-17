@@ -17,7 +17,7 @@ jobs:
       - name: Expand project
         run: |
           tar -xzf TevkilRadar-source.tar.gz
-          base64 -d tevkil_v1.2_core_patch.b64 | gzip -dc | patch -p1 --batch --forward -d TevkilRadar
+          base64 -d tevkil_v1.2_overlay.b64 | tar -xz
           cp tevkil-fixes/styles.xml TevkilRadar/app/src/main/res/values/styles.xml
           # API 26-32 requires the legacy 2-argument receiver registration; API 33+ uses NOT_EXPORTED.
           sed -i '/@Override protected void onResume()/i\    @android.annotation.SuppressLint("UnspecifiedRegisterReceiverFlag")' TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java
