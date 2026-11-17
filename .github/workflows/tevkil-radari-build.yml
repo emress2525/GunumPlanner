@@ -17,7 +17,6 @@ jobs:
       - name: Expand project
         run: |
           tar -xzf TevkilRadar-source.tar.gz
-          base64 -d tevkil_v1.2_overlay.b64 | tar -xz
           cp tevkil-fixes/styles.xml TevkilRadar/app/src/main/res/values/styles.xml
           # API 26-32 requires the legacy 2-argument receiver registration; API 33+ uses NOT_EXPORTED.
           sed -i '/@Override protected void onResume()/i\    @android.annotation.SuppressLint("UnspecifiedRegisterReceiverFlag")' TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java
@@ -40,11 +39,10 @@ jobs:
         run: |
           cd TevkilRadar
           mkdir -p tests/build
-          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java app/src/main/java/com/tevkil/radar/InstagramSources.java tests/FilterEngineTest.java tests/InstagramSourcesTest.java
+          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java app/src/main/java/com/tevkil/radar/InstagramSources.java app/src/main/java/com/tevkil/radar/TevkilOcrSummary.java tests/FilterEngineTest.java tests/InstagramSourcesTest.java tests/TevkilOcrSummaryTest.java
           java -cp tests/build FilterEngineTest
-          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/InstagramSources.java tests/InstagramSourcesTest.java
           java -cp tests/build InstagramSourcesTest
-          java -cp tests/build InstagramSourcesTest
+          java -cp tests/build TevkilOcrSummaryTest
       - name: Assemble installable APK
         run: cd TevkilRadar && gradle :app:assembleDebug --stacktrace --no-daemon
       - name: Android lint analysis
