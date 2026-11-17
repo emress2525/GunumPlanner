@@ -39,8 +39,9 @@ jobs:
         run: |
           cd TevkilRadar
           mkdir -p tests/build
-          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java tests/FilterEngineTest.java
+          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java app/src/main/java/com/tevkil/radar/InstagramSources.java tests/FilterEngineTest.java tests/InstagramSourcesTest.java
           java -cp tests/build FilterEngineTest
+          java -cp tests/build InstagramSourcesTest
       - name: Assemble installable APK
         run: cd TevkilRadar && gradle :app:assembleDebug --stacktrace --no-daemon
       - name: Android lint analysis
