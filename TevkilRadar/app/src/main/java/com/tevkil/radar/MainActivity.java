@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.time.LocalDate;
 
 public class MainActivity extends Activity {
     private static final int PICK_OCR_IMAGE = 610;
@@ -281,6 +282,11 @@ public class MainActivity extends Activity {
     private void prepareInstagramComment(NoticeStore.Notice n) {
         if (n.url == null || !n.url.startsWith("https://www.instagram.com/")) {
             toast("Gönderi bağlantısı bulunamadı."); openSource(n); return;
+        }
+        if (TevkilDateGate.isExpired(n.body, LocalDate.now())) {
+            new AlertDialog.Builder(this).setTitle("Tarihi geçmiş ilan")
+                .setMessage("İlandaki duruşma/keşif tarihi geçmiş görünüyor. Asıl gönderiden doğrula.")
+                .setPositiveButton("Tamam",null).show(); return;
         }
         if (!FilterEngine.matches(n.title, n.body, Prefs.rules(this))) {
             new AlertDialog.Builder(this).setTitle("Filtre dışı ilan")
