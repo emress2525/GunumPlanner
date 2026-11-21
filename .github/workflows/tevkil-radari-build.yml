@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Expand project
         run: |
-          tar -xzf TevkilRadar-source.tar.gz
+          test -f TevkilRadar/app/src/main/java/com/tevkil/radar/MainActivity.java
           sed -i 's/android.useAndroidX=false/android.useAndroidX=true/' TevkilRadar/gradle.properties
           cp tevkil-fixes/styles.xml TevkilRadar/app/src/main/res/values/styles.xml
           # API 26-32 requires the legacy 2-argument receiver registration; API 33+ uses NOT_EXPORTED.
@@ -40,10 +40,11 @@ jobs:
         run: |
           cd TevkilRadar
           mkdir -p tests/build
-          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java app/src/main/java/com/tevkil/radar/InstagramSources.java app/src/main/java/com/tevkil/radar/TevkilOcrSummary.java tests/FilterEngineTest.java tests/InstagramSourcesTest.java tests/TevkilOcrSummaryTest.java
+          javac -encoding UTF-8 -d tests/build app/src/main/java/com/tevkil/radar/FilterEngine.java app/src/main/java/com/tevkil/radar/InstagramSources.java app/src/main/java/com/tevkil/radar/TevkilOcrSummary.java app/src/main/java/com/tevkil/radar/TevkilDateGate.java tests/FilterEngineTest.java tests/InstagramSourcesTest.java tests/TevkilOcrSummaryTest.java tests/TevkilDateGateTest.java
           java -cp tests/build FilterEngineTest
           java -cp tests/build InstagramSourcesTest
           java -cp tests/build TevkilOcrSummaryTest
+          java -cp tests/build TevkilDateGateTest
       - name: Assemble installable APK
         run: cd TevkilRadar && gradle :app:assembleDebug --stacktrace --no-daemon
       - name: Android lint analysis
