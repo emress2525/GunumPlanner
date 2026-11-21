@@ -77,12 +77,12 @@ public final class InstagramRemoteScanner {
         return r;
     }
 
-    private static void notifyMatch(Context context, long id, String username, String caption) {
+    static void notifyMatch(Context context, long id, String username, String caption) {
         if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) return;
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         manager.createNotificationChannel(new NotificationChannel(CHANNEL,
-                "Instagram API tevkil ilanları", NotificationManager.IMPORTANCE_HIGH));
+                "Instagram tevkil ilanları", NotificationManager.IMPORTANCE_HIGH));
         Intent intent = new Intent(context, MainActivity.class).putExtra("notice_id", id)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pending = PendingIntent.getActivity(context, (int) (id & 0x7fffffff), intent,
