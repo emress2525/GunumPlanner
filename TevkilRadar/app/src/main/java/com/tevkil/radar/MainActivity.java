@@ -18,6 +18,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -55,6 +57,16 @@ public class MainActivity extends Activity {
     private long requestedNotice = -1;
     private boolean quickCommentRequested = false;
     private boolean registered = false;
+    private final Handler publicTimer=new Handler(Looper.getMainLooper());
+    private final Runnable publicTick=new Runnable() {
+        @Override public void run() {
+            if (Prefs.raw(MainActivity.this).getBoolean("public_enabled", true) && !isFinishing()) {
+                new Thread(() -> PublicInstagramScanner.scan(getApplicationContext()),
+                        "public-instagram-foreground-check").start();
+            }
+            publicTimer.postDelayed(this, 3 * 60 * 1000L);
+        }
+    };
     private final BroadcastReceiver refreshReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             if ("inbox".equals(section)) render();
@@ -92,6 +104,8 @@ public class MainActivity extends Activity {
             registered = true;
         }
         render();
+        publicTimer.removeCallbacks(publicTick);
+        publicTimer.postDelayed(publicTick, 8000);
         if (requestedNotice != -1) {
             long id = requestedNotice; requestedNotice = -1;
             boolean quick = quickCommentRequested; quickCommentRequested = false;
@@ -103,6 +117,7 @@ public class MainActivity extends Activity {
         }
     }
     @Override protected void onPause() {
+        publicTimer.removeCallbacks(publicTick);
         if (registered) { unregisterReceiver(refreshReceiver); registered = false; }
         super.onPause();
     }
@@ -162,7 +177,10 @@ public class MainActivity extends Activity {
         top.addView(left,weight(0,-2,1));
         boolean active = (monitoringEnabled() && listenerEnabled()) ||
             (Prefs.raw(this).getBoolean("meta_enabled", false) && InstagramSecureConfig.configured(this));
-        TextView pill=label(active ? "●  AKTİF" : "●  PASİF", 11, active ? PRIMARY : 0xffffb478, true);
+        boolean publicTrial = Prefs.raw(this).getBoolean("public_enabled", true)
+            && !InstagramSources.accounts(watchedInstagram()).isEmpty();
+        TextView pill=label(active ? "●  AKTİF" : (publicTrial ? "●  DENEME" : "●  PASİF"),
+            11, (active || publicTrial) ? PRIMARY : 0xffffb478, true);
         pill.setGravity(Gravity.CENTER);pill.setPadding(dp(10),dp(9),dp(10),dp(9));
         pill.setBackground(background(PANEL,50));
         top.addView(pill, lp(-2,-2));
@@ -192,7 +210,7 @@ public class MainActivity extends Activity {
         if (!access || !monitoringEnabled()) {
             LinearLayout card=panel();
             card.addView(label("WhatsApp / Telegram için isteğe bağlı takip",18,WHITE,true)); gap(card,7);
-            card.addView(label("Instagram için bildirim izni gerekmiyor: Kaynaklar bölümünde Meta API üzerinden ayrı bir bağlantı kurabilirsin. Bu izin yalnızca telefonuna gelen mesaj bildirimlerini yakalamak içindir.",13,MUTED,false));gap(card,14);
+            card.addView(label("Instagram için bildirim erişimi gerekmiyor. Kaynaklar bölümünden Meta'sız açık hesap denemesini kullanabilirsin. Bu izin yalnızca telefonuna gelen WhatsApp/Telegram mesaj bildirimlerini okumak içindir.",13,MUTED,false));gap(card,14);
             card.addView(action(access ? "TAKİBİ ETKİNLEŞTİR" : "BİLDİRİM ERİŞİMİ VER",PRIMARY,BG,false,v->enableMonitoring()),lp(-1,-2));
             gap(card,9);
             card.addView(label("İzin verilen bildirim metinleri analiz edilir; sessize alınan sohbetler veya geçmiş mesajlar okunmaz.",11,MUTED,false));
@@ -392,13 +410,15 @@ public class MainActivity extends Activity {
     }
     private void saveWatchedInstagram(String accounts) {
         Prefs.raw(this).edit().putString("instagram_sources", accounts).apply();
+        InstagramScanJob.schedule(this);
         render();
+        if (Prefs.raw(this).getBoolean("public_enabled", true)) scanPublicNow(false);
     }
     private void showSources() {
         title("Takip edilen kaynaklar", "Instagram profil bağlantılarını buradan yönetebilirsin.");
         LinearLayout info = panel();
         info.addView(label("INSTAGRAM · İZLENEN HESAPLAR", 12, PRIMARY, true)); gap(info, 9);
-        info.addView(label("Bu profiller resmî Meta API hesabın bağlandıysa uzaktan sorgulanabilir. Instagram telefon bildirimlerini açman gerekmez. Meta erişimi yoksa sadece kayıtlı kaynak olarak kalırlar.", 13, MUTED, false));
+        info.addView(label("Kullanıcı adını eklemen yeterli. Meta'sız deneme herkese açık gönderilere erişebiliyorsa yeni ilanları arar. Instagram erişimi engellerse durum alanında görünür.", 13, MUTED, false));
         gap(info, 14);
         List<String> accounts = InstagramSources.accounts(watchedInstagram());
         if (accounts.isEmpty()) {
@@ -422,8 +442,25 @@ public class MainActivity extends Activity {
         gap(info,8);
         info.addView(action("▣  INSTAGRAM GÖRSELİNDEN OKU", PANEL_ALT, WHITE, true, v -> openImagePicker()), lp(-1,-2));
         body.addView(info); gap(body, 14);
+        LinearLayout publicPanel=panel();
+        publicPanel.addView(label("META'SIZ HERKESE AÇIK HESAP TAKİBİ · DENE",15,WHITE,true));gap(publicPanel,9);
+        publicPanel.addView(label("Facebook, profesyonel hesap ve token istemez. Girişsiz erişilebilir gönderiler taranır; erişim yoksa otomatik ilan çıkmaz.",13,MUTED,false));gap(publicPanel,10);
+        boolean publicEnabled=Prefs.raw(this).getBoolean("public_enabled",true);
+        publicPanel.addView(label(publicEnabled ? "DENEME AÇIK" : "DENEME KAPALI",12,PRIMARY,true));gap(publicPanel,8);
+        String publicStatus=Prefs.raw(this).getString("public_last_status","Henüz canlı erişim denemesi yapılmadı");
+        publicPanel.addView(label("DURUM: "+publicStatus,13,WHITE,false));gap(publicPanel,9);
+        long publicTime=Prefs.raw(this).getLong("public_last_time",0);
+        if(publicTime>0) {
+            publicPanel.addView(label("Son kontrol: "+new SimpleDateFormat("dd.MM.yyyy HH:mm",
+                new Locale("tr","TR")).format(new Date(publicTime)),12,MUTED,false));gap(publicPanel,9);
+        }
+        publicPanel.addView(action("ŞİMDİ ERİŞİMİ TEST ET",PRIMARY,BG,false,v->scanPublicNow(true)),lp(-1,-2));gap(publicPanel,9);
+        publicPanel.addView(action(publicEnabled ? "OTOMATİK DENEMEYİ DURDUR" : "OTOMATİK DENEMEYİ BAŞLAT",
+                PANEL_ALT,WHITE,true,v->togglePublicMode()),lp(-1,-2));gap(publicPanel,10);
+        publicPanel.addView(label("Uygulama ekrandayken yaklaşık 3 dakikada bir dener. Arka planda Android en erken yaklaşık 15 dakikalık işleri planlar ve geciktirebilir. Instagram erişim engeli nedeniyle bildirim garantisi yoktur.",12,MUTED,false));
+        body.addView(publicPanel);gap(body,14);
         LinearLayout hint = panel();
-        hint.addView(label("BİLDİRİMSİZ INSTAGRAM TAKİBİ · RESMÎ META API", 15, WHITE, true)); gap(hint, 11);
+        hint.addView(label("İSTEĞE BAĞLI · GELİŞMİŞ META BAĞLANTISI", 15, WHITE, true)); gap(hint, 11);
         hint.addView(label("Meta Business Discovery iznine sahip profesyonel Instagram hesabın ve erişim tokenın varsa takip listesindeki profesyonel hesapların gönderileri API üzerinden sorgulanır. Telefonun Instagram bildirimlerini açmana gerek yok. Herkese açık kişisel hesaplar, hikâyeler ve izin verilmeyen içerikler okunamaz.", 13, MUTED, false));
         gap(hint, 12);
         String igStatus = Prefs.raw(this).getString("meta_last_status", "Henüz API taraması yapılmadı");
@@ -440,7 +477,7 @@ public class MainActivity extends Activity {
         body.addView(hint); gap(body, 14);
         LinearLayout limitations = panel();
         limitations.addView(label("Önemli sınırlama", 14, PRIMARY, true)); gap(limitations, 8);
-        limitations.addView(label("@tevkiliniz hesabının Business/Creator türünde olduğu veya hesabının Meta API erişimi bulunduğu henüz doğrulanmadı. Bağlantı kurulamazsa durum alanında açık hata gösterilir. Meta erişimi olmadan ilanlar otomatik gelmez. Alternatif olarak Instagram'ın Paylaş menüsünden bir ilanı elle ekleyebilirsin.", 13, MUTED, false));
+        limitations.addView(label("Meta'sız deneme yalnızca Instagram'ın girişsiz sunduğu gönderilerde çalışabilir. Profil açık olsa bile erişim reddedilebilir. Durumda bir gönderi okunmadıysa otomatik ilan bulundu denmez. Profil ekleme, Instagram hesabına bağlantı kurmak değildir.",13,MUTED,false));
         body.addView(limitations);
     }
     private void openInstagramProfile(String account) {
@@ -463,7 +500,7 @@ public class MainActivity extends Activity {
         input.setPadding(dp(18), dp(11), dp(18), dp(11));
         AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle("Instagram hesabı ekle")
-            .setMessage("Profil bağlantısını veya @kullaniciadi yaz. Uzaktan takip için ayrıca Meta API erişimi gereklidir.")
+            .setMessage("Profil bağlantısını veya @kullaniciadi yaz. Meta'sız açık profil denemesi otomatik yapılacak; Instagram erişimi engelleyebilir.")
             .setView(input).setNegativeButton("Vazgeç", null)
             .setPositiveButton("Ekle", null).create();
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
@@ -512,6 +549,36 @@ public class MainActivity extends Activity {
         InstagramScanJob.schedule(this);
         render();
         toast(enabled ? "Periyodik Instagram taraması durduruldu." : "Periyodik Instagram taraması planlandı.");
+    }
+
+    private void togglePublicMode() {
+        boolean now=Prefs.raw(this).getBoolean("public_enabled",true);
+        Prefs.raw(this).edit().putBoolean("public_enabled",!now).apply();
+        InstagramScanJob.schedule(this);
+        render();
+        if (!now) scanPublicNow(false);
+        else toast("Meta'sız tarama denemesi durduruldu.");
+    }
+
+    private void scanPublicNow(boolean interactive) {
+        if (Build.VERSION.SDK_INT >= 33 &&
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},106);
+        }
+        if (interactive) toast("Instagram açık profil erişimi deneniyor...");
+        new Thread(() -> {
+            PublicInstagramScanner.Result result=PublicInstagramScanner.scan(getApplicationContext());
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                render();
+                if(interactive) {
+                    if(result.readable==0)
+                        new AlertDialog.Builder(this).setTitle("Instagram erişimi sağlanamadı")
+                            .setMessage(result.status).setPositiveButton("Tamam",null).show();
+                    else toast("Erişim testi bitti. Detayı Kaynaklar bölümünde görebilirsin.");
+                }
+            });
+        },"public-instagram-manual").start();
     }
 
     private void scanInstagramNow() {
