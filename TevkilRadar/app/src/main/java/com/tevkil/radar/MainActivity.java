@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -42,10 +44,15 @@ public class MainActivity extends Activity {
     private static final int MUTED = 0xff9db5c5;
     private static final int WHITE = 0xfff4f9fc;
     private static final int LINE = 0xff294156;
+    private static final int DIALOG_TEXT = 0xff17212b;
+    private static final int DIALOG_MUTED = 0xff4b5563;
+    private static final int DIALOG_OK = 0xff116149;
+    private static final int DIALOG_WARNING = 0xff9a3412;
     private LinearLayout root, body, navbar;
     private NoticeStore store;
     private String section = "inbox";
     private long requestedNotice = -1;
+    private boolean quickCommentRequested = false;
     private boolean registered = false;
     private final BroadcastReceiver refreshReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
@@ -86,7 +93,12 @@ public class MainActivity extends Activity {
         render();
         if (requestedNotice != -1) {
             long id = requestedNotice; requestedNotice = -1;
-            for (NoticeStore.Notice n : store.list(400)) if (n.id == id) { showNotice(n); break; }
+            boolean quick = quickCommentRequested; quickCommentRequested = false;
+            for (NoticeStore.Notice n : store.list(400)) if (n.id == id) {
+                if (quick && n.source.toLowerCase(Locale.ROOT).contains("instagram")) prepareInstagramComment(n);
+                else showNotice(n);
+                break;
+            }
         }
     }
     @Override protected void onPause() {
@@ -254,7 +266,8 @@ public class MainActivity extends Activity {
            .setMessage(text)
            .setNeutralButton("Kaynağı aç",(dialog,which)->openSource(n))
            .setNegativeButton("Kapat",(dialog,which)->render())
-           .setPositiveButton("Başvuru hazırla",(dialog,which)->replyDialog(n))
+           .setPositiveButton(n.source.toLowerCase(Locale.ROOT).contains("instagram") ? "Yorum için aç" : "Başvuru hazırla",
+                (dialog,which)->{ if(n.source.toLowerCase(Locale.ROOT).contains("instagram")) prepareInstagramComment(n); else replyDialog(n); })
            .create(); d.setOnDismissListener(x->render());d.show();
     }
     private void openSource(NoticeStore.Notice n) {
@@ -264,6 +277,28 @@ public class MainActivity extends Activity {
         }
         toast("Kaynak bağlantısı bulunamadı. Bildirimi açın veya uygulamadaki sohbeti bulun.");
     }
+    /** Clipboard plus original post: no unsupported automated Instagram publishing. */
+    private void prepareInstagramComment(NoticeStore.Notice n) {
+        if (n.url == null || !n.url.startsWith("https://www.instagram.com/")) {
+            toast("Gönderi bağlantısı bulunamadı."); openSource(n); return;
+        }
+        if (!FilterEngine.matches(n.title, n.body, Prefs.rules(this))) {
+            new AlertDialog.Builder(this).setTitle("Filtre dışı ilan")
+                .setMessage("Bu ilan mevcut Ankara, anahtar kelime veya ücret kurallarına uymuyor. Başvuru hazırlanmadı.")
+                .setPositiveButton("Tamam", null).show(); return;
+        }
+        String comment = Prefs.comment(this).trim();
+        if (comment.isEmpty()) { toast("Yorum şablonu boş. Ayarlardan düzenle."); return; }
+        ClipboardManager clip = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clip == null) { toast("Pano kullanılamıyor."); return; }
+        clip.setPrimaryClip(ClipData.newPlainText("Tevkil başvuru yorumu", comment));
+        store.mark(n.id, "prepared");
+        toast("Yorum kopyalandı. Instagram'da yapıştırıp Gönder'e bas.");
+        try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(n.url))); }
+        catch (Exception e) { toast("Gönderi açılamadı. Yorum panoya kopyalandı."); }
+        render();
+    }
+
     private void replyDialog(NoticeStore.Notice n) {
         EditText message = new EditText(this);
         message.setText(Prefs.reply(this)); message.setTextSize(15);
@@ -312,23 +347,23 @@ public class MainActivity extends Activity {
         body.addView(help);
     }
     private EditText field(String value, int lines) {
-        EditText t=new EditText(this);t.setText(value);t.setTextSize(14);t.setTextColor(WHITE);
-        t.setHintTextColor(MUTED);t.setBackgroundTintList(android.content.res.ColorStateList.valueOf(PRIMARY));
+        EditText t=new EditText(this);t.setText(value);t.setTextSize(14);t.setTextColor(DIALOG_TEXT);
+        t.setHintTextColor(DIALOG_MUTED);t.setBackgroundTintList(android.content.res.ColorStateList.valueOf(PRIMARY));
         t.setMinLines(lines); t.setSelectAllOnFocus(false); return t;
     }
     private void editFilters() {
         FilterEngine.Rules r=Prefs.rules(this);
         ScrollView scroll=new ScrollView(this);
         LinearLayout form=column();form.setPadding(dp(20),dp(9),dp(20),dp(9));
-        CheckBox ankara=new CheckBox(this);ankara.setText("Yalnızca Ankara ve ilçeleri");ankara.setTextColor(WHITE);
+        CheckBox ankara=new CheckBox(this);ankara.setText("Yalnızca Ankara ve ilçeleri");ankara.setTextColor(DIALOG_TEXT);
         ankara.setChecked(r.ankaraOnly);form.addView(ankara);gap(form,13);
-        form.addView(label("Aranacak ifadeler (virgülle ayır)",12,MUTED,false));
+        form.addView(label("Aranacak ifadeler (virgülle ayır)",12,DIALOG_MUTED,false));
         EditText include=field(r.include,2);form.addView(include);gap(form,12);
-        form.addView(label("Hariç tutulan ifadeler",12,MUTED,false));
+        form.addView(label("Hariç tutulan ifadeler",12,DIALOG_MUTED,false));
         EditText exclude=field(r.exclude,1);form.addView(exclude);gap(form,12);
-        form.addView(label("İlçeler (boşsa tüm Ankara)",12,MUTED,false));
+        form.addView(label("İlçeler (boşsa tüm Ankara)",12,DIALOG_MUTED,false));
         EditText districts=field(r.districts,1);form.addView(districts);gap(form,12);
-        form.addView(label("Asgari ilan ücreti (TL, 0 = sınırsız)",12,MUTED,false));
+        form.addView(label("Asgari ilan ücreti (TL, 0 = sınırsız)",12,DIALOG_MUTED,false));
         EditText fee=field(Long.toString(r.minFee),1);fee.setInputType(InputType.TYPE_CLASS_NUMBER);form.addView(fee);gap(form,12);
         scroll.addView(form);
         AlertDialog dialog=new AlertDialog.Builder(this)
@@ -436,14 +471,14 @@ public class MainActivity extends Activity {
     /** Optional API integration. The app never asks for the user's Instagram password. */
     private void editMetaCredentials() {
         LinearLayout form = column(); form.setPadding(dp(20), dp(10), dp(20), dp(4));
-        form.addView(label("Kendi profesyonel Instagram IG User ID (sayısal)", 13, WHITE, false));
+        form.addView(label("Kendi profesyonel Instagram IG User ID (sayısal)", 13, DIALOG_TEXT, false));
         EditText id = field(Prefs.raw(this).getString("meta_ig_id", ""), 1);
         id.setInputType(InputType.TYPE_CLASS_NUMBER); id.setHint("1784..."); form.addView(id); gap(form, 12);
-        form.addView(label("Meta Graph API erişim tokenı (Instagram şifren DEĞİL)", 13, WHITE, false));
+        form.addView(label("Meta Graph API erişim tokenı (Instagram şifren DEĞİL)", 13, DIALOG_TEXT, false));
         EditText token = field("", 1); token.setHint(InstagramSecureConfig.getToken(this).isEmpty() ? "Erişim tokenını yapıştır" : "Değiştirmeyeceksen boş bırak");
         token.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD); form.addView(token);
         gap(form, 12);
-        form.addView(label("Sadece yetkili Meta geliştirici erişimiyle çalışır. Facebook Login + profesyonel hesap ve Business Discovery için gerekli izinler gerekir. Bu uygulama otomatik Meta hesabı açmaz.", 12, MUTED, false));
+        form.addView(label("Bu bağlantı yalnızca yetkili Meta geliştirici erişimiyle çalışır. Instagram şifreni buraya girme. Gerekli izinler yoksa takip işlemi başlamaz.", 12, DIALOG_MUTED, false));
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle("Meta API bağlantısı")
                 .setView(form).setNeutralButton("Bağlantıyı sil", (d, which) -> {
                     InstagramSecureConfig.clear(this);toast("Meta API anahtarı silindi.");render();
@@ -507,13 +542,17 @@ public class MainActivity extends Activity {
         LinearLayout r=panel();r.addView(label("BAŞVURU MESAJIN",11,PRIMARY,true));gap(r,10);
         r.addView(label(Prefs.reply(this),13,WHITE,false));gap(r,13);
         r.addView(action("HAZIR MESAJI DÜZENLE",PANEL_ALT,WHITE,true,v->editReply()),lp(-1,-2));
+        gap(r,10);
+        r.addView(label("INSTAGRAM YORUM ŞABLONU",11,PRIMARY,true));gap(r,8);
+        r.addView(label(Prefs.comment(this),13,WHITE,false));gap(r,10);
+        r.addView(action("YORUM ŞABLONUNU DÜZENLE",PANEL_ALT,WHITE,true,v->editComment()),lp(-1,-2));
         body.addView(r);gap(body,13);
         LinearLayout privacy=panel();privacy.addView(label("VERİLER",11,PRIMARY,true));gap(privacy,8);
         privacy.addView(label("İlanlar cihazındaki yerel veritabanında kalır. Meta API kullanırsan kimlik doğrulama tokenı Android Keystore ile şifrelenir; API isteği doğrudan Meta sunucusuna gönderilir.",13,MUTED,false));gap(privacy,12);
         privacy.addView(action("KAYITLARI SİL",0xff402b34,0xffffb8c6,true,v->confirmClear()),lp(-1,-2));
         body.addView(privacy);gap(body,13);
         LinearLayout scope=panel();scope.addView(label("BU SÜRÜMÜN SINIRLARI",11,PRIMARY,true));gap(scope,8);
-        scope.addView(label("• WhatsApp/Telegram bildirim özelliği ayrı ve isteğe bağlıdır.\n\n• Instagram API taraması sadece Meta'nın izin verdiği profesyonel hesaplarda çalışır; her hesaba garanti erişim yoktur.\n\n• Başvurular yalnızca onayınla hazırlanır; platform izin vermezse paylaşım ekranı açılır.",13,MUTED,false));
+        scope.addView(label("• WhatsApp/Telegram bildirim özelliği ayrı ve isteğe bağlıdır.\n\n• Instagram API taraması sadece Meta'nın izin verdiği profesyonel hesaplarda çalışır; her hesaba garanti erişim yoktur.\n\n• Instagram API başka hesapların gönderilerine otomatik yorum yazmaz. Bildirimde Yoruma hazırla ile metin kopyalanır, gönderi açılır; Gönder tuşuna Instagram içinde sen basarsın.",13,MUTED,false));
         body.addView(scope);
     }
     private void editReply() {
@@ -523,6 +562,16 @@ public class MainActivity extends Activity {
           .setPositiveButton("Kaydet",(d,w)->{
             Prefs.raw(this).edit().putString("reply",input.getText().toString()).apply();render();
           }).show();
+    }
+    private void editComment() {
+        EditText input=field(Prefs.comment(this),4);
+        input.setPadding(dp(18),dp(10),dp(18),dp(10));
+        new AlertDialog.Builder(this).setTitle("Instagram başvuru yorumu")
+            .setMessage("Yorum hazırlanır. Son Gönder işlemi Instagram içinde yapılır.")
+            .setView(input).setNegativeButton("Vazgeç",null)
+            .setPositiveButton("Kaydet",(d,w)->{
+                Prefs.raw(this).edit().putString("comment",input.getText().toString()).apply();render();
+            }).show();
     }
     private void confirmClear() {
         new AlertDialog.Builder(this).setTitle("Tüm ilanları sil")
@@ -577,13 +626,13 @@ public class MainActivity extends Activity {
         panel.setPadding(dp(18),dp(6),dp(18),0);
         String structured = summary.asDisplay();
         panel.addView(label(structured.isEmpty() ? "Mahkeme/dosya/tarih bilgisi güvenle çıkarılamadı."
-                : structured, 13, WHITE, true));
+                : structured, 13, DIALOG_TEXT, true));
         gap(panel,9);
         panel.addView(label(matches ? "✓ Filtreye uygun görünüyor."
                 : "⚠ Mevcut Ankara/konu/ücret filtrelerine uymuyor. İstersen yine de kaydedebilirsin.",
-                12, matches ? PRIMARY : 0xffffb478, true));
+                12, matches ? DIALOG_OK : DIALOG_WARNING, true));
         gap(panel,9);
-        panel.addView(label("OCR metni hatalı olabilir. Özellikle mahkeme, tarih ve ücret bilgilerini asıl ilandan doğrula.",12,MUTED,false));
+        panel.addView(label("OCR metni hatalı olabilir. Özellikle mahkeme, tarih ve ücret bilgilerini asıl ilandan doğrula.",12,DIALOG_MUTED,false));
         gap(panel,7);
         EditText editable = field(recognized, 7);
         editable.setMaxLines(16);
@@ -626,6 +675,10 @@ public class MainActivity extends Activity {
     }
     private void handleIntent(Intent intent) {
         if (intent == null) return;
+        if (intent.hasExtra("quick_comment")) {
+            quickCommentRequested = intent.getBooleanExtra("quick_comment", false);
+            intent.removeExtra("quick_comment");
+        }
         if (intent.hasExtra("notice_id")) { requestedNotice=intent.getLongExtra("notice_id",-1);intent.removeExtra("notice_id"); }
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null &&
                 intent.getType().startsWith("image/")) {
