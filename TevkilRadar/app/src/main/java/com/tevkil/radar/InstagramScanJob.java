@@ -7,7 +7,7 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 
-/** Best-effort ~15min Android periodic task; Android may defer execution. */
+/** Best-effort ~15min Android periodic task for enabled modes; Android may defer execution. */
 public final class InstagramScanJob extends JobService {
     private static final int JOB_ID = 751091;
     private Thread worker;
@@ -16,7 +16,10 @@ public final class InstagramScanJob extends JobService {
         JobScheduler scheduler = context.getSystemService(JobScheduler.class);
         if (scheduler == null) return;
         scheduler.cancel(JOB_ID);
-        if (!Prefs.raw(context).getBoolean("meta_enabled", false) || !InstagramSecureConfig.configured(context)) return;
+        boolean publicMode=Prefs.raw(context).getBoolean("public_enabled", true);
+        boolean metaMode=Prefs.raw(context).getBoolean("meta_enabled", false)
+                && InstagramSecureConfig.configured(context);
+        if (!publicMode && !metaMode) return;
         JobInfo info = new JobInfo.Builder(JOB_ID, new ComponentName(context, InstagramScanJob.class))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPeriodic(15 * 60 * 1000L)
@@ -27,7 +30,9 @@ public final class InstagramScanJob extends JobService {
     @Override public boolean onStartJob(JobParameters params) {
         worker = new Thread(() -> {
             try {
-                if (Prefs.raw(this).getBoolean("meta_enabled", false)) InstagramRemoteScanner.scan(this);
+                if (Prefs.raw(this).getBoolean("public_enabled", true)) PublicInstagramScanner.scan(this);
+                if (Prefs.raw(this).getBoolean("meta_enabled", false)
+                        && InstagramSecureConfig.configured(this)) InstagramRemoteScanner.scan(this);
             } finally { jobFinished(params, false); }
         }, "instagram-api-scan");
         worker.start();
