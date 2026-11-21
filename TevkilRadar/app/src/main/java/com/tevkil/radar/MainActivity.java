@@ -609,7 +609,7 @@ public class MainActivity extends Activity {
         body.addView(c);gap(body,13);
         LinearLayout sources = panel();
         sources.addView(label("INSTAGRAM PROFİLLERİ",11,PRIMARY,true));gap(sources,7);
-        sources.addView(label(InstagramSources.accounts(watchedInstagram()).size()+" hesap ekli. Meta API erişimi sağlandıysa uzaktan tarama yapılabilir; Instagram bildirimleri şart değil.",13,MUTED,false));gap(sources,12);
+        sources.addView(label(InstagramSources.accounts(watchedInstagram()).size()+" hesap ekli. Açık profil denemesi giriş gerektirmez; erişim engeli varsa durum Kaynaklar bölümünde gösterilir.",13,MUTED,false));gap(sources,12);
         sources.addView(action("KAYNAKLARI YÖNET",PANEL_ALT,WHITE,true,v->{section="sources";render();}),lp(-1,-2));
         body.addView(sources);gap(body,13);
         LinearLayout r=panel();r.addView(label("BAŞVURU MESAJIN",11,PRIMARY,true));gap(r,10);
