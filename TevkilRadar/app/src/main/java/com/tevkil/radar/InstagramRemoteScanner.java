@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import java.util.List;
+import java.time.LocalDate;
 
 /** Fetches only API-authorized professional accounts and filters captions locally. */
 public final class InstagramRemoteScanner {
@@ -53,6 +54,7 @@ public final class InstagramRemoteScanner {
                         }
                         String text = combined.toString();
                         if (!FilterEngine.matches(title, text, Prefs.rules(context))) continue;
+                        if (TevkilDateGate.isExpired(text, LocalDate.now())) continue;
                         long id = store.addRemote("Instagram API · Görsel / Metin", title, text, m.permalink, m.id);
                         if (id >= 0) { count++; notifyMatch(context, id, username, text); }
                     }
