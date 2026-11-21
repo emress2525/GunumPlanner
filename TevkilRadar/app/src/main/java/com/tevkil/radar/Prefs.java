@@ -7,6 +7,8 @@ public final class Prefs {
     private static final String P = "radar_config_v1";
     public static final String DEFAULT_REPLY = "Merhaba meslektaşım, paylaştığınız tevkil işi için müsaitim. Uygunsa ayrıntıları görüşebiliriz.";
 
+    public static final String DEFAULT_COMMENT = "Sayın meslektaşım, ilanınızdaki tevkil işi için uygunum. Benimle iletişime geçebilir misiniz?";
+
     private Prefs() {}
     public static SharedPreferences raw(Context context) {
         return context.getSharedPreferences(P, Context.MODE_PRIVATE);
@@ -20,6 +22,9 @@ public final class Prefs {
         r.districts = p.getString("districts", "");
         r.minFee = p.getLong("minFee", 0);
         return r;
+    }
+    public static String comment(Context context) {
+        return raw(context).getString("comment", DEFAULT_COMMENT);
     }
     public static String reply(Context context) {
         return raw(context).getString("reply", DEFAULT_REPLY);
