@@ -85,9 +85,18 @@ public final class InstagramRemoteScanner {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pending = PendingIntent.getActivity(context, (int) (id & 0x7fffffff), intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        // The notification action is an explicit user gesture. It prepares a clipboard
+        // comment and opens the original post, never claims to have submitted a comment.
+        Intent quick = new Intent(context, MainActivity.class)
+                .putExtra("notice_id", id).putExtra("quick_comment", true)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent quickPending = PendingIntent.getActivity(context, ((int)(id & 0x7fffffff)) ^ 0x55000000,
+                quick, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         manager.notify((int)(id & 0x7fffffff), new Notification.Builder(context, CHANNEL)
                 .setSmallIcon(R.drawable.ic_radar).setContentTitle("Yeni tevkil ilanı · @" + username)
                 .setContentText(caption).setStyle(new Notification.BigTextStyle().bigText(caption))
-                .setAutoCancel(true).setContentIntent(pending).build());
+                .setAutoCancel(true).setContentIntent(pending)
+                .addAction(R.drawable.ic_radar, "Yoruma hazırla", quickPending)
+                .build());
     }
 }
