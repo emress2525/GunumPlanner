@@ -1,143 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-20T12:59:19",
-  "event_count": 31,
+  "generated_at": "2026-11-21T12:43:03",
+  "event_count": 30,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 2,
-      "ms": 1300
+      "ms": 1415
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1296
+      "ms": 1481
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 1,
-      "ms": 13250
+      "ms": 13975
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 5,
-      "ms": 8204
+      "events": 4,
+      "ms": 9206
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1011)')))",
-      "ms": 440
+      "ms": 510
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 6343
+      "ms": 8531
     }
   ],
   "events": [
-    {
-      "id": "c1348ebeed086a3c",
-      "title": "KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI Ana Sayfa Duyurular KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI 2026-11-20 00:00:00 İşareti : 05/5000-3458 İrtibat: tore.silis@aso.org.tr Sayın Üyemiz, Enerji ve Tabii Kaynaklar Bakanlığı tarafından belirlenen 2050 yılı nükleer enerji hedefleri çerçevesinde, 5 GW'ı küçük modüler reaktörlerden (SMR) oluşmak üzere ülkemizin toplam nükleer kurulu gücünün 20 GW'a ulaştırılması öngörülmektedir. Bu doğrultuda, ülkemizde küçük modüler reaktör teknolojilerine yönelik yürütülen çalışmalar, Türk sanayisi için önemli iş birliği ve tedarik fırsatları sunmaktadır. Bu kapsamda Odamız koordinasyonunda faaliyetlerini sürdürmekte olan Nükleer Sanayi Kümelenmesi (ASO NÜKSAK) ve Nükleer Sanayi Derneği (NIATR) tarafından, K",
-      "starts_at": "2026-11-20T10:00:00",
-      "ends_at": "2026-11-20T17:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/kucuk-moduler-reaktor-teknolojisi-ve-turk-sanayisi-calistayi-8018",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "6aff81918bf3146d",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI Devamı 20.11.2026 DUYURULAR KOBİ'LERİN YABANCI RÜŞVET RİSKİ KONUSUNDA BİLGİLENDİRİLMESİ HK. Devamı 19.11.2026 DUYURULAR ALMANYA BUSINESS FAST TRACK (BFT) PROGRAMI HAKKINDA Devamı 19.11.2026 DUYURULAR YÜKSEKTE GÜVENLİ ÇALIŞMA: FARKINDALIK BULUŞMALARI Devamı 18.11.2026 DUYURULAR ULUSLARARASI TAŞIMACILIKTA VİZE VE SINIR GEÇİŞ SÜREÇLERİ Devamı 18.11.2026 DUYURULAR 16 KASIM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 17.11.2026 DUYURULAR E-TİCARET PAZAR YERLERİNDE SATIŞA YASAK ÜRÜNLER HAKKINDA Devamı 17.11.2026 DUYURULAR TÜRKİYE-GÜRCİSTAN GÜMRÜK KOMİTESİ TOPLANTI GÖRÜŞ TALEBİ Devamı 17.11.2026 DUYURULAR AKADEMİKİK TANITIM ETKİNLİĞİ Devamı 17.11.2026 DUYURULAR TÜRKİYE-GÜNEY AFRİKA CUMHURİYE",
-      "starts_at": "2026-11-20T20:11:00",
-      "ends_at": "2026-11-20T22:11:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları",
-        "networking"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket sahipleri",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 98,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "7d5fc0b8922b5e46",
       "title": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı!",
@@ -292,6 +196,53 @@
       "organizer": "Ankara Sanayi Odası",
       "source_name": "Ankara Sanayi Odası",
       "source_url": "https://www.aso.org.tr/post/ihale-duyurusu-ncts-icin-donanim-bilesenleri-alimi-7965",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "9c12dce7744a4b4f",
+      "title": "KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI Ana Sayfa Duyurular KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI 2026-11-20 00:00:00 İşareti : 05/5000-3458 İrtibat: tore.silis@aso.org.tr Sayın Üyemiz, Enerji ve Tabii Kaynaklar Bakanlığı tarafından belirlenen 2050 yılı nükleer enerji hedefleri çerçevesinde, 5 GW'ı küçük modüler reaktörlerden (SMR) oluşmak üzere ülkemizin toplam nükleer kurulu gücünün 20 GW'a ulaştırılması öngörülmektedir. Bu doğrultuda, ülkemizde küçük modüler reaktör teknolojilerine yönelik yürütülen çalışmalar, Türk sanayisi için önemli iş birliği ve tedarik fırsatları sunmaktadır. Bu kapsamda Odamız koordinasyonunda faaliyetlerini sürdürmekte olan Nükleer Sanayi Kümelenmesi (ASO NÜKSAK) ve Nükleer Sanayi Derneği (NIATR) tarafından, K",
+      "starts_at": "2026-11-25T10:00:00",
+      "ends_at": "2026-11-25T17:00:00",
+      "venue": "Ankara Sanayi Odası",
+      "district": "Ankara",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/kucuk-moduler-reaktor-teknolojisi-ve-turk-sanayisi-calistayi-8018",
       "verified": true,
       "source_confidence": 99,
       "categories": [
