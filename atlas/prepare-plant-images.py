@@ -82,8 +82,9 @@ def licensed(item):
     lic=striphtml(ext.get("LicenseShortName",{}).get("value",""))
     usage=striphtml(ext.get("UsageTerms",{}).get("value",""))
     s=(lic+" "+usage).lower()
-    accepted=any(t in s for t in ("cc-by","cc0","public domain","public-domain"))
-    return accepted,lic,ext
+    permitted=bool(re.search(r"cc[ -]?by(?:[ -]?sa)?\b|cc0|public[ -]domain",s))
+    restricted=bool(re.search(r"\bby[ -]?(nc|nd)\b|non[- ]commercial|no[- ]derivatives",s))
+    return permitted and not restricted,lic,ext
 def download(url,max_bytes=1_500_000):
     req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"image/jpeg,image/png,*/*"})
     for i in range(3):
