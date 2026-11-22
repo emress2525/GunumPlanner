@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
         content = new FrameLayout(this);
         root.addView(content, new LinearLayout.LayoutParams(-1, 0, 1));
         setContentView(root);
-        setStatus(mapFile.exists() ? "Harita hazır. Harita sekmesine dokun." : "Harita ZIP dosyasını Harita sekmesinden seç.");
+        setStatus(mapFile.exists() ? "Harita hazır. Türkiye Haritası sekmesine dokun." : "Türkiye Haritası: Wi-Fi ile indir veya ZIP dosyası seç.");
         showGuides();
     }
 
