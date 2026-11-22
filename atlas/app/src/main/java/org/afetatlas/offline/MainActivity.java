@@ -1,6 +1,7 @@
 package org.afetatlas.offline;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -30,6 +31,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.HttpURLConnection;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
@@ -63,6 +66,7 @@ public class MainActivity extends Activity {
     private boolean showingMap;
     private File mapFile;
     private Cities.Point targetDistrict;
+    private volatile boolean mapDownloadBusy=false;
     private static final int LOCATION_PERMISSION=105;
 
     @Override public void onCreate(Bundle state) {
@@ -95,7 +99,7 @@ public class MainActivity extends Activity {
             targetDistrict=p;
             if(!mapFile.exists()){
                 setStatus(p.city+" / "+p.district+" seçildi. Önce harita ZIP'ini yükle.");
-                pickMap();
+                showMapOrImport();
             }else showMapOrImport();
         }));
         gps.setOnClickListener(v->locate());
@@ -146,7 +150,7 @@ public class MainActivity extends Activity {
     private void locate(){
         if(!mapFile.exists()){
             setStatus("GPS için önce çevrimdışı haritayı yükle.");
-            pickMap(); return;
+            showMapOrImport(); return;
         }
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION);
@@ -188,7 +192,7 @@ public class MainActivity extends Activity {
     }
     private void showMapOrImport() {
         if (!mapFile.exists() || mapFile.length() < 100000) {
-            pickMap();
+            showMapSetup();
             return;
         }
         try {
@@ -218,6 +222,61 @@ public class MainActivity extends Activity {
             setStatus("Harita açılamadı: " + e.getMessage());
             showGuides();
         }
+    }
+    private void showMapSetup(){
+        if(mapDownloadBusy){setStatus("Harita indiriliyor veya çıkarılıyor. Lütfen bekle.");return;}
+        new AlertDialog.Builder(this)
+         .setTitle("Türkiye çevrimdışı haritası")
+         .setMessage("Harita yaklaşık 450 MB'tır. Bir kez indirildikten sonra internet olmadan çalışır. Mobil veri yerine Wi-Fi önerilir. Telefonda yaklaşık 1 GB boş yer ayır.")
+         .setPositiveButton("Haritayı indir",(dialog,which)->downloadMap())
+         .setNeutralButton("Telefondan ZIP / .map seç",(dialog,which)->pickMap())
+         .setNegativeButton("İptal",null).show();
+    }
+    private void downloadMap(){
+        if(mapDownloadBusy)return;
+        if(getFilesDir().getUsableSpace()<550L*1024*1024){
+            setStatus("Yeterli alan yok: harita için en az 550 MB boş alan gerekiyor.");
+            return;
+        }
+        mapDownloadBusy=true;
+        setStatus("BBBike Türkiye haritasına bağlanılıyor; indirme büyük olduğu için bekle...");
+        new Thread(()->{
+            File tmp=new File(getFilesDir(),"turkiye.map.part");
+            HttpURLConnection connection=null;
+            try{
+                if(tmp.exists()&&!tmp.delete())throw new IllegalStateException("Geçici harita temizlenemedi");
+                URL link=new URL("https://data.bbbike.org/osm/mapsforge/region/europe/turkey/turkey.osm.mapsforge-osm.zip");
+                connection=(HttpURLConnection)link.openConnection();
+                connection.setConnectTimeout(30000);
+                connection.setReadTimeout(45000);
+                connection.setInstanceFollowRedirects(true);
+                int code=connection.getResponseCode();
+                if(code!=200)throw new IllegalStateException("Sunucu yanıtı: HTTP "+code);
+                boolean found=false;
+                try(ZipInputStream zis=new ZipInputStream(new BufferedInputStream(connection.getInputStream(),128*1024))){
+                    ZipEntry entry;
+                    while((entry=zis.getNextEntry())!=null){
+                        if(!entry.isDirectory()&&entry.getName().toLowerCase(Locale.ROOT).endsWith(".map")){
+                            copy(zis,tmp);found=true;break;
+                        }
+                        zis.closeEntry();
+                    }
+                }
+                if(!found||tmp.length()<100000)throw new IllegalStateException("İndirilen ZIP içinde kullanılabilir .map yok");
+                if(mapFile.exists()&&!mapFile.delete())throw new IllegalStateException("Eski harita temizlenemedi");
+                if(!tmp.renameTo(mapFile))throw new IllegalStateException("Harita kaydedilemedi");
+                runOnUiThread(()->{
+                    setStatus("Türkiye haritası indirildi ve çevrimdışı kullanıma hazır.");
+                    showMapOrImport();
+                });
+            }catch(Exception e){
+                tmp.delete();
+                runOnUiThread(()->setStatus("Harita indirilemedi: "+e.getMessage()+" • ZIP dosyasını seçerek de yükleyebilirsin."));
+            }finally{
+                if(connection!=null)connection.disconnect();
+                mapDownloadBusy=false;
+            }
+        }).start();
     }
     private void pickMap() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
