@@ -1,0 +1,34 @@
+name: Atlas Stage Photo License Test
+on:
+  push:
+    branches: [atlas-integrations-review]
+    paths: ['.github/workflows/atlas-stage-photo-test.yml', 'atlas/prepare-plant-images.py']
+  workflow_dispatch:
+jobs:
+  license-photo-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify species reference images
+        run: python3 atlas/prepare-plant-images.py
+      - name: Check image manifest integrity
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          folder=pathlib.Path('atlas/app/src/main/assets/plant_photos')
+          manifest=json.loads((folder/'photo_metadata.json').read_text(encoding='utf8'))
+          assert len(manifest)>=12
+          for item in manifest.values():
+              p=folder/item['filename']
+              assert p.stat().st_size>500, p
+              assert item['license'] and item['author'] and item['source']
+          print('LICENSED_IMAGES_TEST_PASS',len(manifest))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Atlas-Photo-License-Audit
+          path: atlas/app/src/main/assets/plant_photos/photo_metadata.json
+          if-no-files-found: ignore
+          retention-days: 10
