@@ -54,6 +54,7 @@ for batch in batches(titles,40):
         "action":"query","format":"json","redirects":"1",
         "titles":"|".join(batch),"prop":"pageimages","piprop":"original"
     })
+    print("WIKIPEDIA_RESPONSE",str(results)[:850],flush=True)
     for obj in results.get("query",{}).get("pages",{}).values():
         photo=obj.get("pageimage")
         if photo:photoByArticle[obj["title"].lower()]=photo
