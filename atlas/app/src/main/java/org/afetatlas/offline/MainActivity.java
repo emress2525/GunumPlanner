@@ -25,6 +25,7 @@ import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
+import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import java.io.File;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity {
     private FrameLayout content;
     private TextView status;
     private MapView mapView;
+    private Marker positionMarker;
     private boolean showingMap;
     private File mapFile;
     private Cities.Point targetDistrict;
@@ -148,6 +150,15 @@ public class MainActivity extends Activity {
             mapView = null;
         }
         showingMap = false;
+        positionMarker=null;
+    }
+    private void showPin(double lat,double lon){
+        if(mapView==null)return;
+        if(positionMarker!=null)mapView.getLayerManager().getLayers().remove(positionMarker);
+        android.graphics.drawable.Drawable icon=getResources().getDrawable(R.drawable.atlas_pin);
+        org.mapsforge.core.graphics.Bitmap bm=AndroidGraphicFactory.convertToBitmap(icon);
+        positionMarker=new Marker(new LatLong(lat,lon),bm,0,-bm.getHeight()/2);
+        mapView.getLayerManager().getLayers().add(positionMarker);
     }
     private void showGuides() {
         closeMap();
@@ -194,8 +205,9 @@ public class MainActivity extends Activity {
         if(mapView!=null){
             mapView.setCenter(new LatLong(location.getLatitude(),location.getLongitude()));
             mapView.setZoomLevel((byte)15);
+            showPin(location.getLatitude(),location.getLongitude());
             setStatus(info+": "+String.format(Locale.US,"%.5f, %.5f",location.getLatitude(),location.getLongitude())+
-                " (merkeze alındı; GPS işaretçisi yok)");
+                " (haritada işaretlendi)");
         }
     }
     @Override public void onRequestPermissionsResult(int req,String[] perms,int[] grants){
@@ -229,6 +241,7 @@ public class MainActivity extends Activity {
             if(targetDistrict!=null){
                 mapView.setCenter(new LatLong(targetDistrict.latitude,targetDistrict.longitude));
                 mapView.setZoomLevel((byte)11);
+                showPin(targetDistrict.latitude,targetDistrict.longitude);
             }
             showingMap = true;
             setStatus(targetDistrict==null?"Türkiye haritası cihazdan yükleniyor; internet gerekli değil.":targetDistrict.city+" / "+targetDistrict.district+" • yaklaşık ilçe koordinatı");
