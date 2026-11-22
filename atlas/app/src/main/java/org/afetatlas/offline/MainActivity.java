@@ -325,9 +325,8 @@ public class MainActivity extends Activity {
                         zis.closeEntry();
                     }
                 }
-                if(!found||tmp.length()<100000)throw new IllegalStateException("İndirilen ZIP içinde kullanılabilir .map yok");
-                if(mapFile.exists()&&!mapFile.delete())throw new IllegalStateException("Eski harita temizlenemedi");
-                if(!tmp.renameTo(mapFile))throw new IllegalStateException("Harita kaydedilemedi");
+                if(!found)throw new IllegalStateException("İndirilen ZIP içinde .map yok");
+                commitValidatedMap(tmp);
                 runOnUiThread(()->{
                     setStatus("Türkiye haritası indirildi ve çevrimdışı kullanıma hazır.");
                     showMapOrImport();
@@ -436,14 +435,32 @@ public class MainActivity extends Activity {
                     copy(input, tmp);
                 }
             }
-            if (tmp.length() < 100000) throw new IllegalArgumentException("Harita dosyası çok küçük");
-            if (mapFile.exists() && !mapFile.delete()) throw new IllegalStateException("Eski harita silinemedi");
-            if (!tmp.renameTo(mapFile)) throw new IllegalStateException("Harita kaydedilemedi");
+            commitValidatedMap(tmp);
             runOnUiThread(() -> { setStatus("Harita içe aktarıldı."); showMapOrImport(); });
         } catch (Exception ex) {
             tmp.delete();
             runOnUiThread(() -> setStatus("İçe aktarma hatası: " + ex.getMessage()));
         }
+    }
+    private void commitValidatedMap(File candidate) throws Exception {
+        if(!candidate.exists()||candidate.length()<100000)
+            throw new IllegalArgumentException("Harita eksik veya çok küçük");
+        MapFile verify=null;
+        try {
+            verify=new MapFile(candidate);
+            if(verify.boundingBox()==null)throw new IllegalArgumentException("Mapsforge sınırları okunamadı");
+        } finally {if(verify!=null)verify.close();}
+        // Never delete the last known working map until the replacement is valid.
+        File backup=new File(getFilesDir(),"turkiye.map.backup");
+        if(backup.exists()&&!backup.delete())throw new IllegalStateException("Yedek harita temizlenemedi");
+        boolean hadOld=mapFile.exists();
+        if(hadOld&&!mapFile.renameTo(backup))throw new IllegalStateException("Mevcut harita yedeklenemedi");
+        boolean swapped=candidate.renameTo(mapFile);
+        if(!swapped){
+            if(hadOld&&!backup.renameTo(mapFile))throw new IllegalStateException("Harita değiştirilemedi; yedek de kurtarılamadı");
+            throw new IllegalStateException("Yeni harita yerine taşınamadı");
+        }
+        if(backup.exists())backup.delete();
     }
     private void copy(InputStream in, File file) throws Exception {
         byte[] buffer = new byte[128 * 1024];
