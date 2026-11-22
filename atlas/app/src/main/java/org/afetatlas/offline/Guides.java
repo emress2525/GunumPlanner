@@ -126,6 +126,10 @@ final class Guides {
     list.add(new Entry("İletişim ve hazırlık", "Belgeler ve mahremiyet", "Kimlik, reçete ve kritik iletişim bilgilerini güvenli şekilde yedekle.\nDijital kopyaları güçlü kilit ve mümkünse şifreli depolamayla koru.\nAcil iletişim kartını gereksiz kişisel veri içermeden hazırla."));
     list.add(new Entry("İletişim ve hazırlık", "Çevrimdışı harita kullanımı", "Haritayı önceden indir, telefon uçak modundayken açılışını test et.\nOffline harita görüntüsü her zaman yönlendirme veya güncel yol kapanışı bilgisi sağlamaz.\nÖnemli rotalar için kâğıt harita ve pusula da bulundur."));
     list.add(new Entry("İletişim ve hazırlık", "AFAD ve resmî kaynaklar", "Türkiye’de afet uyarısı, toplanma alanı ve tahliye için AFAD ve yerel yetkili kurumların güncel talimatlarını izle.\nUygulamanın çevrimdışı içeriği güncel resmî uyarıların yerine geçmez.\nHayati durumda 112’yi ara."));
+    list.addAll(ExpandedGuides.all());
+    list.addAll(AdditionalGuides.all());
+    list.addAll(FinalGuides.all());
+    if(list.size()!=273)throw new IllegalStateException("Unexpected guide count: "+list.size());
     DATA = Collections.unmodifiableList(list);
   }
   static List<Entry> all() { return DATA; }
