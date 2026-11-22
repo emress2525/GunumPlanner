@@ -1,0 +1,61 @@
+name: Türkiye Mapsforge Gerçek Harita Testi
+on:
+  workflow_dispatch:
+  push:
+    branches: [atlas-offline-maps-build]
+    paths: ['.github/workflows/atlas-turkiye-map-verification.yml']
+jobs:
+  verify-turkey-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Download the actual all-Türkiye Mapsforge ZIP
+        run: |
+          curl -fLS --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 1200 \
+          'https://data.bbbike.org/osm/mapsforge/region/europe/turkey/turkey.osm.mapsforge-osm.zip' \
+          -o turkiye.mapsforge.zip
+          test "$(stat -c %s turkiye.mapsforge.zip)" -gt 150000000
+          sha256sum turkiye.mapsforge.zip > turkey_map_checksum.txt
+      - name: Stream-validate all map bytes, ZIP and Mapsforge signature
+        run: |
+          python3 - <<'PY'
+          import zipfile,hashlib,os
+          p='turkiye.mapsforge.zip'
+          with zipfile.ZipFile(p) as z:
+            maps=[item for item in z.infolist() if item.filename.lower().endswith('.map')]
+            assert len(maps)>=1, 'ZIP has no .map'
+            real=maps[0]
+            assert real.file_size>150_000_000, 'Unpacked .map unexpectedly small'
+            digest=hashlib.sha256()
+            with z.open(real) as f:
+              header=f.read(20)
+              assert header==b'mapsforge binary OSM', repr(header)
+              digest.update(header)
+              size=len(header)
+              while True:
+                data=f.read(1024*1024)
+                if not data:break
+                size+=len(data);digest.update(data)
+              assert size==real.file_size, (size,real.file_size)
+            bad=z.testzip()
+            assert bad is None, 'ZIP CRC failure: '+str(bad)
+            with open('turkey_map_validation.txt','w') as out:
+              out.write('MAP_VALIDATION=PASS\n')
+              out.write('Mapsforge magic: PASS\n')
+              out.write('ZIP CRC: PASS\n')
+              out.write('map_name='+real.filename+'\n')
+              out.write('unpacked_bytes='+str(size)+'\n')
+              out.write('SHA256_map='+digest.hexdigest()+'\n')
+              out.write('SHA256_zip='+hashlib.sha256(open(p,'rb').read()).hexdigest()+'\n')
+          print(open('turkey_map_validation.txt').read())
+          PY
+      - name: Save proof report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Atlas-Turkiye-Full-Map-Verification
+          path: |
+            turkey_map_validation.txt
+            turkey_map_checksum.txt
+          if-no-files-found: ignore
+          retention-days: 30
