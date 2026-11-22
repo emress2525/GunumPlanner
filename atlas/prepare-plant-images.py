@@ -1,126 +1,135 @@
 #!/usr/bin/env python3
-"""Build reproducible OFFLINE thumbnails from explicitly licensed Wikimedia Commons files.
-Images are illustrative, NOT reliable positive taxonomic identification.
-A network/metadata failure never silently invents or substitutes a species.
+"""Download offline botanical thumbnail examples in only two MediaWiki API batches.
+Source: English Wikipedia species article's pageimage, followed by Commons
+per-image license check. Attribution and source retained in APK. Never claim
+image is an authoritative diagnostic species identification.
 """
-import html
-import json
-import os
-import re
-import sys
-import time
+from pathlib import Path
 import urllib.parse
 import urllib.request
 import urllib.error
-from pathlib import Path
+import json
+import re
+import html
+import time
+import os
 
 ROOT=Path(__file__).resolve().parent
 PLANTS=ROOT/"app/src/main/java/org/afetatlas/offline/Plants.java"
-ASSETS=ROOT/"app/src/main/assets/plant_photos"
-ASSETS.mkdir(parents=True,exist_ok=True)
-UA="HayattaKalmaAtlasi/0.3 (offline educational image attribution; GitHub emress2525/GunumPlanner)"
-body=PLANTS.read_text(encoding="utf-8")
-items=re.findall(r'new Species\("([^"]+)",\s*"([^"]+)"',body)
-if len(items)<47:
-    raise SystemExit("Expected 47 unique botanical names; read "+str(len(items)))
-API="https://commons.wikimedia.org/w/api.php"
-LICENSES=("cc-by","cc0","public domain","public-domain","pd-")
+OUTPUT=ROOT/"app/src/main/assets/plant_photos"
+OUTPUT.mkdir(parents=True,exist_ok=True)
+UA="HayattaKalmaAtlasi/0.4 (+https://github.com/emress2525/GunumPlanner; attribution-only offline educational thumbnails)"
+plants=re.findall(r'new Species\("([^"]+)",\s*"([^"]+)"',PLANTS.read_text(encoding="utf-8"))
+if len(plants)!=47:
+    raise SystemExit(f"Plant catalogue mismatch: {len(plants)} expected 47")
+def page_title(name):
+    if " spp." in name: return name.split()[0]
+    if " agg." in name: return name.split()[0]+" "+name.split()[1]
+    return name.strip()
 
-def getjson(url):
+def striphtml(value):
+    value=re.sub(r'<[^>]*>',' ',value or "")
+    return " ".join(html.unescape(value).split())[:350]
+
+def api(endpoint, params, retries=3):
+    url=endpoint+"?"+urllib.parse.urlencode(params)
     req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/json"})
-    for attempt in range(4):
+    for attempt in range(retries):
         try:
-            with urllib.request.urlopen(req,timeout=30) as r:
-                return json.loads(r.read(4_000_000).decode("utf-8"))
-        except urllib.error.HTTPError as ex:
-            if ex.code!=429 or attempt==3: raise
-            wait=10*(attempt+1)
-            print("Commons rate limit; waiting",wait,"seconds",flush=True)
+            with urllib.request.urlopen(req,timeout=45) as res:
+                return json.loads(res.read(10_000_000).decode('utf-8'))
+        except urllib.error.HTTPError as exc:
+            if exc.code!=429 or attempt+1==retries: raise
+            wait=(attempt+1)*15
+            print("API throttle; sleeping",wait,flush=True)
             time.sleep(wait)
 
-def fetch(url,limit=900_000):
+def batches(collection, n=40):
+    for i in range(0,len(collection),n):yield collection[i:i+n]
+
+titles=sorted(set(page_title(scientific) for common,scientific in plants))
+photoByArticle={}
+for batch in batches(titles,40):
+    results=api("https://en.wikipedia.org/w/api.php",{
+        "action":"query","format":"json","redirects":"1",
+        "titles":"|".join(batch),"prop":"pageimages","piprop":"original"
+    })
+    for obj in results.get("query",{}).get("pages",{}).values():
+        photo=obj.get("pageimage")
+        if photo:photoByArticle[obj["title"].lower()]=photo
+print("Wikipedia species/genus pageimages",len(photoByArticle),"/",len(titles),flush=True)
+fileTitles=sorted(set("File:"+x for x in photoByArticle.values()))
+metaByFile={}
+for batch in batches(fileTitles,38):
+    results=api("https://commons.wikimedia.org/w/api.php",{
+        "action":"query","format":"json","titles":"|".join(batch),
+        "prop":"imageinfo","iiprop":"url|extmetadata","iiurlwidth":"720"
+    })
+    for obj in results.get("query",{}).get("pages",{}).values():
+        data=obj.get("imageinfo") or []
+        if data:metaByFile[obj["title"].lower()]=data[0]
+print("Commons image records",len(metaByFile),"/",len(fileTitles),flush=True)
+
+def licensed(item):
+    ext=item.get('extmetadata') or {}
+    lic=striphtml(ext.get("LicenseShortName",{}).get("value",""))
+    usage=striphtml(ext.get("UsageTerms",{}).get("value",""))
+    s=(lic+" "+usage).lower()
+    accepted=any(t in s for t in ("cc-by","cc0","public domain","public-domain"))
+    return accepted,lic,ext
+def download(url,max_bytes=1_500_000):
     req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"image/jpeg,image/png,*/*"})
-    for attempt in range(4):
+    for i in range(3):
         try:
-            with urllib.request.urlopen(req,timeout=30) as r:
-                data=r.read(limit+1)
-            break
-        except urllib.error.HTTPError as ex:
-            if ex.code!=429 or attempt==3: raise
-            wait=10*(attempt+1)
-            print("Image rate limit; waiting",wait,"seconds",flush=True)
-            time.sleep(wait)
-    if len(data)>limit: raise ValueError("Thumbnail oversized")
-    if data[:3]!=b"\xff\xd8\xff" and data[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError("Image not JPEG/PNG")
-    return data
+            with urllib.request.urlopen(req,timeout=45) as res:
+                body=res.read(max_bytes+1)
+            if len(body)>max_bytes:raise ValueError("Thumbnail too large")
+            if body.startswith(b'\xff\xd8\xff'):return body,".jpg"
+            if body.startswith(b'\x89PNG\r\n\x1a\n'):return body,".png"
+            raise ValueError("Unknown image format")
+        except urllib.error.HTTPError as exc:
+            if exc.code!=429 or i==2:raise
+            time.sleep(10*(i+1))
 
-def clean(s):
-    s=re.sub(r'<[^>]+>',' ',s or "")
-    s=html.unescape(s)
-    return " ".join(s.split())[:350]
-
-out={}
-for idx,(turkish,scientific) in enumerate(items,1):
-    # Prefer a filename containing BOTH Latin genus and species, never category-level stock photos.
-    binomial=scientific.split(" spp.")[0].replace(" agg.","")
-    parts=binomial.split()
-    genus=parts[0]
-    species=parts[1] if len(parts)>=2 else None
-    if scientific.endswith("spp."):
-        species=None
-    query="filetype:bitmap "+genus+(" "+species if species else "")
-    params={
-       "action":"query","format":"json","generator":"search",
-       "gsrsearch":query,"gsrnamespace":"6","gsrlimit":"30",
-       "prop":"imageinfo","iiprop":"url|extmetadata","iiurlwidth":"720"
-    }
-    url=API+"?"+urllib.parse.urlencode(params)
+found={}
+for idx,(common,scientific) in enumerate(plants,1):
+    article=page_title(scientific)
+    image=photoByArticle.get(article.lower())
+    if not image:
+        print("NO_PAGEIMAGE",idx,scientific,flush=True)
+        continue
+    ii=metaByFile.get(("File:"+image).lower())
+    if not ii:
+        print("NO_COMMONS_METADATA",idx,scientific,flush=True)
+        continue
+    allowed,lic,ext=licensed(ii)
+    if not allowed:
+        print("LICENSE_NOT_ALLOWED",idx,scientific,lic,flush=True)
+        continue
+    uri=ii.get("thumburl") or ii.get("url")
+    if not uri:
+        print("IMAGE_URL_MISSING",idx,scientific,flush=True)
+        continue
     try:
-        pages=list(getjson(url).get("query",{}).get("pages",{}).values())
-        def score(p):
-            name=p.get("title","").lower()
-            return 0 if genus.lower() in name and (not species or species.lower() in name) else 1
-        pages.sort(key=score)
-        selected=None
-        for page in pages:
-            title=page.get("title","")
-            lt=title.lower().replace("_"," ")
-            if genus.lower() not in lt or (species and species.lower() not in lt):
-                continue
-            ii=(page.get("imageinfo") or [{}])[0]
-            url=ii.get("thumburl") or ii.get("url")
-            meta=ii.get("extmetadata") or {}
-            license_short=clean(meta.get("LicenseShortName",{}).get("value","")).lower()
-            usage=clean(meta.get("UsageTerms",{}).get("value","")).lower()
-            if not any(term in license_short or term in usage for term in LICENSES): continue
-            if not url or not (".jpg" in url.lower() or ".jpeg" in url.lower() or ".png" in url.lower()):
-                continue
-            author=clean(meta.get("Artist",{}).get("value","")) or "Wikimedia Commons katkıda bulunanları"
-            data=fetch(url)
-            ext=".png" if data.startswith(b"\x89PNG") else ".jpg"
-            filename="plant_%02d"%idx+ext
-            (ASSETS/filename).write_bytes(data)
-            selected={
-                "filename":filename,
-                "scientific":scientific,
-                "common":turkish,
-                "source":"https://commons.wikimedia.org/wiki/"+urllib.parse.quote(title.replace(" ","_")),
-                "license":clean(meta.get("LicenseShortName",{}).get("value","")),
-                "license_url":clean(meta.get("LicenseUrl",{}).get("value","")),
-                "author":author,
-                "note":("Wikimedia cins düzeyinde örnek fotoğrafı; TÜRE AİT KESİN GÖRSEL DEĞİLDİR." if not species else "Wikimedia fotoğrafı; tür teşhisi için güvenli dayanak değildir.")
-            }
-            break
-        if selected:
-            out[scientific]=selected
-            print("PHOTO",idx,scientific,selected["license"],flush=True)
-        else:
-            print("NO LICENSED EXACT-TITLE PHOTO",idx,scientific,flush=True)
+        data,extension=download(uri)
+        filename="plant_%02d"%idx+extension
+        (OUTPUT/filename).write_bytes(data)
+        title="File:"+image
+        found[scientific]={
+            "filename":filename,
+            "common":common,
+            "scientific":scientific,
+            "source":"https://commons.wikimedia.org/wiki/"+urllib.parse.quote(title.replace(" ","_")),
+            "license":lic,
+            "license_url":striphtml(ext.get("LicenseUrl",{}).get("value","")),
+            "author":striphtml(ext.get("Artist",{}).get("value","")) or "Wikimedia Commons",
+            "note":("Cins düzeyinde TEMSİLİ görüntü; tür teşhisi değildir" if (" spp." in scientific)
+                else "Makale fotoğrafı; fotoğrafa bakarak tür teşhisi güvenli değildir")
+        }
+        print("PHOTO_OK",idx,scientific,lic,flush=True)
     except Exception as exc:
-        print("UNAVAILABLE",idx,scientific,str(exc),flush=True)
-    time.sleep(2.25)
-
-(ASSETS/"photo_metadata.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
-print("LICENSED_PHOTOS",len(out),"/",len(items),flush=True)
-if len(out)<12:
-    raise SystemExit("Too few properly licensed species-labelled photos; blocking release")
+        print("PHOTO_UNAVAILABLE",idx,scientific,str(exc),flush=True)
+    time.sleep(1.0)
+(OUTPUT/"photo_metadata.json").write_text(json.dumps(found,ensure_ascii=False,indent=2),encoding="utf-8")
+print("LICENSED_PHOTOS",len(found),"/",len(plants),flush=True)
+if len(found)<12:raise SystemExit("Not enough license-confirmed photos, build blocked")
