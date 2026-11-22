@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# BRouter 1.7.8 uses lookups.dat version 10, matching rd5 tiles in use.
+# BRouter 1.7.10 uses lookups.dat version 11, matching 2026 rd5 routing tiles.
 # Upstream BRouter source and profiles are MIT licensed.
-SHA="041488b36c761ff2dd0fd71c1538b646364223ea"
+SHA="4d2639af77ea5ed9c30d3e400764eb6f9e8522da"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENDOR="$SCRIPT_DIR/vendor/brouter"
 if [ ! -f "$VENDOR/LICENSE" ]; then
@@ -22,4 +22,4 @@ for f in lookups.dat trekking.brf car-vario.brf hiking-mountain.brf; do
 done
 mkdir -p "$SCRIPT_DIR/app/src/main/assets/licenses"
 cp "$VENDOR/LICENSE" "$SCRIPT_DIR/app/src/main/assets/licenses/BRouter-LICENSE.txt"
-echo "Pinned BRouter engine $SHA with v10 routing profiles"
+echo "Pinned BRouter engine $SHA with v11 routing profiles"
