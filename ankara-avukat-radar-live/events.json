@@ -1,93 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T12:43:03",
-  "event_count": 30,
+  "generated_at": "2026-11-22T12:38:24",
+  "event_count": 29,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 2,
-      "ms": 1415
+      "ms": 1416
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1481
+      "ms": 1449
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
-      "events": 1,
-      "ms": 13975
+      "events": 0,
+      "ms": 10982
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
       "events": 4,
-      "ms": 9206
+      "ms": 8830
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1011)')))",
-      "ms": 510
+      "ms": 346
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 0,
-      "ms": 8531
+      "ms": 7613
     }
   ],
   "events": [
-    {
-      "id": "7d5fc0b8922b5e46",
-      "title": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı!",
-      "description": "Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! | Ankara Kalkınma Ajansı Ana içeriğe atla tr en Themes Teknoloji Girişimciliği ve Ticarileşme Yeni Nesil Kırsal Kalkınma Sosyal Yenilik ve Sosyal Kalkınma Ankara'da Yatırım Bize Ulaşın Kalkınma Ajansları Genel Müdürlüğü Hakkımızda Kalkınma Ajansları Hakkında Destekler Strateji ve Planlama Etkinlikler Haberler Duyurular İhale İlanları Anket Merkezi Bütçe Uygulama Sonuçları Bize Ulaşın Menü Genç Ticaret Elçileri 11. Dönem Eğitim Programı Başvuruları Başladı! Etkinlik Hakkında 17 Ekim 2026 10:00 - 21 Kasım 2026 17:00 Ankara Kalkınma Ajansı koordinasyonunda, Genç MÜSİAD Ankara ve OSTİM Teknik Üniversitesi iş birliğinde gerçekleştirilen Genç Ticaret Elçileri 11. Dönem Eğitim Programı için başvurular başladı! Kimler Başvurabilir? Türkiye’de lisans, yüksek lisans veya doktora düzeyinde öğrenim gören uluslararası öğrenciler programa başvurabilir. Kontenjanla sınırlı olan programa başvurular 5 Ekim Pazartesi günü saat 18.00’e kadar alınacaktır. Başvuruların değerlendirilmesinin ardından uygun bulunan adaylar mülakata davet edilecek , mülakat sonucunda programa kabul edilen adaylara e-posta yoluyla bilgi verilecektir. Programın Amacı Genç Ticaret Elçileri Programı ile Türkiye ile öğrencilerin ülkeleri arasındaki ekonomik ve ticari ilişkilerin geliştirilmesine katkı sağlayabilecek uluslararası öğrencilerin desteklenmesi amaçlanmaktadır. Programı tamamlayarak ülkelerine dönecek öğrencilerin, Türkiye’nin dış ticaret ilişkilerinin geliştirilmesine katkı sunabilecek gönüllü ticaret elçileri olarak yetiştirilmesi hedeflen",
-      "starts_at": "2026-11-21T10:00:00",
-      "ends_at": "2026-11-21T17:00:00",
-      "venue": "OSTİM",
-      "district": "Yenimahalle",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Kalkınma Ajansı",
-      "source_name": "Ankara Kalkınma Ajansı",
-      "source_url": "https://ankaraka.org.tr/genc-ticaret-elcileri-11-donem-egitim-programi-basvurulari-basladi",
-      "verified": true,
-      "source_confidence": 98,
-      "categories": [
-        "yatırım",
-        "startup",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "ihracatçılar"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 98,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "37cb365a00196693",
       "title": "TİCARET BAKANLIĞI İHRACAT SÜREÇLERİ VE DEVLET DESTEKLERİ EĞİTİM PROGRAMI",
