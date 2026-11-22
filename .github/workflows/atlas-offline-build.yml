@@ -26,6 +26,8 @@ jobs:
           SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$SDKM" ]; then SDKM="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -1)"; fi
           "$SDKM" "platforms;android-35" "build-tools;35.0.0"
+      - name: Prepare pinned BRouter engine and routing profiles
+        run: bash atlas/prepare-brouter.sh
       - name: Build APK
         run: gradle -p atlas :app:assembleDebug --stacktrace
       - name: Verify APK archive
