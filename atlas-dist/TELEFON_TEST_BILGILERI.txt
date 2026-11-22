@@ -1,0 +1,6 @@
+Hayatta Kalma Atlası - Telefon Testi v0.4.0
+273 cevrimdisi rehber, 47 lisansli bitki fotografi, 10 sessiz egitim videosu, offline BRouter ve Mapsforge harita altyapisi.
+Tum Turkiye Mapsforge .map dosyasi (~570 MB) ilk kurulumda ayrica indirilmelidir.
+BRouter rd5 yol agi dosyalari da ilk rota hesaplamasinda internet gerektirir.
+Bu bir deneme APK dosyasidir. Saglik egitiminin veya guncel resmi acil durum talimatlarinin yerine gecmez.
+Test sirasinda uygulamanin Test/Hata sekmesinden raporu kopyalayip ChatGPT sohbete yapistirin.
