@@ -116,6 +116,7 @@ public class MainActivity extends Activity {
         Button visuals=button("Görsel Rehber");
         Button plants=button("47 Bitki");
         Button videos=button("10 Video");
+        Button sources=button("Kaynaklar");
         Button saved=button("Noktalar");
         Button gpx=button("GPX İz");
         Button saveCenter=button("Merkezi Kaydet");
@@ -129,6 +130,7 @@ public class MainActivity extends Activity {
         extraTools.addView(visuals,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(plants,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(videos,new LinearLayout.LayoutParams(dp(110),dp(49)));
+        extraTools.addView(sources,new LinearLayout.LayoutParams(dp(112),dp(49)));
         extraTools.addView(saved,new LinearLayout.LayoutParams(dp(114),dp(49)));
         extraTools.addView(gpx,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(saveCenter,new LinearLayout.LayoutParams(dp(143),dp(49)));
@@ -144,6 +146,7 @@ public class MainActivity extends Activity {
         visuals.setOnClickListener(v->showExtra(VisualGuides.screen(this)));
         plants.setOnClickListener(v->showExtra(Plants.screen(this)));
         videos.setOnClickListener(v->showExtra(EducationalVideos.screen(this)));
+        sources.setOnClickListener(v->showExtra(Sources.screen(this)));
         saved.setOnClickListener(v->showExtra(SavedPlaces.screen(this,(place,name)->{
             routeEnd=place;
             routeDestinationName=name;
