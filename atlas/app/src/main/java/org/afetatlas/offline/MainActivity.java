@@ -92,10 +92,13 @@ public class MainActivity extends Activity {
         top.setBackgroundColor(0xff12283c);
         Button guide = button("Rehber");
         Button map = button("Türkiye Haritası");
+        Button test=button("Test / Hata");
         top.addView(guide, new LinearLayout.LayoutParams(0, dp(48), 1));
         top.addView(map, new LinearLayout.LayoutParams(0, dp(48), 1.2f));
+        top.addView(test, new LinearLayout.LayoutParams(0, dp(48), .96f));
         guide.setOnClickListener(v -> showGuides());
         map.setOnClickListener(v -> showMapOrImport());
+        test.setOnClickListener(v -> showExtra(TestDiagnostics.screen(this)));
         root.addView(top);
         LinearLayout extras=new LinearLayout(this);
         extras.setBackgroundColor(0xffdce7ec);
@@ -442,15 +445,15 @@ public class MainActivity extends Activity {
         if(mapDownloadBusy){setStatus("Harita indiriliyor veya çıkarılıyor. Lütfen bekle.");return;}
         new AlertDialog.Builder(this)
          .setTitle("Türkiye çevrimdışı haritası")
-         .setMessage("Harita yaklaşık 450 MB'tır. Bir kez indirildikten sonra internet olmadan çalışır. Mobil veri yerine Wi-Fi önerilir. Telefonda yaklaşık 1 GB boş yer ayır.")
+         .setMessage("Harita ZIP indirmesi yaklaşık 450 MB, açılmış harita yaklaşık 570 MB. Bir kere yüklendikten sonra internetsiz çalışır. Wi-Fi kullan ve telefonda en az 1 GB boş alan bırak.")
          .setPositiveButton("Haritayı indir",(dialog,which)->downloadMap())
          .setNeutralButton("Telefondan ZIP / .map seç",(dialog,which)->pickMap())
          .setNegativeButton("İptal",null).show();
     }
     private void downloadMap(){
         if(mapDownloadBusy)return;
-        if(getFilesDir().getUsableSpace()<550L*1024*1024){
-            setStatus("Yeterli alan yok: harita için en az 550 MB boş alan gerekiyor.");
+        if(getFilesDir().getUsableSpace()<900L*1024*1024){
+            setStatus("Yeterli alan yok: harita indirme ve açma için en az 900 MB boş alan gerekiyor.");
             return;
         }
         mapDownloadBusy=true;
