@@ -124,6 +124,7 @@ public class MainActivity extends Activity {
         Button start=button("Başlangıç");
         Button destination=button("Hedef");
         Button route=button("Rota Hesapla");
+        Button turns=button("Dönüşler");
         Button routeData=button("Rota Verisi");
         extraTools.addView(flows,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(notebook,new LinearLayout.LayoutParams(dp(125),dp(49)));
@@ -138,6 +139,7 @@ public class MainActivity extends Activity {
         extraTools.addView(start,new LinearLayout.LayoutParams(dp(122),dp(49)));
         extraTools.addView(destination,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(route,new LinearLayout.LayoutParams(dp(134),dp(49)));
+        extraTools.addView(turns,new LinearLayout.LayoutParams(dp(113),dp(49)));
         extraTools.addView(routeData,new LinearLayout.LayoutParams(dp(113),dp(49)));
         toolsStrip.addView(extraTools);
         root.addView(toolsStrip);
@@ -170,6 +172,17 @@ public class MainActivity extends Activity {
         start.setOnClickListener(v->selectRoutePoint(true));
         destination.setOnClickListener(v->selectRoutePoint(false));
         route.setOnClickListener(v->chooseRoutingMode());
+        turns.setOnClickListener(v->showExtra(RouteInstructions.screen(this,(point,direction)->{
+            if(!mapFile.exists()){setStatus("Önce harita ZIP'ini yükle.");showMapSetup();return;}
+            targetDistrict=null;
+            showMapOrImport();
+            if(mapView!=null){
+                mapView.setCenter(point);
+                mapView.setZoomLevel((byte)16);
+                showPin(point.latitude,point.longitude);
+                setStatus("Dönüş: "+direction);
+            }
+        })));
         routeData.setOnClickListener(v->new AlertDialog.Builder(this)
             .setTitle("Türkiye çevrimdışı rota verisi")
             .setMessage("BRouter için ayrıca 5°x5° yol ağı dosyaları gerekir. Türkiye çevresindeki 10 parça Wi-Fi ile indirilir ve telefonda saklanır. Büyük veri kullanımı ve depolama alanı gerektirir. Mapsforge haritasından ayrıdır.")
