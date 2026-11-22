@@ -11,6 +11,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+import urllib.error
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
@@ -27,13 +28,28 @@ LICENSES=("cc-by","cc0","public domain","public-domain","pd-")
 
 def getjson(url):
     req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"application/json"})
-    with urllib.request.urlopen(req,timeout=30) as r:
-        return json.loads(r.read(2_000_000).decode("utf-8"))
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req,timeout=30) as r:
+                return json.loads(r.read(4_000_000).decode("utf-8"))
+        except urllib.error.HTTPError as ex:
+            if ex.code!=429 or attempt==3: raise
+            wait=10*(attempt+1)
+            print("Commons rate limit; waiting",wait,"seconds",flush=True)
+            time.sleep(wait)
 
 def fetch(url,limit=900_000):
-    req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"image/webp,image/jpeg,image/png,*/*"})
-    with urllib.request.urlopen(req,timeout=30) as r:
-        data=r.read(limit+1)
+    req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"image/jpeg,image/png,*/*"})
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req,timeout=30) as r:
+                data=r.read(limit+1)
+            break
+        except urllib.error.HTTPError as ex:
+            if ex.code!=429 or attempt==3: raise
+            wait=10*(attempt+1)
+            print("Image rate limit; waiting",wait,"seconds",flush=True)
+            time.sleep(wait)
     if len(data)>limit: raise ValueError("Thumbnail oversized")
     if data[:3]!=b"\xff\xd8\xff" and data[:8]!=b"\x89PNG\r\n\x1a\n":raise ValueError("Image not JPEG/PNG")
     return data
@@ -48,14 +64,14 @@ for idx,(turkish,scientific) in enumerate(items,1):
     # Prefer a filename containing BOTH Latin genus and species, never category-level stock photos.
     binomial=scientific.split(" spp.")[0].replace(" agg.","")
     parts=binomial.split()
-    if len(parts)<2:
-        print("SKIP broad taxon",scientific,flush=True)
-        continue
-    genus,species=parts[:2]
-    query="filetype:bitmap "+genus+" "+species
+    genus=parts[0]
+    species=parts[1] if len(parts)>=2 else None
+    if scientific.endswith("spp."):
+        species=None
+    query="filetype:bitmap "+genus+(" "+species if species else "")
     params={
        "action":"query","format":"json","generator":"search",
-       "gsrsearch":query,"gsrnamespace":"6","gsrlimit":"15",
+       "gsrsearch":query,"gsrnamespace":"6","gsrlimit":"30",
        "prop":"imageinfo","iiprop":"url|extmetadata","iiurlwidth":"720"
     }
     url=API+"?"+urllib.parse.urlencode(params)
@@ -63,13 +79,13 @@ for idx,(turkish,scientific) in enumerate(items,1):
         pages=list(getjson(url).get("query",{}).get("pages",{}).values())
         def score(p):
             name=p.get("title","").lower()
-            return 0 if genus.lower() in name and species.lower() in name else 1
+            return 0 if genus.lower() in name and (not species or species.lower() in name) else 1
         pages.sort(key=score)
         selected=None
         for page in pages:
             title=page.get("title","")
             lt=title.lower().replace("_"," ")
-            if genus.lower() not in lt or species.lower() not in lt:
+            if genus.lower() not in lt or (species and species.lower() not in lt):
                 continue
             ii=(page.get("imageinfo") or [{}])[0]
             url=ii.get("thumburl") or ii.get("url")
@@ -92,7 +108,7 @@ for idx,(turkish,scientific) in enumerate(items,1):
                 "license":clean(meta.get("LicenseShortName",{}).get("value","")),
                 "license_url":clean(meta.get("LicenseUrl",{}).get("value","")),
                 "author":author,
-                "note":"Wikimedia fotoğrafı; tür teşhisi için güvenli dayanak değildir."
+                "note":("Wikimedia cins düzeyinde örnek fotoğrafı; TÜRE AİT KESİN GÖRSEL DEĞİLDİR." if not species else "Wikimedia fotoğrafı; tür teşhisi için güvenli dayanak değildir.")
             }
             break
         if selected:
@@ -102,7 +118,7 @@ for idx,(turkish,scientific) in enumerate(items,1):
             print("NO LICENSED EXACT-TITLE PHOTO",idx,scientific,flush=True)
     except Exception as exc:
         print("UNAVAILABLE",idx,scientific,str(exc),flush=True)
-    time.sleep(.13)
+    time.sleep(2.25)
 
 (ASSETS/"photo_metadata.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
 print("LICENSED_PHOTOS",len(out),"/",len(items),flush=True)
