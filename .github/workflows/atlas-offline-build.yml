@@ -1,10 +1,10 @@
 name: Afet Atlasi Offline APK
 on:
   push:
-    branches: [atlas-offline-maps-build]
+    branches: [atlas-offline-maps-build, atlas-integrations-review]
   workflow_dispatch:
 concurrency:
-  group: atlas-offline-build
+  group: atlas-offline-build-${{ github.ref_name }}
   cancel-in-progress: true
 jobs:
   build:
@@ -55,6 +55,7 @@ jobs:
           unzip -t atlas/app/build/outputs/apk/debug/app-debug.apk | tail -1
           sha256sum atlas/app/build/outputs/apk/debug/app-debug.apk
       - name: Publish direct APK on isolated branch
+        if: github.ref == 'refs/heads/atlas-offline-maps-build'
         run: |
           mkdir -p atlas-dist
           cp atlas/app/build/outputs/apk/debug/app-debug.apk atlas-dist/Afet_Atlasi_Harita_Deneme.apk
