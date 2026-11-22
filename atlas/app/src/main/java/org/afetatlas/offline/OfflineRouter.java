@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Set;
 
-/** Locally embedded BRouter 1.7.8, MIT license, rd5 data format with lookup version 10.
+/** Locally embedded BRouter 1.7.10, MIT license, rd5 data format with lookup version 11.
  *  Core computes a candidate route on OSM roads/paths after routing segments are downloaded.
  *  A Mapsforge .map rendering file alone is NOT sufficient for offline routing.
  */
@@ -50,8 +50,8 @@ final class OfflineRouter {
             }
         }
         try(BufferedReader r=new BufferedReader(new InputStreamReader(new FileInputStream(new File(dir,"lookups.dat")),StandardCharsets.UTF_8))){
-            if(!"---lookupversion:10".equals(r.readLine()))
-                throw new IllegalStateException("Rota verisi sürümü uyumsuz: BRouter lookup v10 bekleniyor");
+            if(!"---lookupversion:11".equals(r.readLine()))
+                throw new IllegalStateException("Rota verisi sürümü uyumsuz: BRouter lookup v11 bekleniyor");
         }
     }
     static List<String> allTurkeyTiles(){
