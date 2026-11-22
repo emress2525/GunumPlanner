@@ -6,12 +6,23 @@ android {
         applicationId 'org.afetatlas.offline'
         minSdk 24
         targetSdk 34
-        versionCode 2
-        versionName '0.2-beta'
+        versionCode 3
+        versionName '0.3-router-test'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    sourceSets {
+        main {
+            java.srcDirs += [
+                file('../vendor/brouter/brouter-core/src/main/java'),
+                file('../vendor/brouter/brouter-mapaccess/src/main/java'),
+                file('../vendor/brouter/brouter-util/src/main/java'),
+                file('../vendor/brouter/brouter-expressions/src/main/java'),
+                file('../vendor/brouter/brouter-codec/src/main/java')
+            ]
+        }
     }
     buildTypes {
         release { minifyEnabled false }
