@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -97,18 +98,25 @@ public class MainActivity extends Activity {
         extras.addView(gps,new LinearLayout.LayoutParams(0,dp(50),0.8f));
         extras.addView(check,new LinearLayout.LayoutParams(0,dp(50),1.3f));
         root.addView(extras);
+        HorizontalScrollView toolsStrip=new HorizontalScrollView(this);
+        toolsStrip.setHorizontalScrollBarEnabled(false);
         LinearLayout extraTools=new LinearLayout(this);
+        extraTools.setOrientation(LinearLayout.HORIZONTAL);
         extraTools.setBackgroundColor(0xffe4edf1);
         Button flows=button("Acil Akışlar");
         Button notebook=button("Saha Defteri");
         Button visuals=button("Görsel Rehber");
-        extraTools.addView(flows,new LinearLayout.LayoutParams(0,dp(49),1));
-        extraTools.addView(notebook,new LinearLayout.LayoutParams(0,dp(49),1));
-        extraTools.addView(visuals,new LinearLayout.LayoutParams(0,dp(49),1));
-        root.addView(extraTools);
+        Button plants=button("47 Bitki");
+        extraTools.addView(flows,new LinearLayout.LayoutParams(dp(125),dp(49)));
+        extraTools.addView(notebook,new LinearLayout.LayoutParams(dp(125),dp(49)));
+        extraTools.addView(visuals,new LinearLayout.LayoutParams(dp(125),dp(49)));
+        extraTools.addView(plants,new LinearLayout.LayoutParams(dp(105),dp(49)));
+        toolsStrip.addView(extraTools);
+        root.addView(toolsStrip);
         flows.setOnClickListener(v->showExtra(DecisionFlows.menu(this)));
         notebook.setOnClickListener(v->showExtra(FieldNotebook.screen(this)));
         visuals.setOnClickListener(v->showExtra(VisualGuides.screen(this)));
+        plants.setOnClickListener(v->showExtra(Plants.screen(this)));
         places.setOnClickListener(v->Cities.pick(this,p->{
             targetDistrict=p;
             if(!mapFile.exists()){
