@@ -30,6 +30,14 @@ jobs:
         run: bash atlas/prepare-brouter.sh
       - name: Collect licensed offline plant images from Wikimedia Commons
         run: python3 atlas/prepare-plant-images.py
+      - name: Render ten original offline instructional MP4 clips
+        run: python3 atlas/prepare-videos.py
+      - name: Validate offline video archive count
+        run: |
+          test "$(find atlas/app/src/main/assets/educational_videos -name '*.mp4' | wc -l)" -eq 10
+          for f in atlas/app/src/main/assets/educational_videos/*.mp4; do
+            ffprobe -v error -show_entries format=duration -of default=nw=1 "$f" | grep -q duration
+          done
       - name: Build APK
         run: gradle -p atlas :app:assembleDebug --stacktrace
       - name: Calculate three genuine offline Ankara road routes
