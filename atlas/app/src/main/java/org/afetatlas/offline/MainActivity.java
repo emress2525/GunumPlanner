@@ -27,10 +27,12 @@ import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.layer.overlay.Marker;
+import org.mapsforge.map.layer.overlay.Polyline;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.net.URL;
@@ -42,6 +44,7 @@ import java.util.zip.ZipInputStream;
 
 public class MainActivity extends Activity {
     private static final int SELECT_MAP = 101;
+    private static final int SELECT_GPX = 106;
     private final String[] topics = {
         "Şiddetli kanama", "Bilinç kaybı ve solunum", "Yanık", "Kırık şüphesi",
         "Deprem", "Sel", "Orman yangını", "Hipotermi", "Sıcak çarpması",
@@ -66,6 +69,7 @@ public class MainActivity extends Activity {
     private TextView status;
     private MapView mapView;
     private Marker positionMarker;
+    private Polyline importedTrackLine;
     private boolean showingMap;
     private File mapFile;
     private Cities.Point targetDistrict;
@@ -107,16 +111,37 @@ public class MainActivity extends Activity {
         Button notebook=button("Saha Defteri");
         Button visuals=button("Görsel Rehber");
         Button plants=button("47 Bitki");
+        Button saved=button("Noktalar");
+        Button gpx=button("GPX İz");
+        Button saveCenter=button("Merkezi Kaydet");
         extraTools.addView(flows,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(notebook,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(visuals,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(plants,new LinearLayout.LayoutParams(dp(105),dp(49)));
+        extraTools.addView(saved,new LinearLayout.LayoutParams(dp(114),dp(49)));
+        extraTools.addView(gpx,new LinearLayout.LayoutParams(dp(105),dp(49)));
+        extraTools.addView(saveCenter,new LinearLayout.LayoutParams(dp(143),dp(49)));
         toolsStrip.addView(extraTools);
         root.addView(toolsStrip);
         flows.setOnClickListener(v->showExtra(DecisionFlows.menu(this)));
         notebook.setOnClickListener(v->showExtra(FieldNotebook.screen(this)));
         visuals.setOnClickListener(v->showExtra(VisualGuides.screen(this)));
         plants.setOnClickListener(v->showExtra(Plants.screen(this)));
+        saved.setOnClickListener(v->showExtra(SavedPlaces.screen(this,(place,name)->{
+            targetDistrict=null;
+            showMapOrImport();
+            if(mapView!=null){
+                mapView.setCenter(place);
+                mapView.setZoomLevel((byte)14);
+                showPin(place.latitude,place.longitude);
+                setStatus("Kayıtlı nokta: "+name);
+            }
+        })));
+        gpx.setOnClickListener(v->pickGpx());
+        saveCenter.setOnClickListener(v->{
+            if(mapView==null){setStatus("Önce haritayı aç ve kaydedeceğin noktayı merkezle.");return;}
+            SavedPlaces.addAt(this,mapView.getModel().mapViewPosition.getCenter());
+        });
         places.setOnClickListener(v->Cities.pick(this,p->{
             targetDistrict=p;
             if(!mapFile.exists()){
@@ -159,6 +184,7 @@ public class MainActivity extends Activity {
         }
         showingMap = false;
         positionMarker=null;
+        importedTrackLine=null;
     }
     private void showPin(double lat,double lon){
         if(mapView==null)return;
@@ -252,6 +278,7 @@ public class MainActivity extends Activity {
                 showPin(targetDistrict.latitude,targetDistrict.longitude);
             }
             showingMap = true;
+            drawImportedTrack();
             setStatus(targetDistrict==null?"Türkiye haritası cihazdan yükleniyor; internet gerekli değil.":targetDistrict.city+" / "+targetDistrict.district+" • yaklaşık ilçe koordinatı");
         } catch (Exception e) {
             closeMap(); content.removeAllViews();
@@ -314,6 +341,51 @@ public class MainActivity extends Activity {
             }
         }).start();
     }
+    private void pickGpx(){
+        Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("*/*");
+        startActivityForResult(i,SELECT_GPX);
+    }
+    private void importGpx(Uri uri){
+        File temp=new File(getFilesDir(),"imported_track.part");
+        try {
+            long bytes=0;
+            try(InputStream in=getContentResolver().openInputStream(uri);
+                OutputStream out=new FileOutputStream(temp)){
+                if(in==null)throw new IllegalArgumentException("GPX dosyasına erişilemedi");
+                byte[] buff=new byte[32768];int count;
+                while((count=in.read(buff))!=-1){
+                    bytes+=count;
+                    if(bytes>GPXTracks.MAX_BYTES)throw new IllegalArgumentException("GPX 20 MB sınırını aşıyor");
+                    out.write(buff,0,count);
+                }
+            }
+            GPXTracks.Track data=GPXTracks.parse(temp);
+            File target=GPXTracks.target(this);
+            if(target.exists()&&!target.delete())throw new IllegalStateException("Eski iz kaldırılamadı");
+            if(!temp.renameTo(target))throw new IllegalStateException("İz saklanamadı");
+            runOnUiThread(()->{
+                if(!mapFile.exists()){setStatus("GPX kaydedildi ("+String.format(Locale.US,"%.1f",data.lengthKm)+" km). Harita yükledikten sonra gösterilecek.");showMapSetup();}
+                else {targetDistrict=null;showMapOrImport();}
+            });
+        }catch(Exception e){runOnUiThread(()->setStatus("GPX hatası: "+e.getMessage()));}
+        finally{temp.delete();}
+    }
+    private void drawImportedTrack(){
+        File target=GPXTracks.target(this);
+        if(mapView==null||!target.exists())return;
+        try{
+            GPXTracks.Track track=GPXTracks.parse(target);
+            importedTrackLine=GPXTracks.overlay(mapView,track);
+            if(targetDistrict==null){
+                mapView.setCenter(track.points.get(0));
+                mapView.setZoomLevel((byte)12);
+            }
+            setStatus("GPX iz görüntüleniyor: "+track.points.size()+" nokta / "+
+                String.format(Locale.US,"%.1f",track.lengthKm)+" km. Bu dosya önceden çizilmiş izdir; otomatik rota hesaplama değildir.");
+        }catch(Exception ex){setStatus("GPX açılamadı: "+ex.getMessage());}
+    }
     private void pickMap() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -322,6 +394,12 @@ public class MainActivity extends Activity {
     }
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_GPX && resultCode == RESULT_OK && data != null && data.getData()!=null){
+            final Uri uri=data.getData();
+            setStatus("GPX izi işleniyor...");
+            new Thread(()->importGpx(uri)).start();
+            return;
+        }
         if (requestCode == SELECT_MAP && resultCode == RESULT_OK && data != null && data.getData() != null) {
             final Uri uri = data.getData();
             setStatus("Dosya işleniyor. ZIP büyükse birkaç dakika sürebilir…");
