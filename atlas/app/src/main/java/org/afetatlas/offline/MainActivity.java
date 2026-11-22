@@ -118,6 +118,7 @@ public class MainActivity extends Activity {
         Button saved=button("Noktalar");
         Button gpx=button("GPX İz");
         Button saveCenter=button("Merkezi Kaydet");
+        Button searchDistrict=button("İlçe Ara");
         Button start=button("Başlangıç");
         Button destination=button("Hedef");
         Button route=button("Rota Hesapla");
@@ -129,6 +130,7 @@ public class MainActivity extends Activity {
         extraTools.addView(saved,new LinearLayout.LayoutParams(dp(114),dp(49)));
         extraTools.addView(gpx,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(saveCenter,new LinearLayout.LayoutParams(dp(143),dp(49)));
+        extraTools.addView(searchDistrict,new LinearLayout.LayoutParams(dp(108),dp(49)));
         extraTools.addView(start,new LinearLayout.LayoutParams(dp(122),dp(49)));
         extraTools.addView(destination,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(route,new LinearLayout.LayoutParams(dp(134),dp(49)));
@@ -152,6 +154,13 @@ public class MainActivity extends Activity {
             }
         })));
         gpx.setOnClickListener(v->pickGpx());
+        searchDistrict.setOnClickListener(v->Cities.search(this,p->{
+            targetDistrict=p;
+            routeEnd=new LatLong(p.latitude,p.longitude);
+            routeDestinationName=p.city+" / "+p.district;
+            if(mapFile.exists())showMapOrImport();
+            else {setStatus("İlçe seçildi: "+routeDestinationName);showMapSetup();}
+        }));
         start.setOnClickListener(v->selectRoutePoint(true));
         destination.setOnClickListener(v->selectRoutePoint(false));
         route.setOnClickListener(v->chooseRoutingMode());
