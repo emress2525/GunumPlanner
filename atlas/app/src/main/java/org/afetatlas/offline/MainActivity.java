@@ -1,6 +1,11 @@
 package org.afetatlas.offline;
 
 import android.app.Activity;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +29,7 @@ import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
@@ -56,6 +62,8 @@ public class MainActivity extends Activity {
     private MapView mapView;
     private boolean showingMap;
     private File mapFile;
+    private Cities.Point targetDistrict;
+    private static final int LOCATION_PERMISSION=105;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -74,6 +82,24 @@ public class MainActivity extends Activity {
         guide.setOnClickListener(v -> showGuides());
         map.setOnClickListener(v -> showMapOrImport());
         root.addView(top);
+        LinearLayout extras=new LinearLayout(this);
+        extras.setBackgroundColor(0xffdce7ec);
+        Button places=button("81 İl / İlçe");
+        Button gps=button("GPS");
+        Button check=button("Kontrol Listesi");
+        extras.addView(places,new LinearLayout.LayoutParams(0,dp(50),1.2f));
+        extras.addView(gps,new LinearLayout.LayoutParams(0,dp(50),0.8f));
+        extras.addView(check,new LinearLayout.LayoutParams(0,dp(50),1.3f));
+        root.addView(extras);
+        places.setOnClickListener(v->Cities.pick(this,p->{
+            targetDistrict=p;
+            if(!mapFile.exists()){
+                setStatus(p.city+" / "+p.district+" seçildi. Önce harita ZIP'ini yükle.");
+                pickMap();
+            }else showMapOrImport();
+        }));
+        gps.setOnClickListener(v->locate());
+        check.setOnClickListener(v->showChecklist());
         status = new TextView(this);
         status.setTextColor(0xff244055);
         status.setPadding(dp(14), dp(8), dp(14), dp(8));
@@ -108,20 +134,57 @@ public class MainActivity extends Activity {
         showingMap = false;
     }
     private void showGuides() {
-        closeMap(); content.removeAllViews();
-        ScrollView scroll = new ScrollView(this);
-        LinearLayout list = new LinearLayout(this);
-        list.setOrientation(LinearLayout.VERTICAL);
-        list.addView(paragraph("AFET ATLASI | Çevrimdışı Rehber", 20, 0xff12283c));
-        list.addView(paragraph("Bu sürüm harita altyapısının ilk bağımsız derlemesidir. Resmî acil yardım hattı: 112. Bilgiler eğitim amaçlıdır; profesyonel yardımın yerini almaz.", 14, 0xff555555));
-        for (int i=0; i<topics.length; i++) {
-            TextView heading = paragraph(topics[i], 17, 0xff123e55);
-            heading.setTypeface(null, 1);
-            list.addView(heading);
-            list.addView(paragraph(descriptions[i], 15, 0xff232323));
+        closeMap();
+        content.removeAllViews();
+        content.addView(AtlasPages.guides(this));
+    }
+    private void showChecklist(){
+        closeMap();
+        content.removeAllViews();
+        content.addView(AtlasPages.checklist(this));
+    }
+    private void locate(){
+        if(!mapFile.exists()){
+            setStatus("GPS için önce çevrimdışı haritayı yükle.");
+            pickMap(); return;
         }
-        scroll.addView(list);
-        content.addView(scroll);
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION);
+            return;
+        }
+        try{
+            LocationManager lm=(LocationManager)getSystemService(LOCATION_SERVICE);
+            Location location=lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location==null)location=lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(location!=null){goToLocation(location,"Son bilinen konum");return;}
+            if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                setStatus("Telefonun konum hizmetlerini aç.");return;
+            }
+            setStatus("GPS sinyali bekleniyor...");
+            lm.requestSingleUpdate(LocationManager.GPS_PROVIDER,new LocationListener(){
+                @Override public void onLocationChanged(Location location){goToLocation(location,"GPS konumu");}
+                @Override public void onStatusChanged(String provider,int status,Bundle extra){}
+                @Override public void onProviderEnabled(String provider){}
+                @Override public void onProviderDisabled(String provider){setStatus("GPS kapalı");}
+            },null);
+        }catch(Exception e){setStatus("GPS hatası: "+e.getMessage());}
+    }
+    private void goToLocation(Location location,String info){
+        targetDistrict=null;
+        if(mapView==null)showMapOrImport();
+        if(mapView!=null){
+            mapView.setCenter(new LatLong(location.getLatitude(),location.getLongitude()));
+            mapView.setZoomLevel((byte)15);
+            setStatus(info+": "+String.format(Locale.US,"%.5f, %.5f",location.getLatitude(),location.getLongitude())+
+                " (merkeze alındı; GPS işaretçisi yok)");
+        }
+    }
+    @Override public void onRequestPermissionsResult(int req,String[] perms,int[] grants){
+        super.onRequestPermissionsResult(req,perms,grants);
+        if(req==LOCATION_PERMISSION){
+            if(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED)locate();
+            else setStatus("Konum izni verilmedi.");
+        }
     }
     private void showMapOrImport() {
         if (!mapFile.exists() || mapFile.length() < 100000) {
@@ -144,8 +207,12 @@ public class MainActivity extends Activity {
             mapView.getLayerManager().getLayers().add(layer);
             mapView.setCenter(new LatLong(39.0, 35.0));
             mapView.setZoomLevel((byte) 6);
+            if(targetDistrict!=null){
+                mapView.setCenter(new LatLong(targetDistrict.latitude,targetDistrict.longitude));
+                mapView.setZoomLevel((byte)11);
+            }
             showingMap = true;
-            setStatus("Türkiye haritası cihazdan yükleniyor; internet gerekli değil.");
+            setStatus(targetDistrict==null?"Türkiye haritası cihazdan yükleniyor; internet gerekli değil.":targetDistrict.city+" / "+targetDistrict.district+" • yaklaşık ilçe koordinatı");
         } catch (Exception e) {
             closeMap(); content.removeAllViews();
             setStatus("Harita açılamadı: " + e.getMessage());
@@ -172,8 +239,13 @@ public class MainActivity extends Activity {
             String name = uri.getLastPathSegment();
             if (name == null) name = "";
             boolean zip = name.toLowerCase(Locale.ROOT).endsWith(".zip");
-            try (InputStream input = getContentResolver().openInputStream(uri)) {
-                if (input == null) throw new IllegalStateException("Dosya okunamadı");
+            try (InputStream inputOriginal = getContentResolver().openInputStream(uri)) {
+                if(inputOriginal==null)throw new IllegalStateException("Dosya okunamadı");
+                BufferedInputStream input=new BufferedInputStream(inputOriginal,128*1024);
+                input.mark(4);
+                int marker1=input.read(),marker2=input.read();
+                input.reset();
+                zip=zip||(marker1=='P'&&marker2=='K');
                 if (zip) {
                     try (ZipInputStream zis = new ZipInputStream(input)) {
                         ZipEntry entry;
