@@ -89,8 +89,7 @@ final class Plants {
        Button item=new Button(a);item.setAllCaps(false);item.setTextSize(14);
        item.setText((sp.risk==2?"☠ ":"⚠ ")+sp.name+"  /  "+sp.scientific);
        list.addView(item);shown++;
-       item.setOnClickListener(v->new AlertDialog.Builder(a).setTitle(sp.name+" ("+sp.scientific+")")
-         .setMessage("Görünüm / genel bilgi:\n"+sp.overview+"\n\nUyarı:\n"+sp.warning+"\n\nÇevrimdışı bilgi notudur; kesin tür teşhisi değildir. Tüketme, yaraya sürme ya da tedavi amacıyla kullanma.").setPositiveButton("Kapat",null).show());
+       item.setOnClickListener(v->PlantPhotos.show(a,sp));
     }
     if(shown==0){TextView none=new TextView(a);none.setText("Aramaya uygun bitki bulunamadı.");list.addView(none);}
   }
