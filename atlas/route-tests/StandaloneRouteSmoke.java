@@ -30,6 +30,7 @@ public final class StandaloneRouteSmoke {
             RoutingContext context=new RoutingContext();
             context.localFunction=new File(profiles,profile+".brf").getAbsolutePath();
             context.memoryclass=64;
+            context.turnInstructionMode=3; // OsmAnd GPX turn-instruction mode
             context.rawTrackPath=new File(segments,"test-"+profile+".dat").getAbsolutePath();
             RoutingEngine engine=new RoutingEngine(null,null,segments,wp,context);
             engine.quite=true;
@@ -39,8 +40,10 @@ public final class StandaloneRouteSmoke {
             OsmTrack track=engine.getFoundTrack();
             if(track==null)throw new IllegalStateException(profile+" returned null track");
             String gpx=new FormatGpx(context).format(track);
-            if(!gpx.contains("<trkpt")&&!gpx.contains("<rtept"))
+            if(!gpx.contains("<trkpt"))
                 throw new IllegalStateException(profile+" returned no track geometry");
+            if(!gpx.contains("<rtept")||!gpx.contains("<desc>"))
+                throw new IllegalStateException(profile+" emitted no local turn-instruction routepoints");
             System.out.println("ROUTING_OK profile="+profile+" gpxChars="+gpx.length());
         }
     }
