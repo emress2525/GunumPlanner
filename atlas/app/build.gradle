@@ -3,7 +3,7 @@ android {
     namespace 'org.afetatlas.offline'
     compileSdk 35
     defaultConfig {
-        applicationId 'org.afetatlas.offline'
+        applicationId 'org.afetatlas.offline.preview'
         minSdk 24
         targetSdk 34
         versionCode 4
