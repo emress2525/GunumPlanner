@@ -30,6 +30,15 @@ jobs:
         run: bash atlas/prepare-brouter.sh
       - name: Build APK
         run: gradle -p atlas :app:assembleDebug --stacktrace
+      - name: Calculate three genuine offline Ankara road routes
+        run: |
+          mkdir -p atlas/route-tests/fixtures/segments4 atlas/route-tests/classes
+          curl -fL --retry 3 --connect-timeout 30 --max-time 240             "https://brouter.de/brouter/segments4/E30_N35.rd5"             -o atlas/route-tests/fixtures/segments4/E30_N35.rd5
+          test "$(stat -c %s atlas/route-tests/fixtures/segments4/E30_N35.rd5)" -gt 1000000
+          find atlas/vendor/brouter/brouter-core/src/main/java                atlas/vendor/brouter/brouter-mapaccess/src/main/java                atlas/vendor/brouter/brouter-util/src/main/java                atlas/vendor/brouter/brouter-expressions/src/main/java                atlas/vendor/brouter/brouter-codec/src/main/java                -type f -name '*.java' -print > atlas/route-tests/sources.txt
+          echo atlas/route-tests/StandaloneRouteSmoke.java >> atlas/route-tests/sources.txt
+          javac -encoding UTF-8 -d atlas/route-tests/classes @atlas/route-tests/sources.txt
+          java -Xmx1024m -cp atlas/route-tests/classes StandaloneRouteSmoke             atlas/route-tests/fixtures/segments4 atlas/app/src/main/assets/brouter
       - name: Verify APK archive
         run: |
           test -s atlas/app/build/outputs/apk/debug/app-debug.apk
