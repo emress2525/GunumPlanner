@@ -54,10 +54,16 @@ for batch in batches(titles,40):
         "action":"query","format":"json","redirects":"1",
         "titles":"|".join(batch),"prop":"pageimages","piprop":"original"
     })
-    print("WIKIPEDIA_RESPONSE",str(results)[:850],flush=True)
-    for obj in results.get("query",{}).get("pages",{}).values():
+    query=results.get("query",{})
+    for obj in query.get("pages",{}).values():
+        original=(obj.get("original") or {}).get("source")
         photo=obj.get("pageimage")
+        if not photo and original:
+            photo=urllib.parse.unquote(urllib.parse.urlparse(original).path.rsplit("/",1)[-1]).replace("_"," ")
         if photo:photoByArticle[obj["title"].lower()]=photo
+    for entry in query.get("redirects",[]):
+        target=photoByArticle.get(entry.get("to","").lower())
+        if target:photoByArticle[entry["from"].lower()]=target
 print("Wikipedia species/genus pageimages",len(photoByArticle),"/",len(titles),flush=True)
 fileTitles=sorted(set("File:"+x for x in photoByArticle.values()))
 metaByFile={}
