@@ -74,6 +74,10 @@ public class MainActivity extends Activity {
     private File mapFile;
     private Cities.Point targetDistrict;
     private volatile boolean mapDownloadBusy=false;
+    private volatile boolean routingBusy=false;
+    private LatLong routeStart;
+    private LatLong routeEnd;
+    private String routeDestinationName="Hedef";
     private static final int LOCATION_PERMISSION=105;
 
     @Override public void onCreate(Bundle state) {
@@ -114,6 +118,10 @@ public class MainActivity extends Activity {
         Button saved=button("Noktalar");
         Button gpx=button("GPX İz");
         Button saveCenter=button("Merkezi Kaydet");
+        Button start=button("Başlangıç");
+        Button destination=button("Hedef");
+        Button route=button("Rota Hesapla");
+        Button routeData=button("Rota Verisi");
         extraTools.addView(flows,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(notebook,new LinearLayout.LayoutParams(dp(125),dp(49)));
         extraTools.addView(visuals,new LinearLayout.LayoutParams(dp(125),dp(49)));
@@ -121,6 +129,10 @@ public class MainActivity extends Activity {
         extraTools.addView(saved,new LinearLayout.LayoutParams(dp(114),dp(49)));
         extraTools.addView(gpx,new LinearLayout.LayoutParams(dp(105),dp(49)));
         extraTools.addView(saveCenter,new LinearLayout.LayoutParams(dp(143),dp(49)));
+        extraTools.addView(start,new LinearLayout.LayoutParams(dp(122),dp(49)));
+        extraTools.addView(destination,new LinearLayout.LayoutParams(dp(105),dp(49)));
+        extraTools.addView(route,new LinearLayout.LayoutParams(dp(134),dp(49)));
+        extraTools.addView(routeData,new LinearLayout.LayoutParams(dp(113),dp(49)));
         toolsStrip.addView(extraTools);
         root.addView(toolsStrip);
         flows.setOnClickListener(v->showExtra(DecisionFlows.menu(this)));
@@ -128,6 +140,8 @@ public class MainActivity extends Activity {
         visuals.setOnClickListener(v->showExtra(VisualGuides.screen(this)));
         plants.setOnClickListener(v->showExtra(Plants.screen(this)));
         saved.setOnClickListener(v->showExtra(SavedPlaces.screen(this,(place,name)->{
+            routeEnd=place;
+            routeDestinationName=name;
             targetDistrict=null;
             showMapOrImport();
             if(mapView!=null){
@@ -138,11 +152,21 @@ public class MainActivity extends Activity {
             }
         })));
         gpx.setOnClickListener(v->pickGpx());
+        start.setOnClickListener(v->selectRoutePoint(true));
+        destination.setOnClickListener(v->selectRoutePoint(false));
+        route.setOnClickListener(v->chooseRoutingMode());
+        routeData.setOnClickListener(v->new AlertDialog.Builder(this)
+            .setTitle("Türkiye çevrimdışı rota verisi")
+            .setMessage("BRouter için ayrıca 5°x5° yol ağı dosyaları gerekir. Türkiye çevresindeki 10 parça Wi-Fi ile indirilir ve telefonda saklanır. Büyük veri kullanımı ve depolama alanı gerektirir. Mapsforge haritasından ayrıdır.")
+            .setPositiveButton("10 parçayı indir",(d,w)->downloadRoutingData(OfflineRouter.allTurkeyTiles(),null))
+            .setNegativeButton("İptal",null).show());
         saveCenter.setOnClickListener(v->{
             if(mapView==null){setStatus("Önce haritayı aç ve kaydedeceğin noktayı merkezle.");return;}
             SavedPlaces.addAt(this,mapView.getModel().mapViewPosition.getCenter());
         });
         places.setOnClickListener(v->Cities.pick(this,p->{
+            routeEnd=new LatLong(p.latitude,p.longitude);
+            routeDestinationName=p.city+" / "+p.district;
             targetDistrict=p;
             if(!mapFile.exists()){
                 setStatus(p.city+" / "+p.district+" seçildi. Önce harita ZIP'ini yükle.");
@@ -234,6 +258,7 @@ public class MainActivity extends Activity {
         }catch(Exception e){setStatus("GPS hatası: "+e.getMessage());}
     }
     private void goToLocation(Location location,String info){
+        routeStart=new LatLong(location.getLatitude(),location.getLongitude());
         targetDistrict=null;
         if(mapView==null)showMapOrImport();
         if(mapView!=null){
@@ -250,6 +275,105 @@ public class MainActivity extends Activity {
             if(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED)locate();
             else setStatus("Konum izni verilmedi.");
         }
+    }
+    private void selectRoutePoint(boolean beginning){
+        String[] choices=beginning?
+          new String[]{"GPS konumum","81 il/ilçe","Kayıtlı nokta"}:
+          new String[]{"81 il/ilçe","Kayıtlı nokta"};
+        new AlertDialog.Builder(this).setTitle(beginning?"Rota başlangıcı":"Rota hedefi")
+        .setItems(choices,(dialog,which)->{
+            if(beginning&&which==0){
+                if(routeStart!=null){
+                    setStatus("Başlangıç GPS: "+String.format(Locale.US,"%.5f, %.5f",
+                        routeStart.latitude,routeStart.longitude));
+                }else locate();
+                return;
+            }
+            int index=beginning?which-1:which;
+            if(index==0)Cities.pick(this,p->{
+                LatLong point=new LatLong(p.latitude,p.longitude);
+                if(beginning)routeStart=point;
+                else {routeEnd=point;routeDestinationName=p.city+" / "+p.district;}
+                setStatus((beginning?"Başlangıç: ":"Hedef: ")+p.city+" / "+p.district);
+                if(mapFile.exists()){
+                    targetDistrict=p;showMapOrImport();
+                }
+            });
+            else showExtra(SavedPlaces.screen(this,(point,title)->{
+                if(beginning)routeStart=point;
+                else {routeEnd=point;routeDestinationName=title;}
+                setStatus((beginning?"Başlangıç: ":"Hedef: ")+title);
+            }));
+        }).setNegativeButton("İptal",null).show();
+    }
+    private void chooseRoutingMode(){
+        if(routingBusy){setStatus("Rota verisi veya hesaplama işlemi sürüyor.");return;}
+        if(routeStart==null||routeEnd==null){
+            new AlertDialog.Builder(this).setTitle("Rota noktaları eksik")
+              .setMessage("Başlangıç ve hedef düğmelerinden iki nokta seç. Başlangıç için GPS de kullanılabilir.")
+              .setPositiveButton("Başlangıç",(d,w)->selectRoutePoint(true))
+              .setNeutralButton("Hedef",(d,w)->selectRoutePoint(false))
+              .setNegativeButton("Kapat",null).show();
+            return;
+        }
+        new AlertDialog.Builder(this).setTitle("Çevrimdışı rota türü")
+            .setMessage("BRouter yol ve patika ağına göre hesaplar. Yol kapanışlarını, afet risklerini veya geçiş güvenliğini gerçek zamanlı bilmez.")
+            .setItems(new String[]{"Bisiklet – trekking","Yürüyüş – hiking","Araç – car-vario"},(d,index)->{
+                String profile=index==0?"trekking":index==1?"hiking-mountain":"car-vario";
+                try{
+                    OfflineRouter.setup(this);
+                    java.util.List<String> needed=OfflineRouter.aroundRoute(routeStart,routeEnd);
+                    java.util.List<String> missing=OfflineRouter.missing(this,needed);
+                    if(!missing.isEmpty()){
+                        new AlertDialog.Builder(this).setTitle("Rota ağı verisi eksik")
+                          .setMessage(missing.size()+" ayrı bölge veri dosyası gerekiyor. İlk kez Wi-Fi ile indirilir; sonraki hesaplamalar internetsiz yapılır.\n\n"+String.join(", ",missing))
+                          .setPositiveButton("İndir ve hesapla",(x,w)->downloadRoutingData(needed,profile))
+                          .setNegativeButton("İptal",null).show();
+                    }else computeOfflineRoute(profile);
+                }catch(Exception ex){setStatus("Rota kurulumu: "+ex.getMessage());}
+            }).setNegativeButton("Kapat",null).show();
+    }
+    private void downloadRoutingData(java.util.List<String> tiles,String profileAfter){
+        if(routingBusy)return;
+        routingBusy=true;
+        new Thread(()->{
+            try{
+                OfflineRouter.download(this,tiles,text->runOnUiThread(()->setStatus(text)));
+                routingBusy=false;
+                if(profileAfter!=null)computeOfflineRoute(profileAfter);
+                else runOnUiThread(()->setStatus("Türkiye rota verileri indirildi. Artık rota hesaplayabilirsin."));
+            }catch(Exception e){
+                routingBusy=false;
+                runOnUiThread(()->setStatus("Rota verisi indirilemedi: "+e.getMessage()));
+            }
+        }).start();
+    }
+    private void computeOfflineRoute(String profile){
+        if(routingBusy)return;
+        if(routeStart==null||routeEnd==null)return;
+        final LatLong from=routeStart,to=routeEnd;
+        routingBusy=true;
+        new Thread(()->{
+            try{
+                GPXTracks.Track computed=OfflineRouter.calculate(this,from,to,profile,
+                    text->runOnUiThread(()->setStatus(text)));
+                routingBusy=false;
+                runOnUiThread(()->{
+                    targetDistrict=null;
+                    if(!mapFile.exists()){setStatus("Rota bulundu; haritada göstermek için Mapsforge Türkiye haritasını yükle.");showMapSetup();}
+                    else {
+                        showMapOrImport();
+                        setStatus("BRouter çevrimdışı "+profile+" rotası: "+
+                            String.format(Locale.US,"%.1f km",computed.lengthKm)+
+                            " • Hedef: "+routeDestinationName+
+                            ". Bu rota canlı tehlikeleri hesaba katmaz.");
+                    }
+                });
+            }catch(Exception ex){
+                routingBusy=false;
+                runOnUiThread(()->setStatus("Rota hesaplanamadı: "+ex.getMessage()));
+            }
+        }).start();
     }
     private void showMapOrImport() {
         if (!mapFile.exists() || mapFile.length() < 100000) {
