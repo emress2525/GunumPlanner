@@ -1,7 +1,7 @@
 name: Afet Atlasi Offline APK
 on:
   push:
-    branches: [atlas-offline-maps-build, atlas-integrations-review]
+    branches: [atlas-offline-maps-build, atlas-integrations-review, atlas-ready-to-test]
   workflow_dispatch:
 concurrency:
   group: atlas-offline-build-${{ github.ref_name }}
@@ -80,6 +80,20 @@ jobs:
           test -s atlas/app/build/outputs/apk/debug/app-debug.apk
           unzip -t atlas/app/build/outputs/apk/debug/app-debug.apk | tail -1
           sha256sum atlas/app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish test APK with checksums
+        if: github.ref == 'refs/heads/atlas-ready-to-test'
+        run: |
+          mkdir -p atlas-dist
+          cp atlas/app/build/outputs/apk/debug/app-debug.apk atlas-dist/Hayatta_Kalma_Atlasi_Telefon_Testi_v0.4.apk
+          cd atlas-dist
+          sha256sum Hayatta_Kalma_Atlasi_Telefon_Testi_v0.4.apk > SHA256SUMS.txt
+          printf '%s\n' 'Hayatta Kalma Atlası - Telefon Testi v0.4.0' '273 cevrimdisi rehber, 47 lisansli bitki fotografi, 10 sessiz egitim videosu, offline BRouter ve Mapsforge harita altyapisi.' 'Tum Turkiye Mapsforge .map dosyasi (~570 MB) ilk kurulumda ayrica indirilmelidir.' 'BRouter rd5 yol agi dosyalari da ilk rota hesaplamasinda internet gerektirir.' 'Bu bir deneme APK dosyasidir. Saglik egitiminin veya guncel resmi acil durum talimatlarinin yerine gecmez.' 'Test sirasinda uygulamanin Test/Hata sekmesinden raporu kopyalayip ChatGPT sohbete yapistirin.' > TELEFON_TEST_BILGILERI.txt
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add atlas-dist/Hayatta_Kalma_Atlasi_Telefon_Testi_v0.4.apk atlas-dist/SHA256SUMS.txt atlas-dist/TELEFON_TEST_BILGILERI.txt
+          git commit -m "Publish verified user trial APK [skip ci]" || true
+          git push origin HEAD:atlas-ready-to-test
       - name: Publish direct APK on isolated branch
         if: github.ref == 'refs/heads/atlas-offline-maps-build'
         run: |
