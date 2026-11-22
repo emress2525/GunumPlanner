@@ -142,6 +142,9 @@ final class OfflineRouter {
         rc.localFunction=new File(profiles(ctx),profile+".brf").getAbsolutePath();
         rc.rawTrackPath=new File(base(ctx),"last_raw_track.dat").getAbsolutePath();
         rc.memoryclass=64;
+        // 3 = OsmAnd-compatible turn hints, stored in GPX <rtept> with <desc>/<turn>.
+        // Available offline after route calculation; never assume the route is obstacle-free.
+        rc.turnInstructionMode=3;
         List<OsmNodeNamed> waypoints=new ArrayList<>();
         OsmNodeNamed p1=new OsmNodeNamed();
         p1.name="from";
