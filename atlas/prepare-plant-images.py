@@ -65,7 +65,7 @@ for batch in batches(titles,40):
         target=photoByArticle.get(entry.get("to","").lower())
         if target:photoByArticle[entry["from"].lower()]=target
 print("Wikipedia species/genus pageimages",len(photoByArticle),"/",len(titles),flush=True)
-fileTitles=sorted(set("File:"+x for x in photoByArticle.values()))
+fileTitles=sorted(set("File:"+x for x in photoByArticle.values()) | {"File:Sideritis scardica kz05.jpg"})
 metaByFile={}
 for batch in batches(fileTitles,38):
     results=api("https://commons.wikimedia.org/w/api.php",{
@@ -102,7 +102,7 @@ def download(url,max_bytes=1_500_000):
 found={}
 for idx,(common,scientific) in enumerate(plants,1):
     article=page_title(scientific)
-    image=photoByArticle.get(article.lower())
+    image=("Sideritis scardica kz05.jpg" if scientific=="Sideritis spp." else photoByArticle.get(article.lower()))
     if not image:
         print("NO_PAGEIMAGE",idx,scientific,flush=True)
         continue
@@ -131,7 +131,7 @@ for idx,(common,scientific) in enumerate(plants,1):
             "license":lic,
             "license_url":striphtml(ext.get("LicenseUrl",{}).get("value","")),
             "author":striphtml(ext.get("Artist",{}).get("value","")) or "Wikimedia Commons",
-            "note":("Cins düzeyinde TEMSİLİ görüntü; tür teşhisi değildir" if (" spp." in scientific)
+            "note":("Sideritis scardica, cins düzeyinde TEMSİLİ fotoğraf; Sideritis tür teşhisi değildir" if scientific=="Sideritis spp." else "Cins düzeyinde TEMSİLİ görüntü; tür teşhisi değildir" if (" spp." in scientific)
                 else "Makale fotoğrafı; fotoğrafa bakarak tür teşhisi güvenli değildir")
         }
         print("PHOTO_OK",idx,scientific,lic,flush=True)
