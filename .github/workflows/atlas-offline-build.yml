@@ -29,7 +29,6 @@ jobs:
       - name: Prepare pinned BRouter engine and routing profiles
         run: bash atlas/prepare-brouter.sh
       - name: Collect licensed offline plant images from Wikimedia Commons
-        if: github.ref == 'refs/heads/atlas-offline-maps-build'
         run: python3 atlas/prepare-plant-images.py
       - name: Install offline video render dependencies
         run: |
@@ -56,6 +55,26 @@ jobs:
           echo atlas/route-tests/StandaloneRouteSmoke.java >> atlas/route-tests/sources.txt
           javac -encoding UTF-8 -d atlas/route-tests/classes @atlas/route-tests/sources.txt
           java -Xmx1024m -cp atlas/route-tests/classes StandaloneRouteSmoke             atlas/route-tests/fixtures/segments4 atlas/app/src/main/assets/brouter
+      - name: Verify all 47 licensed pictures and ten videos really exist inside APK
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,zipfile
+          path='atlas/app/build/outputs/apk/debug/app-debug.apk'
+          root=Path('atlas/app/src/main/assets')
+          info=json.loads((root/'plant_photos/photo_metadata.json').read_text('utf-8'))
+          assert len(info)==47, f'Only {len(info)} photos have license records'
+          for scientific,entry in info.items():
+              assert entry['license'] and entry['author'] and entry['source']
+              assert (root/'plant_photos'/entry['filename']).stat().st_size>500
+          with zipfile.ZipFile(path) as z:
+              names=set(z.namelist())
+              for entry in info.values():
+                  assert 'assets/plant_photos/'+entry['filename'] in names, entry['filename']
+              for i in ('acil_cagri','kanama','yanik','cpr','deprem','sel','yangin','serpinti','su','hipotermi'):
+                  assert 'assets/educational_videos/'+i+'.mp4' in names, i
+              print('APK_BUNDLED_CONTENT_PASS',len(info),'licensed photographs, 10 H264 MP4 videos')
+          PY
       - name: Verify APK archive
         run: |
           test -s atlas/app/build/outputs/apk/debug/app-debug.apk
