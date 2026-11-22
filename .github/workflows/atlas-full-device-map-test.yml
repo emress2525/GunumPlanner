@@ -1,0 +1,62 @@
+name: Atlas Full Turkey Android Map Render Test
+on:
+  push:
+    branches: [atlas-full-map-smoke]
+    paths: ['.github/workflows/atlas-full-device-map-test.yml']
+  workflow_dispatch:
+jobs:
+  full-map-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Prepare the Mapsforge Android application
+        run: |
+          bash atlas/prepare-brouter.sh
+          gradle -p atlas :app:assembleDebug
+          test -s atlas/app/build/outputs/apk/debug/app-debug.apk
+      - name: Download and extract genuine whole-Turkey Mapsforge map
+        run: |
+          mkdir -p atlas/tests
+          curl -fLS --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 1200 \
+            'https://data.bbbike.org/osm/mapsforge/region/europe/turkey/turkey.osm.mapsforge-osm.zip' \
+            -o atlas/tests/turkiye.zip
+          python3 - <<'PY'
+          import zipfile,shutil,os
+          p='atlas/tests/turkiye.zip'
+          with zipfile.ZipFile(p) as z:
+              files=[x for x in z.infolist() if x.filename.lower().endswith('.map')]
+              assert files, 'No .map in BBBike ZIP'
+              src=files[0]
+              assert src.file_size>150_000_000
+              with z.open(src) as r,open('atlas/tests/turkiye-full.map','wb') as w:
+                  shutil.copyfileobj(r,w,1024*1024)
+              with open('atlas/tests/turkiye-full.map','rb') as r:
+                  assert r.read(20)==b'mapsforge binary OSM'
+          print('FULL_MAP_BYTES',os.path.getsize('atlas/tests/turkiye-full.map'))
+          PY
+          rm atlas/tests/turkiye.zip
+      - name: Open complete Türkiye map on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          target: google_apis
+          profile: pixel_2
+          disk-size: 8192M
+          disable-animations: true
+          script: bash atlas/tests/full-map-emulator.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Atlas-Full-Turkiye-Android-Map-Evidence
+          path: atlas/tests/evidence/
+          if-no-files-found: ignore
+          retention-days: 14
