@@ -95,6 +95,18 @@ public class MainActivity extends Activity {
         extras.addView(gps,new LinearLayout.LayoutParams(0,dp(50),0.8f));
         extras.addView(check,new LinearLayout.LayoutParams(0,dp(50),1.3f));
         root.addView(extras);
+        LinearLayout extraTools=new LinearLayout(this);
+        extraTools.setBackgroundColor(0xffe4edf1);
+        Button flows=button("Acil Akışlar");
+        Button notebook=button("Saha Defteri");
+        Button visuals=button("Görsel Rehber");
+        extraTools.addView(flows,new LinearLayout.LayoutParams(0,dp(49),1));
+        extraTools.addView(notebook,new LinearLayout.LayoutParams(0,dp(49),1));
+        extraTools.addView(visuals,new LinearLayout.LayoutParams(0,dp(49),1));
+        root.addView(extraTools);
+        flows.setOnClickListener(v->showExtra(DecisionFlows.menu(this)));
+        notebook.setOnClickListener(v->showExtra(FieldNotebook.screen(this)));
+        visuals.setOnClickListener(v->showExtra(VisualGuides.screen(this)));
         places.setOnClickListener(v->Cities.pick(this,p->{
             targetDistrict=p;
             if(!mapFile.exists()){
@@ -141,6 +153,9 @@ public class MainActivity extends Activity {
         closeMap();
         content.removeAllViews();
         content.addView(AtlasPages.guides(this));
+    }
+    private void showExtra(View page){
+        closeMap();content.removeAllViews();content.addView(page);
     }
     private void showChecklist(){
         closeMap();
