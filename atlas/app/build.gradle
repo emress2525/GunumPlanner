@@ -6,8 +6,8 @@ android {
         applicationId 'org.afetatlas.offline'
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName '0.1-harita-deneme'
+        versionCode 2
+        versionName '0.2-beta'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
