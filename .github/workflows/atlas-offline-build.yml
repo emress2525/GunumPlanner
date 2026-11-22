@@ -29,6 +29,7 @@ jobs:
       - name: Prepare pinned BRouter engine and routing profiles
         run: bash atlas/prepare-brouter.sh
       - name: Collect licensed offline plant images from Wikimedia Commons
+        if: github.ref == 'refs/heads/atlas-offline-maps-build'
         run: python3 atlas/prepare-plant-images.py
       - name: Render ten original offline instructional MP4 clips
         run: python3 atlas/prepare-videos.py
