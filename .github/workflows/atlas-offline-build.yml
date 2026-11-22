@@ -28,6 +28,8 @@ jobs:
           "$SDKM" "platforms;android-35" "build-tools;35.0.0"
       - name: Prepare pinned BRouter engine and routing profiles
         run: bash atlas/prepare-brouter.sh
+      - name: Collect licensed offline plant images from Wikimedia Commons
+        run: python3 atlas/prepare-plant-images.py
       - name: Build APK
         run: gradle -p atlas :app:assembleDebug --stacktrace
       - name: Calculate three genuine offline Ankara road routes
