@@ -1,243 +1,47 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-25T14:29:14",
-  "event_count": 32,
+  "generated_at": "2026-11-26T13:57:20",
+  "event_count": 31,
   "sources": [
     {
       "name": "Ankara Ticaret Odası",
       "ok": true,
       "events": 0,
-      "ms": 1649
+      "ms": 1266
     },
     {
       "name": "Ankara Barosu",
       "ok": true,
       "events": 0,
-      "ms": 1709
+      "ms": 1210
     },
     {
       "name": "Ankara Kalkınma Ajansı",
       "ok": true,
       "events": 0,
-      "ms": 18504
+      "ms": 807
     },
     {
       "name": "Ankara Sanayi Odası",
       "ok": true,
-      "events": 3,
-      "ms": 9693
+      "events": 5,
+      "ms": 8770
     },
     {
       "name": "Bilkent CYBERPARK",
       "ok": false,
       "events": 0,
       "error": "SSLError: HTTPSConnectionPool(host='www.cyberpark.com.tr', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1011)')))",
-      "ms": 591
+      "ms": 417
     },
     {
       "name": "OSTİM OSB",
       "ok": true,
       "events": 1,
-      "ms": 6482
+      "ms": 6699
     }
   ],
   "events": [
-    {
-      "id": "9c12dce7744a4b4f",
-      "title": "KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI Ana Sayfa Duyurular KÜÇÜK MODÜLER REAKTÖR TEKNOLOJİSİ VE TÜRK SANAYİSİ ÇALIŞTAYI 2026-11-20 00:00:00 İşareti : 05/5000-3458 İrtibat: tore.silis@aso.org.tr Sayın Üyemiz, Enerji ve Tabii Kaynaklar Bakanlığı tarafından belirlenen 2050 yılı nükleer enerji hedefleri çerçevesinde, 5 GW'ı küçük modüler reaktörlerden (SMR) oluşmak üzere ülkemizin toplam nükleer kurulu gücünün 20 GW'a ulaştırılması öngörülmektedir. Bu doğrultuda, ülkemizde küçük modüler reaktör teknolojilerine yönelik yürütülen çalışmalar, Türk sanayisi için önemli iş birliği ve tedarik fırsatları sunmaktadır. Bu kapsamda Odamız koordinasyonunda faaliyetlerini sürdürmekte olan Nükleer Sanayi Kümelenmesi (ASO NÜKSAK) ve Nükleer Sanayi Derneği (NIATR) tarafından, K",
-      "starts_at": "2026-11-25T10:00:00",
-      "ends_at": "2026-11-25T17:00:00",
-      "venue": "Ankara Sanayi Odası",
-      "district": "Ankara",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/kucuk-moduler-reaktor-teknolojisi-ve-turk-sanayisi-calistayi-8018",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "b5ac3870df536527",
-      "title": "Duyurular",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR ULUSLARARASI İŞ HİZMETLERİ PLATFORMU Devamı 25.11.2026 DUYURULAR 25 KASIM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 25.11.2026 DUYURULAR INDUSFOOD 2027 FUARI (HİNDİSTAN) Devamı 25.11.2026 DUYURULAR TÜRKİYE-UKRAYNA SERBEST TİCARET ANLAŞMASI’NIN (STA) UYGULANMASI Devamı 25.11.2026 DUYURULAR AZERBAYCAN'A YÖNELİK TAŞIMACILIKTA YAŞANAN SORUNLAR Devamı 24.11.2026 DUYURULAR MERSİN SERBEST BÖLGESİNDEKİ ÜSTYAPILARIN YATIRIMCILARIN KULLANIMINA VERİLMESİ Devamı 24.11.2026 DUYURULAR TÜRK GIDA KODEKSİ GIDA KATKI MADDELERİ YÖNETMELİĞİ DEĞİŞİKLİK TASLAĞI Devamı 24.11.2026 DUYURULAR KOSGEB – YEŞİL SANAYİ DESTEK PROGRAMI BİLGİLENDİRME TOPLANTISI (ÇEVRİM İÇİ) Devamı 24.11.2026 DUYURULAR IFEX AQABA 2026 FUARI/14-16 ARALIK 2026, AKABE-ÜRDÜN Devamı 24.11.2026 DUY",
-      "starts_at": "2026-11-25T23:11:00",
-      "ends_at": "2026-11-26T01:11:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/duyurular",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "yatırım",
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "yatırımcılar",
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 97,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "80821e4e843fe5d3",
-      "title": "ARNAVUTLUK ZİYARETİ KAPSAMINDA GÖRÜŞ TALEBİ",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN ARNAVUTLUK ZİYARETİ KAPSAMINDA GÖRÜŞ TALEBİ Ana Sayfa Duyurular ARNAVUTLUK ZİYARETİ KAPSAMINDA GÖRÜŞ TALEBİ 2026-11-23 00:00:00 İşareti : 05/5000-3470 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan yazıda, Ticaret Bakanlığı'nın yazısına atfen; Ticaret Bakanımız Prof. Dr. Ömer Bolat'ın 17 Aralık 2026 tarihinde Arnavutluk'un başkenti Tiran'a bir ziyaret gerçekleştirmesinin öngörüldüğü belirtilmektedir. Ziyaret kapsamında değerlendirilmek üzere Arnavutluk ile ticari ve ekonomik ilişkilere dair görüş ve önerilerinizin 26 Kasım 2026 Perşembe günü mesai bitimine kadar TOBB'a iletilmek üzere Odamıza (E-posta.dim@aso.org.tr) gönderilebileceği hususunu bilgilerinize sunarız. Saygılarımızla, ANKARA SANAYİ ODASI KURUMSAL YAPI Aso'nun Tarihçesi Kal",
-      "starts_at": "2026-11-26T00:00:00",
-      "ends_at": "2026-11-26T02:00:00",
-      "venue": "TOBB",
-      "district": "Söğütözü",
-      "city": "Ankara",
-      "online": false,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/arnavutluk-ziyareti-kapsaminda-gorus-talebi-8019",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "insan kaynakları"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri"
-      ],
-      "networking_score": 90,
-      "decision_maker_score": 94,
-      "professional_development_score": 80,
-      "corporate_opportunity_score": 98
-    },
-    {
-      "id": "e49e2aa2aee1b86e",
-      "title": "YÜKSEKTE GÜVENLİ ÇALIŞMA: FARKINDALIK BULUŞMALARI",
-      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN YÜKSEKTE GÜVENLİ ÇALIŞMA: FARKINDALIK BULUŞMALARI Ana Sayfa Duyurular YÜKSEKTE GÜVENLİ ÇALIŞMA: FARKINDALIK BULUŞMALARI 2026-11-18 00:00:00 İşareti : 12/5000 - 3443 İrtibat: gym@aso.org.tr Sayın Üyemiz, Odamız, Çalışma ve Sosyal Güvenlik Bakanlığı İş Sağlığı ve Güvenliği Genel Müdürlüğü ve Türkiye İnşaat Sanayicileri İşveren Sendikası (İNTES) iş birliğiyle \"Yüksekte Güvenli Çalışma: Farkındalık Buluşmaları\" etkinliği 26 Kasım 2026 Perşembe günü saat 14:00 'da ASO Zafer Çağlayan Meclis Salonu'nda gerçekleştirilecektir. Çalışma ve Sosyal Güvenlik Bakan Yardımcısı Sayın Prof. Dr. Lutfihak ALPKAN, İş Sağlığı ve Güvenliği Genel Müdürü Sayın Erhan TAYLAN, İNTES Yönetim Kurulu Başkanı Sayın Deniz KIZILIRMAK ve Odamız Yönetim Kurulu Başkanı Sayın Seyit ARDIÇ'ın açılış konuşmalarının ardın",
-      "starts_at": "2026-11-26T00:00:00",
-      "ends_at": "2026-11-26T02:00:00",
-      "venue": "Çevrim içi",
-      "district": "Çevrim içi",
-      "city": "Ankara",
-      "online": true,
-      "free": true,
-      "organizer": "Ankara Sanayi Odası",
-      "source_name": "Ankara Sanayi Odası",
-      "source_url": "https://www.aso.org.tr/post/yuksekte-guvenli-calisma-farkindalik-bulusmalari-8012",
-      "verified": true,
-      "source_confidence": 99,
-      "categories": [
-        "startup",
-        "sanayi",
-        "dış ticaret",
-        "teknoloji",
-        "gayrimenkul",
-        "insan kaynakları",
-        "networking"
-      ],
-      "audience": [
-        "startup kurucuları",
-        "şirket yöneticileri",
-        "sanayiciler",
-        "ihracatçılar",
-        "insan kaynakları profesyonelleri"
-      ],
-      "legal_needs": [
-        "Yatırım sözleşmeleri",
-        "Şirketler hukuku",
-        "Pay sahipleri sözleşmeleri",
-        "KVKK",
-        "Fikri mülkiyet",
-        "Ticaret hukuku",
-        "Sözleşmeler",
-        "İş hukuku",
-        "Tahsilat",
-        "Uluslararası ticaret",
-        "Yazılım sözleşmeleri",
-        "Gayrimenkul hukuku",
-        "İnşaat hukuku",
-        "Eser sözleşmeleri"
-      ],
-      "networking_score": 98,
-      "decision_maker_score": 98,
-      "professional_development_score": 83,
-      "corporate_opportunity_score": 98
-    },
     {
       "id": "1ab90e3acea58a35",
       "title": "İTHALATTA ÜRÜN GÜVENLİĞİ DENETİMLERİ PANELİ",
@@ -843,6 +647,55 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "442907ca483add4b",
+      "title": "Duyurular",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN Duyurular Ana Sayfa Duyurular DUYURULAR ULUSLARARASI İŞ HİZMETLERİ PLATFORMU Devamı 25.11.2026 DUYURULAR 25 KASIM 2026 TARİHLİ AKKUYU NGS İHALELERİ Devamı 25.11.2026 DUYURULAR INDUSFOOD 2027 FUARI (HİNDİSTAN) Devamı 25.11.2026 DUYURULAR TÜRKİYE-UKRAYNA SERBEST TİCARET ANLAŞMASI’NIN (STA) UYGULANMASI Devamı 25.11.2026 DUYURULAR AZERBAYCAN'A YÖNELİK TAŞIMACILIKTA YAŞANAN SORUNLAR Devamı 24.11.2026 DUYURULAR MERSİN SERBEST BÖLGESİNDEKİ ÜSTYAPILARIN YATIRIMCILARIN KULLANIMINA VERİLMESİ Devamı 24.11.2026 DUYURULAR TÜRK GIDA KODEKSİ GIDA KATKI MADDELERİ YÖNETMELİĞİ DEĞİŞİKLİK TASLAĞI Devamı 24.11.2026 DUYURULAR KOSGEB – YEŞİL SANAYİ DESTEK PROGRAMI BİLGİLENDİRME TOPLANTISI (ÇEVRİM İÇİ) Devamı 24.11.2026 DUYURULAR IFEX AQABA 2026 FUARI/14-16 ARALIK 2026, AKABE-ÜRDÜN Devamı 24.11.2026 DUY",
+      "starts_at": "2026-12-11T23:11:00",
+      "ends_at": "2026-12-12T01:11:00",
+      "venue": "Çevrim içi",
+      "district": "Çevrim içi",
+      "city": "Ankara",
+      "online": true,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/duyurular",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "yatırım",
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "yatırımcılar",
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 97,
+      "decision_maker_score": 98,
+      "professional_development_score": 83,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "5d7971ce880e9b01",
       "title": "IFEX AQABA 2026 FUARI/14-16 ARALIK 2026, AKABE-ÜRDÜN",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN IFEX AQABA 2026 FUARI/14-16 ARALIK 2026, AKABE-ÜRDÜN Ana Sayfa Duyurular IFEX AQABA 2026 FUARI/14-16 ARALIK 2026, AKABE-ÜRDÜN 2026-11-24 00:00:00 İşareti : 05/5000 -3472 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden alınan bir yazıda, Ulaştırma ve Altyapı Bakanlığı'nın yazısına atfen; 14-16 Aralık 2026 tarihlerinde Akabe Uluslararası Fuar Merkezi'nde \"International Exhibition and Conference for Freight Forwarding, Customs Clearance and Logistics Services (JIFEX AQABA 2026)\" fuarının ikincisinin düzenleneceği belirtilmiştir. Fuara ilişkin detaylı bilgilere https://www.jifexjordan.com/ adresinden ulaşılabilmektedir. Bilgilerinize sunarız. Saygılarımızla, Ankara Sanayi Odası KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamız Harç Tarifesi Birim Politik",
@@ -1111,6 +964,56 @@
       "corporate_opportunity_score": 98
     },
     {
+      "id": "e92d1dea1b5937d8",
+      "title": "TÜRKİYE-UKRAYNA SERBEST TİCARET ANLAŞMASI’NIN (STA) UYGULANMASI",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN TÜRKİYE-UKRAYNA SERBEST TİCARET ANLAŞMASI’NIN (STA) UYGULANMASI Ana Sayfa Duyurular TÜRKİYE-UKRAYNA SERBEST TİCARET ANLAŞMASI’NIN (STA) UYGULANMASI 2026-11-25 00:00:00 İşareti : 05/5000-3474 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) gelen bir yazıda, Ticaret Bakanlığının yazısına atfen, Türkiye ile Ukrayna arasında 3 Şubat 2022 tarihinde Kiev'de imzalanan Serbest Ticaret Anlaşması'nın (STA), her iki ülkedeki iç onay süreçlerinin tamamlanmasının ardından 1 Ekim 2026 tarihinde yürürlüğe girdiği bildirilmiştir. Yazıda, söz konusu Anlaşmanın menşe kurallarının, 31 Ekim 2026 tarihli ve 33416 sayılı Resmî Gazete'de yayımlanan ilgili yönetmelik değişikliği ile Pan-Avrupa-Akdeniz Tercihli Menşe Kurallarına ilişkin mevzuat kapsamına alındığı belir",
+      "starts_at": "2027-01-01T00:00:00",
+      "ends_at": "2027-01-01T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/turkiye-ukrayna-serbest-ticaret-anlasmasi-nin-sta-uygulanmasi-8027",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları",
+        "hukuk"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri",
+        "Mesleki gelişim",
+        "Uyuşmazlık çözümü"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
+      "professional_development_score": 88,
+      "corporate_opportunity_score": 98
+    },
+    {
       "id": "019b7564e47c9ff2",
       "title": "BİRLEŞİK KRALLIK SINIRDA KARBON DÜZENLEME MEKANİZMASI (BK SKDM) KAPSAM GENİŞLETİLMESİ KAMU İSTİŞARE SÜRECİ",
       "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN BİRLEŞİK KRALLIK SINIRDA KARBON DÜZENLEME MEKANİZMASI (BK SKDM) KAPSAM GENİŞLETİLMESİ KAMU İSTİŞARE SÜRECİ Ana Sayfa Duyurular BİRLEŞİK KRALLIK SINIRDA KARBON DÜZENLEME MEKANİZMASI (BK SKDM) KAPSAM GENİŞLETİLMESİ KAMU İSTİŞARE SÜRECİ 2026-11-13 00:00:00 İşareti : 05/5000-3378 İrtibat: cevre@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) alınan bir yazıda, Ticaret Bakanlığı'nın yazısına atfen; Birleşik Krallık Sınırda Karbon Düzenleme Mekanizması'nın (BK SKDM) 1 Ocak 2027 itibarıyla alüminyum, çimento, gübre, hidrojen, demir ve çelik sektörlerinde yürürlüğe girmesinin planlandığı ifade edilmekte ve mekanizmanın rafineri ürünlerini de içerecek şekilde genişletilmesine yönelik kamu istişare sürecinin 28 Ekim 2026 tarihinde başlatıldığı belirtilmektedir. 20 Oc",
@@ -1202,6 +1105,53 @@
       ],
       "networking_score": 90,
       "decision_maker_score": 98,
+      "professional_development_score": 80,
+      "corporate_opportunity_score": 98
+    },
+    {
+      "id": "d8cba568176f1ff4",
+      "title": "INDUSFOOD 2027 FUARI (HİNDİSTAN)",
+      "description": "Ankara Sanayi Odası FİRMA REHBERİ KURUMSAL YAPI ASO'nun Tarihçesi Kalite Politikamız Birim Politikalarımız Üye Memnuniyet Politikası Misyon & Vizyon Stratejik Planlama Faaliyet Raporu & Çalışma Programı Organizasyon Şeması Meclis Başkanlik Divanı Yönetim Kurulu Meclis Üyeleri ve Meslek Komiteleri Disiplin Kurulu İştirakler-Ortaklıklar-İktisadi İşletmeler ASO Logo Etik Komisyon Çalışmaları Bilgi Güvenliği Politikası BİRİMLER Genel Sekreterlik Özel Kalem Müdürlüğü Belge Hizmetleri Müdürlüğü Bilişim Teknolojileri Müdürlüğü Çevre ve İklim Değişikliği Müdürlüğü Girişimcilik ve Yenilikçilik Müdürlüğü İnsan Kaynakları ve İdari Hizmetler Müdürlüğü Mali Yönetim ve İştirakler Müdürlüğü Uluslararası İlişkiler ve Dış Ticaret Müdürlüğü Üye İlişkileri ve Sicil Müdürlüğü HİZMETLER İŞTİRAKLER PROJELER İLETİŞİM EN INDUSFOOD 2027 FUARI (HİNDİSTAN) Ana Sayfa Duyurular INDUSFOOD 2027 FUARI (HİNDİSTAN) 2026-11-25 00:00:00 İşareti : 05/5000-3502 İrtibat: dim@aso.org.tr Sayın Üyemiz, Türkiye Odalar ve Borsalar Birliği'nden (TOBB) gelen yazıda, Ticaret Bakanlığının yazısına atfen, 8–10 Ocak 2027 tarihleri arasında Greater Noida/Hindistan'da düzenlenecek olan ve 5973 sayılı İhracat Destekleri Hakkında Karar kapsamında bireysel katılımı desteklenen fuarlar listesinde yer alan \"INDUSFOOD 2027\" fuarına ülkemiz firmalarının katılım sağlamalarında fayda görüldüğü bildirilmiştir. Söz konusu fuara ilişkin detaylı bilgilerin yer aldığı doküman ekte bilgilerinize sunulmuştur. Saygılarımızla, Ankara Sanayi Odası Ek Listesi INDUSFOOD 2027 Fuarı (Hindistan).pdf KURUMSAL YAPI Aso'nun Tarihçesi Kalite Politikamı",
+      "starts_at": "2027-01-10T00:00:00",
+      "ends_at": "2027-01-10T02:00:00",
+      "venue": "TOBB",
+      "district": "Söğütözü",
+      "city": "Ankara",
+      "online": false,
+      "free": true,
+      "organizer": "Ankara Sanayi Odası",
+      "source_name": "Ankara Sanayi Odası",
+      "source_url": "https://www.aso.org.tr/post/indusfood-2027-fuari-hindistan-8029",
+      "verified": true,
+      "source_confidence": 99,
+      "categories": [
+        "startup",
+        "sanayi",
+        "dış ticaret",
+        "teknoloji",
+        "insan kaynakları"
+      ],
+      "audience": [
+        "startup kurucuları",
+        "sanayiciler",
+        "ihracatçılar",
+        "insan kaynakları profesyonelleri"
+      ],
+      "legal_needs": [
+        "Yatırım sözleşmeleri",
+        "Şirketler hukuku",
+        "Pay sahipleri sözleşmeleri",
+        "KVKK",
+        "Fikri mülkiyet",
+        "Ticaret hukuku",
+        "Sözleşmeler",
+        "İş hukuku",
+        "Tahsilat",
+        "Uluslararası ticaret",
+        "Yazılım sözleşmeleri"
+      ],
+      "networking_score": 90,
+      "decision_maker_score": 94,
       "professional_development_score": 80,
       "corporate_opportunity_score": 98
     },
